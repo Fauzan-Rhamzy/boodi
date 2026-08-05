@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-// handler
+// started with a capital so it can be exported to other files
 func Hello(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
