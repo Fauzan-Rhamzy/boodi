@@ -29,12 +29,14 @@ INSERT INTO Users (email, phone, password, first_name, last_name, profile_pic, r
 ('charlie.davis@example.com', '3335557777', 'hashedpwd654', 'Charlie', 'Davis', NULL, 'user');
 
 -- BOOKS
-INSERT INTO Book (book_title, book_price, book_year, book_page, book_languange, book_desc, book_cover) VALUES
+-- BOOKS (Nama kolom disesuaikan dengan struktur CREATE TABLE Anda)
+INSERT INTO Book (title, price, year, page, language, description, cover) VALUES
 ('The Silent Echo', 15.99, 2021, 320, 'EN', 'A gripping mystery about a forgotten town.', 'https://example.com/cover1.jpg'),
 ('Journey to the Stars', 22.50, 2023, 450, 'EN', 'A sci-fi epic exploring the outer rim of the galaxy.', 'https://example.com/cover2.jpg'),
 ('Mind Over Matter', 18.00, 2019, 280, 'EN', 'A profound self-help book on overcoming mental blocks.', 'https://example.com/cover3.jpg'),
 ('El Misterio', 12.99, 2020, 210, 'ES', 'A Spanish thriller that keeps you on the edge of your seat.', 'https://example.com/cover4.jpg'),
 ('History of the World', 29.99, 2015, 800, 'EN', 'A comprehensive look at human history from ancient to modern times.', 'https://example.com/cover5.jpg');
+
 
 -- AUTHORS
 INSERT INTO Author (name, description) VALUES
