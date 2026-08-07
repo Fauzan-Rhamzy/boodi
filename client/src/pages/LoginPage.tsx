@@ -1,3 +1,157 @@
+import { ArrowLeft, Eye, EyeOff } from "lucide-react";
+import bg from "../assets/bg-login.png";
+import { useState } from "react";
+import BackArrow from "../components/BackArrow";
+
 export default function LoginPage() {
-  return <>login page</>;
+  const [email, setEmail] = useState<String>("");
+  const [password, setPassword] = useState<String>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const handleSubmit = () => {
+    console.log(email, password);
+  };
+  return (
+    // <div
+    //   className="w-full h-screen"
+    //   style={{
+    //     backgroundImage: `url(${bg})`,
+    //     backgroundSize: "100% 100%",
+    //     backgroundRepeat: "no-repeat",
+    //   }}
+    // >
+    //   <div className="flex h-full flex-col items-center justify-center ">
+    //     <p
+    //       style={{ color: "var(--text-color)" }}
+    //       className="text-7xl font-bold"
+    //     >
+    //       BooDi
+    //     </p>
+    //     <div className="bg-[#2d68ff]  px-12 text-white rounded-4xl mt-2">
+    //       <p className="text-sm tracking-[0.4rem]">Book Diary</p>
+    //     </div>
+
+    //     <img
+    //       src={illust}
+    //       alt="a guy reading book"
+    //       className="w-80 mt-6 mb-30"
+    //     />
+    //     <ChevronsUp className=" w-10 h-10 " />
+    //     <p>Swipe up to start</p>
+    //   </div>
+    // </div>
+
+    <>
+      <div
+        className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8 relative bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${bg})` }}
+      >
+        {/* <div className="absolute top-6 left-6">
+          <button
+            type="button"
+            className="flex items-center justify-center p-2 text-gray-700 hover:text-black transition-colors duration-200"
+            aria-label="Go back"
+          >
+            <ArrowLeft className="" />
+          </button>
+        </div> */}
+        <BackArrow />
+
+        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+          <h2 className="text-6xl font-bold tracking-tight text-black">
+            Sign In
+          </h2>
+          <h3 className="text-2xl font-bold">to your account</h3>
+        </div>
+
+        <div className="mt-3 mb-3">
+          <span className=" text-gray-500">
+            Enter your email and password to log in
+          </span>
+        </div>
+
+        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+          <form action="#" method="POST" className="space-y-6">
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm/6 font-medium text-gray-900"
+              >
+                Email address
+              </label>
+              <div className="mt-2">
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  autoComplete="email"
+                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between">
+                <label
+                  htmlFor="password"
+                  className="block text-sm/6 font-medium text-gray-900"
+                >
+                  Password
+                </label>
+                <div className="text-sm">
+                  {/* <a
+                    href="#"
+                    className="font-semibold text-indigo-400 hover:text-indigo-300"
+                  >
+                    Forgot password?
+                  </a> */}
+                </div>
+              </div>
+              <div className="relative flex items-center">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "password" : "text"}
+                  required
+                  autoComplete="current-password"
+                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 pr-10"
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+              </div>
+            </div>
+
+            <div className="relative flex items-center"></div>
+
+            <div>
+              <button
+                type="submit"
+                className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+              >
+                Log In
+              </button>
+            </div>
+          </form>
+
+          <p className="mt-10 text-center text-sm/6 text-gray-500">
+            Don't have an account?{" "}
+            <a
+              href="#"
+              className="font-semibold text-indigo-400 hover:text-indigo-300"
+            >
+              Sign Up
+            </a>
+          </p>
+        </div>
+      </div>
+    </>
+  );
 }
