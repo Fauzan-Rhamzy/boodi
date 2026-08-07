@@ -7,11 +7,12 @@ import Navbar from "../components/Navbar";
 export default function template() {
   return (
     <div
-      className="w-full h-screen"
+      className="w-full min-h-screen"
       style={{
         backgroundImage: `url(${bgHome})`,
-        backgroundSize: "100% 100%",
+        backgroundSize: "100% auto",
         backgroundRepeat: "repeat-y",
+        backgroundPosition: "top center",
       }}
     >
       {/* header */}
@@ -58,7 +59,7 @@ export default function template() {
             <div>image list</div>
           </div>
           {/* trending review */}
-          <div className="mt-6">
+          <div className="mt-6 pb-30">
             <div className="flex items-center justify-between mb-2">
               <p className="text-lg font-bold">Trending Review</p>
               <button className="flex items-center gap-1 text-md text-gray-500">
@@ -71,7 +72,9 @@ export default function template() {
         </div>
       </div>
       {/* navbar */}
-      <Navbar />
+      <div className="fixed bottom-0 left-1/2 z-50 w-full max-w-sm -translate-x-1/2">
+        <Navbar />
+      </div>
     </div>
   );
 }

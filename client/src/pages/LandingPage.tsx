@@ -9,7 +9,7 @@ export default function LandingPage() {
   const navigate = useNavigate();
   return (
     <div
-      className="w-full h-screen"
+      className="w-full min-h-screen"
       style={{
         backgroundImage: `url(${bg2})`,
         backgroundSize: "100% 100%",
