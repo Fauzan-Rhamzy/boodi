@@ -8,12 +8,15 @@ import (
 	"os"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
 
 	// import controllers
 	//"server/controllers"
 
 	"server/internal/auth"
+	"server/internal/author"
 	"server/internal/book"
 	"server/internal/shared/db"
 )
@@ -77,22 +80,40 @@ func main() {
 	bookService := book.NewService(bookRepo)
 	bookHandler := book.NewHandler(bookService)
 
+	authorRepo := author.NewRepository(dbCon)
+	authorService := author.NewService(authorRepo)
+	authorHandler := author.NewHandler(authorService)
+
 	// reviewRepo    := review.NewRepository(db)
 	// reviewService := review.NewService(reviewRepo)
 	// reviewHandler := review.NewHandler(reviewService)
 
 	router := chi.NewRouter()
+	router.Use(middleware.Logger)
+	router.Use(middleware.Recoverer)
 	// router.Use(middleware.CORS)
+	router.Use(cors.Handler(cors.Options{
+		// 1. Mengizinkan localhost dengan port berapa pun
+		AllowedOrigins: []string{"http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:3000"},
+		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		// 2. Mengizinkan SEMUA headers (menghindari error missing header)
+		AllowedHeaders:   []string{"*"},
+		ExposedHeaders:   []string{"Link"},
+		AllowCredentials: true,
+		MaxAge:           300,
+	}))
 	router.Post("/api/auth/login", authHandler.Login)
 	router.Post("/api/auth/register", authHandler.Register)
 
 	router.Get("/api/book", bookHandler.GetAll)
+	router.Get("/api/author", authorHandler.GetByID)
 
 	// http.Handle("/api/hello", corsMiddleware(http.HandlerFunc(helloHandler)))
 
 	fmt.Println("Server is running on http://localhost:" + port)
 	// http.ListenAndServe(":"+port, nil)
-	log.Fatal(http.ListenAndServe(":"+port, corsMiddleware(router)))
+	fmt.Println("Server running on port :" + port)
+	log.Fatal(http.ListenAndServe(":"+port, router))
 }
 
 // func main() {
