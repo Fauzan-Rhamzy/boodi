@@ -5,6 +5,7 @@ import LandingPage from "./pages/LandingPage.tsx";
 import "../index.css";
 import App from "./App.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
+import RegisterPage from "./pages/RegisterPage.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import LibraryPage from "./pages/LibraryPage.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
@@ -25,9 +26,10 @@ const router = createBrowserRouter([
         element: <LoginPage />,
       },
       {
-        path: "/home",
-        element: <HomePage />,
+        path: "/register",
+        element: <RegisterPage />,
       },
+      { path: "/home", element: <HomePage /> },
       {
         path: "/library",
         element: <LibraryPage />,
