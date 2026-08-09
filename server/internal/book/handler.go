@@ -3,6 +3,9 @@ package book
 import (
 	"net/http"
 	"server/internal/shared/response"
+	"strconv"
+
+	"github.com/go-chi/chi/v5"
 )
 
 type Handler struct {
@@ -20,4 +23,20 @@ func (h *Handler) GetAll(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	response.JSON(w, http.StatusOK, books)
+}
+
+func (h *Handler) GetByID(w http.ResponseWriter, r *http.Request) {
+	idStr := chi.URLParam(r, "id")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		response.Error(w, http.StatusBadRequest, "id not valid")
+		return
+	}
+
+	book, err := h.service.GetByID(id)
+	if err != nil {
+		response.Error(w, http.StatusNotFound, err.Error())
+		return
+	}
+	response.JSON(w, http.StatusOK, book)
 }
