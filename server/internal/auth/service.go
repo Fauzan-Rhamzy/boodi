@@ -2,6 +2,7 @@ package auth
 
 import (
 	"errors"
+	"log"
 	"os"
 	"time"
 
@@ -34,6 +35,7 @@ func (s *Service) Login(req LoginRequest) (string, error) {
 
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password))
 	if err != nil {
+		log.Printf("FindByEmail error: %v | email: %s", err, req.Email)
 		return "", errors.New("Wrong password")
 	}
 
