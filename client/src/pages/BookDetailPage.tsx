@@ -1,9 +1,38 @@
 import BackArrow from "../components/BackArrow";
 import bgDetailBook from "../assets/bg-detailBooks.png";
-import book1 from "../assets/booksCover/book1.png";
 import { Plus, Heart } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import book1 from "../assets/booksCover/mindOverMatter.png"
+
+interface Book {
+  id: number;
+  title: string;
+  price: number;
+  year: number;
+  page: number;
+  language: string;
+  description: string;
+  cover: string;
+  genres: string[];
+  authors: string[];
+}
 
 export default function BookDetailPage() {
+    const { id } = useParams(); 
+    const [book, setBook] = useState<Book | null>(null);
+
+    useEffect(() => {
+        fetch(`http://localhost:8080/api/books/${id}`) 
+        .then((res) => res.json())
+        .then((data) => setBook(data.data))
+        .catch((err) => console.error("gagal fetch:", err));
+    }, [id]);
+
+    if (!book) {
+        return <p>Loading...</p>;
+    }
+
   return (
     <div className="w-full min-h-screen relative"
         style={{
@@ -19,15 +48,15 @@ export default function BookDetailPage() {
             
             <h1 className="text-center text-3xl font-bold text-gray-900 mb-2"
                 style={{marginTop: '5px'}}>
-                Lorem Ipsum
+                {book.title}
             </h1>
 
             <div className="flex items-center gap-1 text-gray-700 mb-2">
-                <span className="text-gray-900">2020</span>
+                <span className="text-gray-900">{book.year}</span>
                 <span>•</span>
                 <span className="whitespace-nowrap">Written by</span>
                 <span className="font-bold underline cursor-pointer text-gray-900 underline-offset-3">
-                    Dolores
+                    {book.authors}
                 </span>
             </div>
 
@@ -49,21 +78,21 @@ export default function BookDetailPage() {
             <div className="flex items-center text-center mt-4">
                 <div className="px-6">
                     <p className="text-sm text-gray-700 font-medium">Price</p>
-                    <p className="text-base font-bold text-black mt-0.5">Rp. 80.000</p>
+                    <p className="text-base font-bold text-black mt-0.5">${book.price.toLocaleString("id-ID")}</p>
                 </div>
 
                 <div className="h-8 w-[1px] bg-black"></div>
 
                 <div className="px-6">
                     <p className="text-sm text-gray-700 font-medium">Pages</p>
-                    <p className="text-base font-bold text-black mt-0.5">200</p>
+                    <p className="text-base font-bold text-black mt-0.5">{book.page}</p>
                 </div>
 
                 <div className="h-8 w-[1px] bg-black"></div>
 
                 <div className="px-6">
                     <p className="text-sm text-gray-700 font-medium">Language</p>
-                    <p className="text-base font-bold text-black mt-0.5">ENG</p>
+                    <p className="text-base font-bold text-black mt-0.5">{book.language}</p>
                 </div>
             </div>
 
@@ -71,21 +100,18 @@ export default function BookDetailPage() {
                 <h2
                     className="font-bold text-xl mb-3 text-gray-900"
                     style={{ marginBottom: '3px' , marginTop: '7px' }}>
-                    Genre
+                    Genres
                 </h2>
 
                 <div className="flex flex-wrap gap-1.5">
-                    <span className="px-2 py-1 bg-[#8fa4bf] text-white text-xs rounded-full">
-                    Horror
-                    </span>
-
-                    <span className="px-2 py-1 bg-[#8fa4bf] text-white text-xs rounded-full">
-                        Dark Romance
-                    </span>
-
-                    <span className="px-2 py-1 bg-[#8fa4bf] text-white text-xs rounded-full">
-                        Teen
-                    </span>
+                    {book.genres.map((genre) => (
+                        <span
+                            key={genre}
+                            className="px-2 py-1 bg-[#8fa4bf] text-white text-xs rounded-full"
+                        >
+                            {genre}
+                        </span>
+                    ))}
                 </div>
             </div>
 
@@ -96,10 +122,10 @@ export default function BookDetailPage() {
                     Description
                 </h2>
 
-                <div className="w-full p-6 bg-white rounded-3xl shadow-md border border-gray-100"
+                <div className="w-full p-6 bg-white rounded-2xl shadow-md border border-gray-100"
                         style={{ padding: '15px 17px' }}>
                     <p className="text-gray-800 text-sm leading-snug text-justify">
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce aliquam  mattis libero. Donec luctus est pretium nisi volutpat, a commodo velit  scelerisque. Morbi vehicula arcu nec ultricies vestibulum.
+                        {book.description}
                     </p>
                 </div>
             </div>
