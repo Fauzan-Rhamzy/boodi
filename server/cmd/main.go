@@ -79,11 +79,12 @@ func main() {
 	router.Post("/api/auth/login", authHandler.Login)
 	router.Post("/api/auth/register", authHandler.Register)
 	router.Get("/api/books", bookHandler.GetAll)
+	router.Get("/api/books/{id}", bookHandler.GetByID)
 
 	// protected routes fro admin
 	router.Group(func(r chi.Router) {
 		r.Use(middleware.RequireAuth)
-		r.Get("/api/books", bookHandler.GetAll)
+		// r.Get("/api/books", bookHandler.GetAll)
 		//  r.Post("/api/books", bookHandler.Create)
 		// r.Delete("/api/books/{id}", bookHandler.Delete)
 	})
