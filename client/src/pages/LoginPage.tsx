@@ -2,44 +2,26 @@ import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import bg from "../assets/bg-login.png";
 import { useState } from "react";
 import BackArrow from "../components/BackArrow";
+import { useNavigate } from "react-router";
+import { login } from "../features/auth/api";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState<String>("");
-  const [password, setPassword] = useState<String>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const handleSubmit = () => {
-    console.log(email, password);
+  const navigate = useNavigate();
+  const handleLogin = async (e: React.FormEvent) => {
+    // console.log(email, password);
+    e.preventDefault();
+
+    try {
+      await login({ email, password });
+      navigate("/home");
+    } catch (error: any) {
+      console.log(error);
+    }
   };
   return (
-    // <div
-    //   className="w-full h-screen"
-    //   style={{
-    //     backgroundImage: `url(${bg})`,
-    //     backgroundSize: "100% 100%",
-    //     backgroundRepeat: "no-repeat",
-    //   }}
-    // >
-    //   <div className="flex h-full flex-col items-center justify-center ">
-    //     <p
-    //       style={{ color: "var(--text-color)" }}
-    //       className="text-7xl font-bold"
-    //     >
-    //       BooDi
-    //     </p>
-    //     <div className="bg-[#2d68ff]  px-12 text-white rounded-4xl mt-2">
-    //       <p className="text-sm tracking-[0.4rem]">Book Diary</p>
-    //     </div>
-
-    //     <img
-    //       src={illust}
-    //       alt="a guy reading book"
-    //       className="w-80 mt-6 mb-30"
-    //     />
-    //     <ChevronsUp className=" w-10 h-10 " />
-    //     <p>Swipe up to start</p>
-    //   </div>
-    // </div>
-
     <>
       <div
         className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8 relative bg-cover bg-center bg-no-repeat"
@@ -70,7 +52,7 @@ export default function LoginPage() {
         </div>
 
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <form action="#" method="POST" className="space-y-6">
+          <form onSubmit={handleLogin} className="space-y-6">
             <div>
               <label
                 htmlFor="email"
@@ -144,7 +126,8 @@ export default function LoginPage() {
           <p className="mt-10 text-center text-sm/6 text-gray-500">
             Don't have an account?{" "}
             <a
-              href="#"
+              // href="/register"
+              onClick={() => navigate("/register")}
               className="font-semibold text-indigo-400 hover:text-indigo-300"
             >
               Sign Up
