@@ -14,7 +14,7 @@ func NewRepository(db *sql.DB) *Repository {
 
 func (r *Repository) FindByEmail(email string) (*User, error) {
 	var user User
-	err := r.db.QueryRow(`SELECT * FROM users WHERE email = $1`, email).Scan(&user.ID, &user.Email, &user.Password, &user.Role)
+	err := r.db.QueryRow(`SELECT user_id, email, password, role FROM users WHERE email = $1`, email).Scan(&user.ID, &user.Email, &user.Password, &user.Role)
 	if err != nil {
 		return nil, err
 	}
@@ -27,6 +27,6 @@ func (r *Repository) Create(req RegisterRequest, hashedPassword string) (int, er
 	INSERT INTO users (email, password, first_name, last_name, phone)
 	VALUES ($1, $2, $3, $4, $5)
 	RETURNING user_id
-	`, req.Email, req.Password, req.FirstName, req.LastName, req.Phone).Scan(&id)
+	`, req.Email, hashedPassword, req.FirstName, req.LastName, req.Phone).Scan(&id)
 	return id, err
 }

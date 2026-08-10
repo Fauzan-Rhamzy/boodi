@@ -17,7 +17,7 @@ func (s *Service) GetAll() ([]Book, error) {
 func (s *Service) GetByID(id int) (*Book, error) {
 	book, err := s.repo.FindByID(id)
 	if err != nil {
-		return nil, errors.New("buku tidak ditemukan")
+		return nil, errors.New("book not found")
 	}
 	return book, nil
 }

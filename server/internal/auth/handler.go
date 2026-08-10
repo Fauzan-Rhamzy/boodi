@@ -3,6 +3,8 @@ package auth
 import (
 	"encoding/json"
 	"net/http"
+	"os"
+	"strconv"
 )
 
 type Handler struct {
@@ -43,7 +45,20 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	https := os.Getenv("HTTP_SECURE")
+	secure, err := strconv.ParseBool(https)
+	http.SetCookie(w, &http.Cookie{
+		Name:     "token",
+		Value:    token,
+		HttpOnly: true,
+		Secure:   secure,
+		SameSite: http.SameSiteLaxMode,
+		Path:     "/",
+		MaxAge:   60 * 60 * 24,
+	})
+
+	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{
-		"token": token,
+		"message": "login success",
 	})
 }

@@ -6,10 +6,12 @@ import AuthorPage from "./pages/AuthorPage.tsx";
 import "../index.css";
 import App from "./App.tsx";
 import LoginPage from "./pages/LoginPage.tsx";
+import RegisterPage from "./pages/RegisterPage.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import LibraryPage from "./pages/LibraryPage.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
-
+import NotFoundPage from "./pages/NotFoundPage.tsx";
+import BookDetailPage from "./pages/BookDetailPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -21,7 +23,7 @@ const router = createBrowserRouter([
         element: <LandingPage />,
       },
       {
-        path: '/author', 
+        path: '/author/:id', 
         element: <AuthorPage />,
       }, 
       {
@@ -29,9 +31,10 @@ const router = createBrowserRouter([
         element: <LoginPage />,
       },
       {
-        path: "/home",
-        element: <HomePage />,
+        path: "/register",
+        element: <RegisterPage />,
       },
+      { path: "/home", element: <HomePage /> },
       {
         path: "/library",
         element: <LibraryPage />,
@@ -39,6 +42,14 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <ProfilePage />,
+      },
+      {
+        path: "/bookDetail/:id",
+        element: <BookDetailPage />,
+      },
+      {
+        path: "*",
+        element: <NotFoundPage />,
       },
     ],
   },
