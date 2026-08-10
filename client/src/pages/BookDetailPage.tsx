@@ -2,10 +2,15 @@ import BackArrow from "../components/BackArrow";
 import bgDetailBook from "../assets/bg-detailBooks.png";
 import { Plus, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import book1 from "../assets/booksCover/mindOverMatter.png"
 
-interface Book {
+interface AuthorResponse {
+  id: number;
+  name: string;
+}
+
+export interface Book {
   id: number;
   title: string;
   price: number;
@@ -15,7 +20,7 @@ interface Book {
   description: string;
   cover: string;
   genres: string[];
-  authors: string[];
+  authors: AuthorResponse[];
 }
 
 export default function BookDetailPage() {
@@ -33,6 +38,7 @@ export default function BookDetailPage() {
         return <p>Loading...</p>;
     }
 
+    console.log(book)
   return (
     <div className="w-full min-h-screen relative"
        style={{
@@ -54,10 +60,24 @@ export default function BookDetailPage() {
             <div className="flex items-center gap-1 text-gray-700 mb-2">
                 <span className="text-gray-900">{book.year}</span>
                 <span>•</span>
-                <span className="whitespace-nowrap">Written by</span>
-                <span className="font-bold underline cursor-pointer text-gray-900 underline-offset-3">
+                {/* <span className="whitespace-nowrap">Written by</span> */}
+                {/* <span className="font-bold underline cursor-pointer text-gray-900 underline-offset-3">
                     {book.authors}
-                </span>
+                </span> */}
+
+                {book.authors && book.authors.length > 0 ? (
+                    <>
+                        <span>Written by</span>
+                        <Link 
+                        to={`/author/${book.authors[0].id}`}
+                        className="font-bold underline cursor-pointer text-gray-900 underline-offset-3 hover:text-black"
+                        >
+                        {book.authors[0].name}
+                        </Link>
+                    </>
+                    ) : (
+                    <span>Unknown Author</span>
+                    )}
             </div>
 
             <div className="flex items-center gap-2">

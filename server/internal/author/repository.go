@@ -2,7 +2,6 @@ package author
 
 import (
 	"database/sql"
-	"server/internal/book"
 )
 
 type Repository struct {
@@ -37,8 +36,8 @@ func (r *Repository) FindByID(id int) (*Author, error) {
 	return &a, nil
 }
 
-func (r *Repository) FindBooksByAuthorID(id int) ([]book.Book, error) {
-	rows, err := r.db.Query(`SELECT b.book_id, b.title, b.price, b.year, b.page, b.language, b.description, b.cover
+func (r *Repository) FindBooksByAuthorID(id int) ([]BookResponse, error) {
+	rows, err := r.db.Query(`SELECT b.book_id, b.title, b.cover
 							FROM Book b
 							JOIN AuthorBook ab ON ab.book_id = b.book_id
 							WHERE ab.author_id = $1`, id)
@@ -48,15 +47,15 @@ func (r *Repository) FindBooksByAuthorID(id int) ([]book.Book, error) {
 	}
 	defer rows.Close()
 
-	var books []book.Book
+	var books []BookResponse
 	for rows.Next() {
-		var b book.Book
+		var book BookResponse
 		if err := rows.Scan(
-			&b.BookID, &b.Title, &b.Price, &b.Year, &b.Page, &b.Language, &b.Description, &b.Cover,
+			&book.ID, &book.Title, &book.Cover,
 		); err != nil {
 			return nil, err
 		}
-		books = append(books, b)
+		books = append(books, book)
 	}
 	return books, nil
 }
