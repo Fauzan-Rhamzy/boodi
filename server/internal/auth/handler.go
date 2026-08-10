@@ -62,3 +62,17 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 		"message": "login success",
 	})
 }
+
+func (h *Handler) Logout(w http.ResponseWriter, r *http.Request) {
+	https := os.Getenv("HTTP_SECURE")
+	secure, _ := strconv.ParseBool(https)
+	http.SetCookie(w, &http.Cookie{
+		Name:     "token",
+		Value:    "",
+		HttpOnly: true,
+		Secure:   secure,
+		SameSite: http.SameSiteLaxMode,
+		Path:     "/",
+		MaxAge:   -1,
+	})
+}
