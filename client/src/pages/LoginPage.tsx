@@ -8,7 +8,7 @@ import { login } from "../features/auth/api";
 export default function LoginPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(true);
   const navigate = useNavigate();
   const handleLogin = async (e: React.FormEvent) => {
     // console.log(email, password);
@@ -23,116 +23,120 @@ export default function LoginPage() {
   };
   return (
     <>
-      <div
+      {/* <div
         className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8 relative bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${bg})` }}
+      > */}
+      <div
+        className="w-full h-screen p-10"
+        style={{
+          backgroundImage: `url(${bg})`,
+          backgroundSize: "100% 100%",
+          backgroundRepeat: "no-repeat",
+        }}
       >
-        {/* <div className="absolute top-6 left-6">
-          <button
-            type="button"
-            className="flex items-center justify-center p-2 text-gray-700 hover:text-black transition-colors duration-200"
-            aria-label="Go back"
-          >
-            <ArrowLeft className="" />
-          </button>
-        </div> */}
         <BackArrow />
 
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <h2 className="text-6xl font-bold tracking-tight text-black">
-            Sign In
-          </h2>
-          <h3 className="text-2xl font-bold">to your account</h3>
-        </div>
+        <div className="">
+          {/* <div className="sm:mx-auto sm:w-full sm:max-w-sm pt-12 px-4"> */}
+          <div className="pt-50">
+            <h2 className="text-6xl font-bold tracking-tight text-black">
+              Sign In
+            </h2>
+            <h3 className="text-2xl font-bold">to your account</h3>
+          </div>
 
-        <div className="mt-3 mb-3">
-          <span className=" text-gray-500">
-            Enter your email and password to log in
-          </span>
-        </div>
+          <div className="mt-3 mb-3">
+            <span className=" text-gray-500">
+              Enter your email and password to log in
+            </span>
+          </div>
 
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-          <form onSubmit={handleLogin} className="space-y-6">
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-sm/6 font-medium text-gray-900"
-              >
-                Email address
-              </label>
-              <div className="mt-2">
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  autoComplete="email"
-                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between">
+          <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+            <form onSubmit={handleLogin} className="space-y-6">
+              <div>
                 <label
-                  htmlFor="password"
+                  htmlFor="email"
                   className="block text-sm/6 font-medium text-gray-900"
                 >
-                  Password
+                  Email address
                 </label>
-                <div className="text-sm">
-                  {/* <a
+                <div className="mt-2">
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                    autoComplete="email"
+                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between">
+                  <label
+                    htmlFor="password"
+                    className="block text-sm/6 font-medium text-gray-900"
+                  >
+                    Password
+                  </label>
+                  <div className="text-sm">
+                    {/* <a
                     href="#"
                     className="font-semibold text-indigo-400 hover:text-indigo-300"
                   >
                     Forgot password?
                   </a> */}
+                  </div>
+                </div>
+                <div className="relative flex items-center">
+                  <input
+                    id="password"
+                    name="password"
+                    type={showPassword ? "password" : "text"}
+                    required
+                    autoComplete="current-password"
+                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 pr-10"
+                    onChange={(e) => setPassword(e.target.value)}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors hover:cursor-pointer"
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
                 </div>
               </div>
-              <div className="relative flex items-center">
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? "password" : "text"}
-                  required
-                  autoComplete="current-password"
-                  className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 pr-10"
-                  onChange={(e) => setPassword(e.target.value)}
-                />
+
+              <div className="relative flex items-center"></div>
+
+              <div>
                 <button
-                  type="button"
-                  onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  type="submit"
+                  className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 hover:cursor-pointer"
                 >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  Log In
                 </button>
               </div>
-            </div>
+            </form>
 
-            <div className="relative flex items-center"></div>
-
-            <div>
-              <button
-                type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+            <p className="mt-10 text-center text-sm/6 text-gray-500">
+              Don't have an account?{" "}
+              <a
+                // href="/register"
+                onClick={() => navigate("/register")}
+                className="font-semibold text-indigo-400 hover:text-indigo-300 hover:cursor-pointer"
               >
-                Log In
-              </button>
-            </div>
-          </form>
-
-          <p className="mt-10 text-center text-sm/6 text-gray-500">
-            Don't have an account?{" "}
-            <a
-              // href="/register"
-              onClick={() => navigate("/register")}
-              className="font-semibold text-indigo-400 hover:text-indigo-300"
-            >
-              Sign Up
-            </a>
-          </p>
+                Sign Up
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </>
