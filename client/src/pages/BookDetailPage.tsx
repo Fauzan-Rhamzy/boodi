@@ -38,7 +38,6 @@ export default function BookDetailPage() {
         return <p>Loading...</p>;
     }
 
-    console.log(book)
   return (
     <div className="w-full min-h-screen relative"
        style={{
@@ -47,7 +46,9 @@ export default function BookDetailPage() {
             backgroundRepeat: "repeat-y",
             backgroundPosition: "top center",
         }}>
-        <BackArrow/> 
+        <div className="w-full flex justify-start px-10">
+            <BackArrow />
+        </div>
 
         <div className="flex flex-col items-center pt-5 pb-10 px-4">
             <img src={book1} alt="ex1" className="w-45 h-auto object-cover rounded-3xl mt-15"/>
