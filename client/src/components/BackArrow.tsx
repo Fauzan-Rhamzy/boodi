@@ -8,7 +8,7 @@ interface BackArrowProps {
 export default function BackArrow({ backPath = "/" }: BackArrowProps) {
   const navigate = useNavigate();
   return (
-    <div className="absolute top-20">
+    <div className="absolute top-10">
       <button
         type="button"
         onClick={() => navigate(backPath)}
