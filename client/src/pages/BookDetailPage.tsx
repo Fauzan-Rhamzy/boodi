@@ -26,7 +26,7 @@ export default function BookDetailPage() {
     fetch(`http://localhost:8080/api/books/${id}`)
       .then((res) => res.json())
       .then((data) => setBook(data.data))
-      .catch((err) => console.error("gagal fetch:", err));
+      .catch((err) => console.error("fetch failed:", err));
   }, [id]);
 
   if (!book) {
@@ -45,12 +45,19 @@ export default function BookDetailPage() {
     >
       <BackArrow />
 
-      <div className="flex flex-col items-center pt-12 pb-10 px-4">
+      <div className="flex flex-col items-center pt-5 pb-10 px-4">
         <img
           src={book1}
           alt="ex1"
           className="w-45 h-auto object-cover rounded-3xl mt-15"
         />
+
+        <h1
+          className="text-center text-3xl font-bold text-gray-900 mb-2"
+          style={{ marginTop: "5px" }}
+        >
+          {book.title}
+        </h1>
 
         <h1
           className="text-center text-3xl font-bold text-gray-900 mb-2"
