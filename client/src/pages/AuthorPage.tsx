@@ -41,9 +41,11 @@ export default function AuthorPage() {
                 backgroundRepeat: "repeat-y",
                 backgroundPosition: "top center",
             }}>
-            <BackArrow/> 
+            <div className="w-full flex justify-start px-10">
+                <BackArrow />
+            </div> 
 
-            <div className="flex flex-col items-center pt-5 pb-10 px-4">
+            <div className="flex flex-col items-center pt-2 pb-10 px-4">
                 {/* profile pict dan nama */}
                 <img 
                     src={avatar} 
