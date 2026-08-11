@@ -1,8 +1,9 @@
 import bg from "../assets/bg-author.png";
 import avatar from "../assets/avatar.png"
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import BackArrow from "../components/BackArrow";
+import api from "../lib/axios";
 
 export interface BookResponse {
     id: number;
@@ -19,13 +20,14 @@ export interface Author {
 }
 
 export default function AuthorPage() {
+    const navigate = useNavigate();
     const { id } = useParams(); 
     const [author, setAuthor] = useState<Author | null>(null);
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/author/${id}`) 
-        .then((res) => res.json())
-        .then((data) => setAuthor(data.data))
+        api
+        .get(`/api/author/${id}`)
+        .then((res) => setAuthor(res.data.data)) 
         .catch((err) => console.error("fetch failed:", err));
     }, [id]);
     
@@ -42,7 +44,7 @@ export default function AuthorPage() {
                 backgroundPosition: "top center",
             }}>
             <div className="w-full flex justify-start px-10">
-                <BackArrow />
+                <BackArrow useHistory={true} backPath="/" />
             </div> 
 
             <div className="flex flex-col items-center pt-2 pb-10 px-4">
