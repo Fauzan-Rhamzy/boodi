@@ -11,5 +11,5 @@ type Author struct {
 type BookResponse struct {
 	ID    int    `json:"id"`
 	Title string `json:"title"`
-	Cover string `json:"Cover"`
+	Cover string `json:"cover"`
 }
