@@ -2,8 +2,8 @@ import BackArrow from "../components/BackArrow";
 import bgDetailBook from "../assets/bg-detailBooks.png";
 import { Plus, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import book1 from "../assets/booksCover/mindOverMatter.png"
+import { Link, useNavigate, useParams } from "react-router-dom";
+import api from "../lib/axios";
 
 interface AuthorResponse {
   id: number;
@@ -24,13 +24,14 @@ export interface Book {
 }
 
 export default function BookDetailPage() {
+    const navigate = useNavigate();
     const { id } = useParams(); 
     const [book, setBook] = useState<Book | null>(null);
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/books/${id}`) 
-        .then((res) => res.json())
-        .then((data) => setBook(data.data))
+        api
+        .get(`/api/bookDetail/${id}`)
+        .then((res) => setBook(res.data.data)) 
         .catch((err) => console.error("fetch failed:", err));
     }, [id]);
 
@@ -47,11 +48,11 @@ export default function BookDetailPage() {
             backgroundPosition: "top center",
         }}>
         <div className="w-full flex justify-start px-10">
-            <BackArrow />
+            <BackArrow useHistory={true} backPath="/" />
         </div>
 
         <div className="flex flex-col items-center pt-5 pb-10 px-4">
-            <img src={book1} alt="ex1" className="w-45 h-auto object-cover rounded-3xl mt-15"/>
+            <img src={`/booksCover/${book.cover}`} alt={book.title} className="w-45 h-auto object-cover rounded-3xl mt-15"/>
             
             <h1 className="text-center text-3xl font-bold text-gray-900 mb-2"
                 style={{marginTop: '5px'}}>
@@ -61,10 +62,6 @@ export default function BookDetailPage() {
             <div className="flex items-center gap-1 text-gray-700 mb-2">
                 <span className="text-gray-900">{book.year}</span>
                 <span>•</span>
-                {/* <span className="whitespace-nowrap">Written by</span> */}
-                {/* <span className="font-bold underline cursor-pointer text-gray-900 underline-offset-3">
-                    {book.authors}
-                </span> */}
 
                 {book.authors && book.authors.length > 0 ? (
                     <>
