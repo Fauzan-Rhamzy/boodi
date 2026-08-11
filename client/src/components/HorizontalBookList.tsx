@@ -13,7 +13,7 @@ export default function HorizontalBookList({
     <section>
       {/* <h2 className="mb-3 text-lg font-bold">{title}</h2> */}
 
-      <div className="overflow-x-auto scrollbar-hide">
+      <div className="overflow-x-auto scrollbar-hide mt-2">
         <div className="flex w-max gap-4">
           {books.map((book) => (
             <div key={book.id} className="w-28 shrink-0">
@@ -23,9 +23,9 @@ export default function HorizontalBookList({
                 className="h-40 w-28 rounded-xl object-cover"
               />
 
-              <p className="mt-2 truncate text-sm font-semibold">
+              {/* <p className="mt-2 truncate text-sm font-semibold">
                 {book.title}
-              </p>
+              </p> */}
             </div>
           ))}
         </div>
