@@ -30,3 +30,14 @@ func (r *Repository) Create(req RegisterRequest, hashedPassword string) (int, er
 	`, req.Email, hashedPassword, req.FirstName, req.LastName, req.Phone).Scan(&id)
 	return id, err
 }
+
+func (r *Repository) GetFirstName(userID int) (string, error) {
+	var firstName string
+
+	err := r.db.QueryRow(
+		`SELECT first_name FROM Users WHERE user_id = $1`,
+		userID,
+	).Scan(&firstName)
+
+	return firstName, err
+}

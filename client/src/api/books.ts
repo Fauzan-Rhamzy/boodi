@@ -12,5 +12,13 @@ export async function searchBooks(query: string): Promise<Book[]> {
 export async function getTrendingBooks(): Promise<Book[]> {
   const response = await api.get<Book[]>("/api/books/trending");
 
-  return response.data;
+  return response.data.data;
+}
+export async function getCurrentlyReading(): Promise<Book[]> {
+  const response = await api.get<{
+    data: Book[];
+    success: boolean;
+  }>("/api/books/currently-reading");
+
+  return response.data.data;
 }
