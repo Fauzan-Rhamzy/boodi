@@ -24,3 +24,6 @@ func (s *Service) GetByID(id int) (*Book, error) {
 func (s *Service) SearchBooks(query string) ([]Book, error) {
 	return s.repo.SearchBooks(query)
 }
+func (s *Service) GetTrendingBooks() ([]Book, error) {
+    return s.repo.GetTrendingBooks()
+}

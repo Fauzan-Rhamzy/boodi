@@ -43,17 +43,26 @@ func (h *Handler) GetByID(w http.ResponseWriter, r *http.Request) {
 	response.JSON(w, http.StatusOK, book)
 }
 func (h *Handler) SearchBooks(w http.ResponseWriter, r *http.Request) {
-    query := r.URL.Query().Get("q")
+	query := r.URL.Query().Get("q")
 
-    books, err := h.service.SearchBooks(query)
+	books, err := h.service.SearchBooks(query)
 
-    if err != nil {
-        log.Printf("SearchBooks error: %v", err)
-        http.Error(w, "Failed to search books", http.StatusInternalServerError)
-        return
-    }
+	if err != nil {
+		log.Printf("SearchBooks error: %v", err)
+		http.Error(w, "Failed to search books", http.StatusInternalServerError)
+		return
+	}
 
-    w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", "application/json")
 
-    json.NewEncoder(w).Encode(books)
+	json.NewEncoder(w).Encode(books)
+}
+func (h *Handler) GetTrendingBooks(w http.ResponseWriter, r *http.Request) {
+	books, err := h.service.GetTrendingBooks()
+	if err != nil {
+		response.Error(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	response.JSON(w, http.StatusOK, books)
 }
