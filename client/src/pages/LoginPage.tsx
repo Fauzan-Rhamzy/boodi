@@ -19,6 +19,7 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     // console.log(email, password);
     e.preventDefault();
+    // if (!email) return setError("Input ")
 
     try {
       await login({ email, password });
@@ -125,7 +126,11 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              <div className="relative flex items-center"></div>
+              {error && (
+                <div className="rounded-md bg-red-50 px-3 py-2">
+                  <p className="text-sm text-red-600">{error}</p>
+                </div>
+              )}
 
               <div>
                 <button

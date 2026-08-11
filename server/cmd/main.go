@@ -97,6 +97,9 @@ func main() {
 		r.Use(middleware.RequireAuth)
 		r.Get("/api/auth/me", authHandler.Me)
 		r.Get("/api/books", bookHandler.GetAll)
+		r.Get("/api/bookDetail/{id}", bookHandler.GetByID)
+		r.Get("/api/author/{id}", authorHandler.GetByID)
+    r.Get("/api/book/search", bookHandler.SearchBooks)
 	})
 
 	// protected routes for admin

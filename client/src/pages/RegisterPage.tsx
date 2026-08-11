@@ -14,10 +14,36 @@ export default function RegisterPage() {
   const [phoneNumber, setPhoneNumber] = useState<string | undefined>("");
   const [password, setPassword] = useState<string>("");
 
-  const [showPassword, setShowPassword] = useState<boolean>(true);
+  const [error, setError] = useState("");
+
+  const [hidePassword, setHidePassword] = useState<boolean>(true);
   const navigate = useNavigate();
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email.trim()) {
+      setError("Email should not be empty");
+      return;
+    }
+    if (!firstName.trim()) {
+      setError("First name should not be empty");
+      return;
+    }
+    // if (!password.trim()) {
+    //   setError("Password should not be empty");
+    //   return;
+    // }
+    if (password.length < 8) {
+      setError("Password should at least be 8 characters long");
+      return;
+    }
+    if (!phoneNumber) {
+      setError("Phone should not be empty");
+      return;
+    }
+    if (phoneNumber?.length && phoneNumber?.length < 7) {
+      setError("Phone number is too short");
+      return;
+    }
 
     try {
       await register({
@@ -28,8 +54,9 @@ export default function RegisterPage() {
         phone: phoneNumber || "",
       });
       navigate("/login");
-    } catch (error: any) {
-      console.log(error);
+    } catch (err: any) {
+      console.log(err);
+      setError(err.response?.data || "Failed to register");
     }
   };
   return (
@@ -147,7 +174,7 @@ export default function RegisterPage() {
                 <input
                   id="password"
                   name="password"
-                  type={showPassword ? "password" : "text"}
+                  type={hidePassword ? "password" : "text"}
                   required
                   autoComplete="current-password"
                   className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 pr-10"
@@ -155,11 +182,11 @@ export default function RegisterPage() {
                 />
                 <button
                   type="button"
-                  onClick={() => setShowPassword((prev) => !prev)}
+                  onClick={() => setHidePassword((prev) => !prev)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors hover:cursor-pointer"
-                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  aria-label={hidePassword ? "Hide password" : "Show password"}
                 >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  {hidePassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
             </div>
@@ -204,7 +231,11 @@ export default function RegisterPage() {
               </div>
             </div>
 
-            <div className="relative flex items-center"></div>
+            {error && (
+              <div className="rounded-md bg-red-50 px-3 py-2">
+                <p className="text-sm text-red-600">{error}</p>
+              </div>
+            )}
 
             <div>
               <button

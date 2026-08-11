@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/lib/pq"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -23,8 +24,24 @@ func (s *Service) Register(req RegisterRequest) error {
 	if err != nil {
 		return err
 	}
+
 	_, err = s.repo.Create(req, string(hashed))
-	return err
+	if err != nil {
+		var pqErr *pq.Error
+		if errors.As(err, &pqErr) && pqErr.Code == "23505" {
+			switch pqErr.Constraint {
+			case "users_email_key":
+				return errors.New("This email is already registered")
+			case "users_phone_key":
+				return errors.New("This phone number is already registered")
+			default:
+				return errors.New("data already exists")
+			}
+		}
+		return errors.New("registration failed")
+
+	}
+	return nil
 }
 
 func (s *Service) Login(req LoginRequest) (string, error) {
