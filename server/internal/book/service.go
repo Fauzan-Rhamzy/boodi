@@ -3,10 +3,10 @@ package book
 import "errors"
 
 type Service struct {
-	repo *BookRepository
+	repo *Repository
 }
 
-func NewService(repo *BookRepository) *Service {
+func NewService(repo *Repository) *Service {
 	return &Service{repo: repo}
 }
 
@@ -17,7 +17,7 @@ func (s *Service) GetAll() ([]Book, error) {
 func (s *Service) GetByID(id int) (*Book, error) {
 	book, err := s.repo.FindByID(id)
 	if err != nil {
-		return nil, errors.New("buku tidak ditemukan")
+		return nil, errors.New("book not found")
 	}
 	return book, nil
 }

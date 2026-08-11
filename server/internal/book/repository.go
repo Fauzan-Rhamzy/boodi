@@ -1,16 +1,18 @@
 package book
 
-import "database/sql"
+import (
+	"database/sql"
+)
 
-type BookRepository struct {
+type Repository struct {
 	db *sql.DB
 }
 
-func NewBookRepository(db *sql.DB) *BookRepository {
-	return &BookRepository{db: db}
+func NewRepository(db *sql.DB) *Repository {
+	return &Repository{db: db}
 }
 
-func (r *BookRepository) FindAll() ([]Book, error) {
+func (r *Repository) FindAll() ([]Book, error) {
 	rows, err := r.db.Query(`SELECT book_id, title, price, year, page, language, description, cover FROM book`)
 	if err != nil {
 		return nil, err
@@ -40,7 +42,7 @@ func (r *BookRepository) FindAll() ([]Book, error) {
 	return books, nil
 }
 
-func (r *BookRepository) FindByID(id int) (*Book, error) {
+func (r *Repository) FindByID(id int) (*Book, error) {
 	var b Book
 	err := r.db.QueryRow(`SELECT book_id, title, price, year, page, language, description, cover FROM book WHERE book_id = $1`, id).Scan(
 		&b.BookID,
@@ -71,7 +73,7 @@ func (r *BookRepository) FindByID(id int) (*Book, error) {
 	return &b, nil
 }
 
-func (r *BookRepository) FindGenresByBookID(id int) ([]string, error) {
+func (r *Repository) FindGenresByBookID(id int) ([]string, error) {
 	rows, err := r.db.Query(`SELECT g.name 
 							FROM Genre g
 							JOIN BookGenre bg ON bg.book_genre_id = g.genre_id
@@ -93,10 +95,10 @@ func (r *BookRepository) FindGenresByBookID(id int) ([]string, error) {
 	return genres, nil
 }
 
-func (r *BookRepository) FindAuthorsByBookID(id int) ([]string, error) {
-	rows, err := r.db.Query(`SELECT a.name 
+func (r *Repository) FindAuthorsByBookID(id int) ([]AuthorResponse, error) {
+	rows, err := r.db.Query(`SELECT a.author_id, a.name 
 							FROM Author a
-							JOIN AuthorBook ab ON ab.author_book_id = a.author_id
+							JOIN AuthorBook ab ON ab.author_id = a.author_id
 							WHERE ab.book_id = $1`, id)
 
 	if err != nil {
@@ -104,18 +106,18 @@ func (r *BookRepository) FindAuthorsByBookID(id int) ([]string, error) {
 	}
 	defer rows.Close()
 
-	var authors []string
+	var authors []AuthorResponse
 	for rows.Next() {
-		var name string
-		if err := rows.Scan(&name); err != nil {
+		var author AuthorResponse
+		if err := rows.Scan(&author.ID, &author.Name); err != nil {
 			return nil, err
 		}
-		authors = append(authors, name)
+		authors = append(authors, author)
 	}
 	return authors, nil
 }
 
-func (r *BookRepository) SearchBooks(query string)([]Book, error){
+func (r *Repository) SearchBooks(query string)([]Book, error){
 	rows, err := r.db.Query(`
 	SELECT book_id, title, cover
 	FROM book

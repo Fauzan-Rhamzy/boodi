@@ -14,7 +14,7 @@ export default function RegisterPage() {
   const [phoneNumber, setPhoneNumber] = useState<string | undefined>("");
   const [password, setPassword] = useState<string>("");
 
-  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(true);
   const navigate = useNavigate();
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,9 +34,17 @@ export default function RegisterPage() {
   };
   return (
     <>
-      <div
+      {/* <div
         className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8 relative bg-cover bg-center bg-no-repeat"
         style={{ backgroundImage: `url(${bg})` }}
+      > */}
+      <div
+        className="w-full min-h-screen p-10"
+        style={{
+          backgroundImage: `url(${bg})`,
+          backgroundSize: "100% 100%",
+          backgroundRepeat: "no-repeat",
+        }}
       >
         {/* <div className="absolute top-6 left-6">
           <button
@@ -49,7 +57,7 @@ export default function RegisterPage() {
         </div> */}
         <BackArrow />
 
-        <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+        <div className="pt-25">
           <h2 className="text-6xl font-bold tracking-tight text-black">
             Register
           </h2>
@@ -148,7 +156,7 @@ export default function RegisterPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors hover:cursor-pointer"
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -201,7 +209,7 @@ export default function RegisterPage() {
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 hover:cursor-pointer"
               >
                 Register
               </button>
@@ -213,7 +221,7 @@ export default function RegisterPage() {
             <a
               //   href="/login"
               onClick={() => navigate("/login")}
-              className="font-semibold text-indigo-400 hover:text-indigo-300"
+              className="font-semibold text-indigo-400 hover:text-indigo-300 hover:cursor-pointer"
             >
               Log In
             </a>

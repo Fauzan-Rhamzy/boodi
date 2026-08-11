@@ -13,6 +13,7 @@ import (
 	//"server/controllers"
 
 	"server/internal/auth"
+	"server/internal/author"
 	"server/internal/book"
 	"server/internal/shared/db"
 	"server/internal/shared/middleware"
@@ -57,9 +58,14 @@ func main() {
 	authHandler := auth.NewHandler(authService)
 
 	// book
-	bookRepo := book.NewBookRepository(dbCon)
+	bookRepo := book.NewRepository(dbCon)
 	bookService := book.NewService(bookRepo)
 	bookHandler := book.NewHandler(bookService)
+
+	//author
+	authorRepo := author.NewRepository(dbCon)
+	authorService := author.NewService(authorRepo)
+	authorHandler := author.NewHandler(authorService)
 
 	// collection
 
@@ -78,14 +84,23 @@ func main() {
 	// public routes
 	router.Post("/api/auth/login", authHandler.Login)
 	router.Post("/api/auth/register", authHandler.Register)
-	router.Get("/api/books", bookHandler.GetAll)
+	router.Get("/api/auth/logout", authHandler.Logout)
+	// router.Get("/api/books", bookHandler.GetAll)
 	router.Get("/api/books/{id}", bookHandler.GetByID)
 	router.Get("/api/book/search", bookHandler.SearchBooks)
+	router.Get("/api/author/{id}", authorHandler.GetByID)
 
-	// protected routes fro admin
+	// protected routes for logged in users
 	router.Group(func(r chi.Router) {
 		r.Use(middleware.RequireAuth)
-		// r.Get("/api/books", bookHandler.GetAll)
+		r.Get("/api/auth/me", authHandler.Me)
+		r.Get("/api/books", bookHandler.GetAll)
+	})
+
+	// protected routes for admin
+	router.Group(func(r chi.Router) {
+		r.Use(middleware.RequireAuth)
+		r.Use(middleware.RequireAdmin)
 		//  r.Post("/api/books", bookHandler.Create)
 		// r.Delete("/api/books/{id}", bookHandler.Delete)
 	})
