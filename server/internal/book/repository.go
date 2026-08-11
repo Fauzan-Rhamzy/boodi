@@ -116,3 +116,37 @@ func (r *Repository) FindAuthorsByBookID(id int) ([]AuthorResponse, error) {
 	}
 	return authors, nil
 }
+
+func (r *Repository) SearchBooks(query string)([]Book, error){
+	rows, err := r.db.Query(`
+	SELECT book_id, title, cover
+	FROM book
+	WHERE title ILIKE '%'||$1||'%'`, query)
+
+	if err != nil{
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+    return nil, err
+}
+	defer rows.Close()
+
+	var books []Book
+	
+	for rows.Next(){
+		var book Book
+
+		err:= rows.Scan(
+			&book.BookID,
+			&book.Title,
+			&book.Cover,
+		)
+
+		if err != nil{
+			return nil, err
+		}
+
+		books = append(books, book)
+	}
+	return books, nil
+}
