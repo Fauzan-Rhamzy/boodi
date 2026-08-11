@@ -2,15 +2,15 @@ package book
 
 import "database/sql"
 
-type Repository struct {
+type BookRepository struct {
 	db *sql.DB
 }
 
-func NewRepository(db *sql.DB) *Repository {
-	return &Repository{db: db}
+func NewBookRepository(db *sql.DB) *BookRepository {
+	return &BookRepository{db: db}
 }
 
-func (r *Repository) FindAll() ([]Book, error) {
+func (r *BookRepository) FindAll() ([]Book, error) {
 	rows, err := r.db.Query(`SELECT book_id, title, price, year, page, language, description, cover FROM book`)
 	if err != nil {
 		return nil, err
@@ -40,7 +40,7 @@ func (r *Repository) FindAll() ([]Book, error) {
 	return books, nil
 }
 
-func (r *Repository) FindByID(id int) (*Book, error) {
+func (r *BookRepository) FindByID(id int) (*Book, error) {
 	var b Book
 	err := r.db.QueryRow(`SELECT book_id, title, price, year, page, language, description, cover FROM book WHERE book_id = $1`, id).Scan(
 		&b.BookID,
@@ -71,7 +71,7 @@ func (r *Repository) FindByID(id int) (*Book, error) {
 	return &b, nil
 }
 
-func (r *Repository) FindGenresByBookID(id int) ([]string, error) {
+func (r *BookRepository) FindGenresByBookID(id int) ([]string, error) {
 	rows, err := r.db.Query(`SELECT g.name 
 							FROM Genre g
 							JOIN BookGenre bg ON bg.book_genre_id = g.genre_id
@@ -93,7 +93,7 @@ func (r *Repository) FindGenresByBookID(id int) ([]string, error) {
 	return genres, nil
 }
 
-func (r *Repository) FindAuthorsByBookID(id int) ([]string, error) {
+func (r *BookRepository) FindAuthorsByBookID(id int) ([]string, error) {
 	rows, err := r.db.Query(`SELECT a.name 
 							FROM Author a
 							JOIN AuthorBook ab ON ab.author_book_id = a.author_id
@@ -113,4 +113,38 @@ func (r *Repository) FindAuthorsByBookID(id int) ([]string, error) {
 		authors = append(authors, name)
 	}
 	return authors, nil
+}
+
+func (r *BookRepository) SearchBooks(query string)([]Book, error){
+	rows, err := r.db.Query(`
+	SELECT book_id, title, cover
+	FROM book
+	WHERE title ILIKE '%'||$1||'%'`, query)
+
+	if err != nil{
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+    return nil, err
+}
+	defer rows.Close()
+
+	var books []Book
+	
+	for rows.Next(){
+		var book Book
+
+		err:= rows.Scan(
+			&book.BookID,
+			&book.Title,
+			&book.Cover,
+		)
+
+		if err != nil{
+			return nil, err
+		}
+
+		books = append(books, book)
+	}
+	return books, nil
 }

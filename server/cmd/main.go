@@ -57,7 +57,7 @@ func main() {
 	authHandler := auth.NewHandler(authService)
 
 	// book
-	bookRepo := book.NewRepository(dbCon)
+	bookRepo := book.NewBookRepository(dbCon)
 	bookService := book.NewService(bookRepo)
 	bookHandler := book.NewHandler(bookService)
 
@@ -80,6 +80,7 @@ func main() {
 	router.Post("/api/auth/register", authHandler.Register)
 	router.Get("/api/books", bookHandler.GetAll)
 	router.Get("/api/books/{id}", bookHandler.GetByID)
+	router.Get("/api/book/search", bookHandler.SearchBooks)
 
 	// protected routes fro admin
 	router.Group(func(r chi.Router) {

@@ -11,6 +11,7 @@ import LibraryPage from "./pages/LibraryPage.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
 import NotFoundPage from "./pages/NotFoundPage.tsx";
 import BookDetailPage from "./pages/BookDetailPage.tsx";
+import SearchResultPage from "./pages/SearchResultPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ const router = createBrowserRouter([
       {
         path: "*",
         element: <NotFoundPage />,
+      },
+      {
+        path: "/search",
+        element: <SearchResultPage />,
       },
     ],
   },

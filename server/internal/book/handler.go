@@ -1,6 +1,8 @@
 package book
 
 import (
+	"encoding/json"
+	"log"
 	"net/http"
 	"server/internal/shared/response"
 	"strconv"
@@ -39,4 +41,19 @@ func (h *Handler) GetByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	response.JSON(w, http.StatusOK, book)
+}
+func (h *Handler) SearchBooks(w http.ResponseWriter, r *http.Request) {
+    query := r.URL.Query().Get("q")
+
+    books, err := h.service.SearchBooks(query)
+
+    if err != nil {
+        log.Printf("SearchBooks error: %v", err)
+        http.Error(w, "Failed to search books", http.StatusInternalServerError)
+        return
+    }
+
+    w.Header().Set("Content-Type", "application/json")
+
+    json.NewEncoder(w).Encode(books)
 }
