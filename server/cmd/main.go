@@ -15,6 +15,7 @@ import (
 	"server/internal/auth"
 	"server/internal/author"
 	"server/internal/book"
+	"server/internal/review"
 	"server/internal/shared/db"
 	"server/internal/shared/middleware"
 )
@@ -70,6 +71,9 @@ func main() {
 	// collection
 
 	// review
+	reviewRepo := review.NewRepository(dbCon)
+	reviewService := review.NewService(reviewRepo)
+	reviewHandler := review.NewHandler(reviewService)
 	// reviewRepo    := review.NewRepository(db)
 	// reviewService := review.NewService(reviewRepo)
 	// reviewHandler := review.NewHandler(reviewService)
@@ -91,6 +95,7 @@ func main() {
 	router.Get("/api/books/{id}", bookHandler.GetByID)
 	router.Get("/api/book/search", bookHandler.SearchBooks)
 	router.Get("/api/author/{id}", authorHandler.GetByID)
+	router.Get("/api/reviews/trending", reviewHandler.GetTrendingReviews)
 	
 	// protected routes for logged in users
 	router.Group(func(r chi.Router) {

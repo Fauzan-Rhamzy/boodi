@@ -1,13 +1,10 @@
 import { Outlet } from "react-router-dom";
-import Navbar from "./components/Navbar";
 
 export default function App() {
   return (
-    <div className="min-h-screen flex justify-center bg-gray-300">
-      <div className="w-97.5 min-h-screen bg-white relative">
+    <div className="h-screen scrollbar-hide flex justify-center bg-gray-300">
+      <div className="relative scrollbar-hide w-97.5 h-screenbg-white">
         <Outlet />
-
-        {/* <Navbar /> */}
       </div>
     </div>
   );
