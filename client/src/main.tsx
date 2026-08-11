@@ -12,6 +12,9 @@ import LibraryPage from "./pages/LibraryPage.tsx";
 import ProfilePage from "./pages/ProfilePage.tsx";
 import NotFoundPage from "./pages/NotFoundPage.tsx";
 import BookDetailPage from "./pages/BookDetailPage.tsx";
+import { AuthProvider } from "./features/auth/AuthContext.tsx";
+import GuestRoute from "./components/GuestRoute.tsx";
+import ProtectedRoute from "./components/ProtectedRoute.tsx";
 
 const router = createBrowserRouter([
   {
@@ -23,29 +26,60 @@ const router = createBrowserRouter([
         element: <LandingPage />,
       },
       {
-        path: '/author/:id', 
-        element: <AuthorPage />,
-      }, 
+        path: "/author/:id",
+        element: (
+          <ProtectedRoute>
+            <AuthorPage />
+          </ProtectedRoute>
+        ),
+      },
       {
         path: "/login",
-        element: <LoginPage />,
+        element: (
+          <GuestRoute>
+            <LoginPage />
+          </GuestRoute>
+        ),
       },
       {
         path: "/register",
-        element: <RegisterPage />,
+        element: (
+          <GuestRoute>
+            <RegisterPage />
+          </GuestRoute>
+        ),
       },
-      { path: "/home", element: <HomePage /> },
+      {
+        path: "/home",
+        element: (
+          <ProtectedRoute>
+            <HomePage />
+          </ProtectedRoute>
+        ),
+      },
       {
         path: "/library",
-        element: <LibraryPage />,
+        element: (
+          <ProtectedRoute>
+            <LibraryPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/profile",
-        element: <ProfilePage />,
+        element: (
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "/bookDetail/:id",
-        element: <BookDetailPage />,
+        element: (
+          <ProtectedRoute>
+            <BookDetailPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: "*",
@@ -56,6 +90,8 @@ const router = createBrowserRouter([
 ]);
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </StrictMode>,
 );
