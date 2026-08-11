@@ -39,12 +39,12 @@ INSERT INTO Book (title, price, year, page, language, description, cover) VALUES
 
 
 -- AUTHORS
-INSERT INTO Author (name, description) VALUES
-('Arthur Conan', 'Master of mystery and suspense writing with over 20 bestsellers.'),
-('Stella Nova', 'Award-winning science fiction author and astrophysicist.'),
-('Dr. Alan Mind', 'Renowned psychologist, speaker, and self-help guru.'),
-('Carlos Ruiz', 'Bestselling thriller author originating from Madrid, Spain.'),
-('Eleanor Vance', 'Historian and professor at Oxford University.');
+INSERT INTO Author (name, description, profile_pic) VALUES
+('Arthur Conan', 'Master of mystery and suspense writing with over 20 bestsellers.', NULL),
+('Stella Nova', 'Award-winning science fiction author and astrophysicist.', NULL),
+('Dr. Alan Mind', 'Renowned psychologist, speaker, and self-help guru.', NULL),
+('Carlos Ruiz', 'Bestselling thriller author originating from Madrid, Spain.', NULL),
+('Eleanor Vance', 'Historian and professor at Oxford University.', NULL);
 
 -- AUTHOR_BOOK (Linking Authors to Books)
 INSERT INTO AuthorBook (author_id, book_id) VALUES

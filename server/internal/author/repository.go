@@ -14,7 +14,7 @@ func NewRepository(db *sql.DB) *Repository {
 
 func (r *Repository) FindByID(id int) (*Author, error) {
 	var a Author
-	query := `SELECT author_id, name, description, COALESCE(profile_pict, '') FROM Author WHERE author_id = $1`
+	query := `SELECT author_id, name, description, COALESCE(profile_pic, '') FROM Author WHERE author_id = $1`
 
 	err := r.db.QueryRow(query, id).Scan(
 		&a.AuthorID,
