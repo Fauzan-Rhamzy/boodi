@@ -4,21 +4,29 @@ import { useState } from "react";
 import BackArrow from "../components/BackArrow";
 import { useNavigate } from "react-router";
 import { login } from "../features/auth/api";
+import { useAuth } from "../features/auth/AuthContext";
 
 export default function LoginPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(true);
+  const [error, setError] = useState("");
+
+  const { refetch } = useAuth();
+
   const navigate = useNavigate();
+
   const handleLogin = async (e: React.FormEvent) => {
     // console.log(email, password);
     e.preventDefault();
 
     try {
       await login({ email, password });
+      await refetch();
       navigate("/home");
-    } catch (error: any) {
-      console.log(error);
+    } catch (err: any) {
+      console.log(err);
+      setError(err.response?.data || "Failed to login");
     }
   };
   return (
@@ -28,7 +36,7 @@ export default function LoginPage() {
         style={{ backgroundImage: `url(${bg})` }}
       > */}
       <div
-        className="w-full h-screen p-10"
+        className="w-full min-h-screen p-10"
         style={{
           backgroundImage: `url(${bg})`,
           backgroundSize: "100% 100%",
@@ -69,7 +77,10 @@ export default function LoginPage() {
                     required
                     autoComplete="email"
                     className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                    onChange={(e) => setEmail(e.target.value)}
+                    value={email}
+                    onChange={(e) =>
+                      setEmail(e.target.value.replace(/\s/g, ""))
+                    }
                   />
                 </div>
               </div>

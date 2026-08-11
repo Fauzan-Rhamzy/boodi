@@ -53,7 +53,3 @@ func (s *Service) Login(req LoginRequest) (string, error) {
 
 	return tokenString, nil
 }
-
-func (s *Service) Logout(req LoginRequest) {
-	return
-}

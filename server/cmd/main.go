@@ -92,6 +92,7 @@ func main() {
 	// protected routes for logged in users
 	router.Group(func(r chi.Router) {
 		r.Use(middleware.RequireAuth)
+		r.Get("/api/auth/me", authHandler.Me)
 		r.Get("/api/books", bookHandler.GetAll)
 	})
 
