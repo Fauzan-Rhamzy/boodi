@@ -22,11 +22,17 @@ func (h *Handler) Register(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "request is not valid", http.StatusBadRequest)
 		return
 	}
+
 	if err := h.service.Register(req); err != nil {
+		if err.Error() == "email already registered" {
+			http.Error(w, err.Error(), http.StatusConflict)
+			return
+		}
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(map[string]string{
 		"message": "register success",
