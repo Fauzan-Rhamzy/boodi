@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"os"
+	"server/internal/shared/middleware"
 	"strconv"
 )
 
@@ -60,5 +61,29 @@ func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{
 		"message": "login success",
+	})
+}
+
+func (h *Handler) Logout(w http.ResponseWriter, r *http.Request) {
+	https := os.Getenv("HTTP_SECURE")
+	secure, _ := strconv.ParseBool(https)
+	http.SetCookie(w, &http.Cookie{
+		Name:     "token",
+		Value:    "",
+		HttpOnly: true,
+		Secure:   secure,
+		SameSite: http.SameSiteLaxMode,
+		Path:     "/",
+		MaxAge:   -1,
+	})
+}
+
+func (h *Handler) Me(w http.ResponseWriter, r *http.Request) {
+	user := middleware.GetUser(r)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]any{
+		"user_id": user.UserID,
+		"role":    user.Role,
 	})
 }

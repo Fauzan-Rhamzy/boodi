@@ -39,7 +39,7 @@ export default function RegisterPage() {
         style={{ backgroundImage: `url(${bg})` }}
       > */}
       <div
-        className="w-full h-screen p-10"
+        className="w-full min-h-screen p-10"
         style={{
           backgroundImage: `url(${bg})`,
           backgroundSize: "100% 100%",
