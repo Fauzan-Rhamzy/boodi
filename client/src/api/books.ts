@@ -1,10 +1,5 @@
 import api from "../lib/axios";
-
-export type Book = {
-  id: number;
-  title: string;
-  cover: string;
-};
+import type { Book } from "../types/book";
 
 export async function searchBooks(query: string): Promise<Book[]> {
   const response = await api.get("api/book/search", {
@@ -12,5 +7,10 @@ export async function searchBooks(query: string): Promise<Book[]> {
       q: query,
     },
   });
+  return response.data;
+}
+export async function getTrendingBooks(): Promise<Book[]> {
+  const response = await api.get<Book[]>("/api/books/trending");
+
   return response.data;
 }

@@ -86,9 +86,12 @@ func main() {
 	router.Post("/api/auth/register", authHandler.Register)
 	router.Get("/api/auth/logout", authHandler.Logout)
 	// router.Get("/api/books", bookHandler.GetAll)
-	// router.Get("/api/books/{id}", bookHandler.GetByID)
-	// router.Get("/api/author/{id}", authorHandler.GetByID)
+	router.Get("/api/books/trending", bookHandler.SearchBooks)
 
+	router.Get("/api/books/{id}", bookHandler.GetByID)
+	router.Get("/api/book/search", bookHandler.SearchBooks)
+	router.Get("/api/author/{id}", authorHandler.GetByID)
+	
 	// protected routes for logged in users
 	router.Group(func(r chi.Router) {
 		r.Use(middleware.RequireAuth)
@@ -106,6 +109,13 @@ func main() {
 		//  r.Post("/api/books", bookHandler.Create)
 		// r.Delete("/api/books/{id}", bookHandler.Delete)
 	})
+	router.Handle(
+    "/images/*",
+    http.StripPrefix(
+        "/images/",
+       http.FileServer(http.Dir("../images")),
+    ),
+)
 
 	fmt.Println("Server is running on http://localhost:" + port)
 	// http.ListenAndServe(":"+port, nil)

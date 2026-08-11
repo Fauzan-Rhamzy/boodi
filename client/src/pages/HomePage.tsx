@@ -4,7 +4,24 @@ import bgHome from "../assets/bg-home.png";
 import pfp from "../assets/dummy-pfp.png";
 import ReviewCard from "../components/ReviewCard";
 import Navbar from "../components/Navbar";
-export default function template() {
+import HorizontalBookList from "../components/HorizontalBookList";
+import { useEffect, useState } from "react";
+import type { Book } from "../types/book";
+import { getTrendingBooks } from "../api/books";
+export default function HomePage() {
+  const [trendingBooks, setTrendingBooks] = useState<Book[]>([]);
+  useEffect(() => {
+    async function fetchTrendingBooks() {
+      try {
+        const books = await getTrendingBooks();
+        setTrendingBooks(books);
+      } catch (error) {
+        console.error("Failed to get trending books:", error);
+      }
+    }
+
+    fetchTrendingBooks();
+  }, []);
   return (
     <div
       className="w-full min-h-screen"
@@ -56,7 +73,7 @@ export default function template() {
                 <ChevronsRight className="h-4 w-4" />
               </button>
             </div>
-            <div>image list</div>
+            <HorizontalBookList title="Trending Books" books={trendingBooks} />
           </div>
           {/* trending review */}
           <div className="mt-6 pb-30">

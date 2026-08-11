@@ -132,7 +132,7 @@ func (r *Repository) SearchBooks(query string)([]Book, error){
 	defer rows.Close()
 
 	var books []Book
-	
+	books = make([]Book, 0)
 	for rows.Next(){
 		var book Book
 
@@ -149,4 +149,55 @@ func (r *Repository) SearchBooks(query string)([]Book, error){
 		books = append(books, book)
 	}
 	return books, nil
+}
+func (r *Repository) GetTrendingBooks() ([]Book, error) {
+    rows, err := r.db.Query(`
+        SELECT
+            b.book_id,
+            b.title,
+            b.cover,
+            COUNT(DISTINCT ub.user_id) AS reader_count
+        FROM Book b
+        JOIN UserBook ub
+            ON ub.book_id = b.book_id
+        WHERE ub.logged_at >= NOW() - INTERVAL '30 days'
+        GROUP BY
+            b.book_id,
+            b.title,
+            b.cover
+        ORDER BY reader_count DESC
+        LIMIT 10;
+    `)
+
+    if err != nil {
+        return nil, err
+    }
+
+    defer rows.Close()
+
+    books := make([]Book, 0)
+
+    for rows.Next() {
+        var book Book
+        var readerCount int
+
+        err := rows.Scan(
+            &book.BookID,
+            &book.Title,
+            &book.Cover,
+            &readerCount,
+        )
+
+        if err != nil {
+            return nil, err
+        }
+
+        books = append(books, book)
+    }
+
+    if err := rows.Err(); err != nil {
+        return nil, err
+    }
+
+    return books, nil
 }

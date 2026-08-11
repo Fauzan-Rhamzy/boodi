@@ -20,12 +20,21 @@ export default function SearchResultPage() {
   return (
     <div>
       <h1>Results for {query}</h1>
-      {books.map((book) => (
-        <div key={book.id}>
-          <h2>{book.title}</h2>
-          <p>{book.cover}</p>
+      {books.length === 0 ? (
+        <div className="flex flex-col items-center justify-center px-6 py-10 text-center">
+          <p className="text-lg font-bold text-gray-700">No books found</p>
+
+          <p className="mt-1 text-sm text-gray-500">
+            No book with that title was found.
+          </p>
         </div>
-      ))}
+      ) : (
+        <div>
+          {books.map((book) => (
+            <div key={book.id}>{book.title}</div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
