@@ -15,6 +15,7 @@ export type RegisterRequest = {
 
 export type AuthUser = {
   user_id: number;
+  first_name: string;
   role: string;
 };
 

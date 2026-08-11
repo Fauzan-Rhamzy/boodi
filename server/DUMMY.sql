@@ -31,11 +31,11 @@ INSERT INTO Users (email, phone, password, first_name, last_name, profile_pic, r
 -- BOOKS
 -- BOOKS (Nama kolom disesuaikan dengan struktur CREATE TABLE Anda)
 INSERT INTO Book (title, price, year, page, language, description, cover) VALUES
-('The Silent Echo', 15.99, 2021, 320, 'EN', 'A gripping mystery about a forgotten town.', 'https://example.com/cover1.jpg'),
-('Journey to the Stars', 22.50, 2023, 450, 'EN', 'A sci-fi epic exploring the outer rim of the galaxy.', 'https://example.com/cover2.jpg'),
-('Mind Over Matter', 18.00, 2019, 280, 'EN', 'A profound self-help book on overcoming mental blocks.', 'https://example.com/cover3.jpg'),
-('El Misterio', 12.99, 2020, 210, 'ES', 'A Spanish thriller that keeps you on the edge of your seat.', 'https://example.com/cover4.jpg'),
-('History of the World', 29.99, 2015, 800, 'EN', 'A comprehensive look at human history from ancient to modern times.', 'https://example.com/cover5.jpg');
+('The Silent Echo', 15.99, 2021, 320, 'EN', 'A gripping mystery about a forgotten town.', 'books/book1.png'),
+('Journey to the Stars', 22.50, 2023, 450, 'EN', 'A sci-fi epic exploring the outer rim of the galaxy.', 'books/book2.png'),
+('Mind Over Matter', 18.00, 2019, 280, 'EN', 'A profound self-help book on overcoming mental blocks.', 'books/book3.png'),
+('El Misterio', 12.99, 2020, 210, 'ES', 'A Spanish thriller that keeps you on the edge of your seat.', 'books/book4.png'),
+('History of the World', 29.99, 2015, 800, 'EN', 'A comprehensive look at human history from ancient to modern times.', 'books/book5.png');
 
 
 -- AUTHORS

@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronsRight, Search } from "lucide-react";
+import { ChevronDown, ChevronsRight } from "lucide-react";
 import SearchBar from "../components/SearchBar";
 import bgHome from "../assets/bg-home.png";
 import pfp from "../assets/dummy-pfp.png";
@@ -7,13 +7,26 @@ import Navbar from "../components/Navbar";
 import HorizontalBookList from "../components/HorizontalBookList";
 import { useEffect, useState } from "react";
 import type { Book } from "../types/book";
-import { getTrendingBooks } from "../api/books";
+import { getCurrentlyReading, getTrendingBooks } from "../api/books";
 import { getTrendingReviews } from "../api/review";
 import type { TrendingReview } from "../types/review";
 export default function HomePage() {
   const [trendingBooks, setTrendingBooks] = useState<Book[]>([]);
+  const [currentlyReading, setCurrentlyReading] = useState<Book[]>([]);
+  const [user, setUser] = useState<User | null>(null);
   const [trendingReviews, setTrendingReviews] = useState<TrendingReview[]>([]);
   useEffect(() => {
+    async function fetchUser() {
+      try {
+        const user = await getMe();
+        setUser(user);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    fetchUser();
+
     async function fetchTrendingBooks() {
       try {
         const books = await getTrendingBooks();
@@ -24,6 +37,7 @@ export default function HomePage() {
     }
 
     fetchTrendingBooks();
+
     async function fetchTrendingReviews() {
       try {
         const reviews = await getTrendingReviews();
@@ -34,6 +48,17 @@ export default function HomePage() {
     }
 
     fetchTrendingReviews();
+
+    async function fetchCurrentlyReading() {
+      try {
+        const books = await getCurrentlyReading();
+        setCurrentlyReading(books);
+      } catch (error) {
+        console.error("Failed to get currently reading:", error);
+      }
+    }
+
+    fetchCurrentlyReading();
   }, []);
   return (
     <div
@@ -48,7 +73,9 @@ export default function HomePage() {
       {/* header */}
       <div className="flex justify-between mx-7 pt-15">
         <div>
-          <p className="text-3xl font-bold">Hi, firstName!</p>
+          <p className="text-3xl font-bold">
+            Hi, {user?.first_name ?? "there"}!
+          </p>
           <p className="text-gray-600 text-md font-medium mt-0.5">
             Let's read a new book~
           </p>
@@ -74,7 +101,14 @@ export default function HomePage() {
                 <ChevronsRight className="h-4 w-4" />
               </button>
             </div>
-            <div>image list</div>
+            {currentlyReading.length > 0 ? (
+              <HorizontalBookList
+                title="Currently Reading"
+                books={currentlyReading}
+              />
+            ) : (
+              <p className="mt-3 text-sm text-gray-500">Read a new book~</p>
+            )}
           </div>
 
           {/* trending book */}

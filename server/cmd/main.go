@@ -90,21 +90,23 @@ func main() {
 	router.Post("/api/auth/register", authHandler.Register)
 	router.Get("/api/auth/logout", authHandler.Logout)
 	// router.Get("/api/books", bookHandler.GetAll)
-	router.Get("/api/books/trending", bookHandler.SearchBooks)
-
 	router.Get("/api/books/{id}", bookHandler.GetByID)
-	router.Get("/api/book/search", bookHandler.SearchBooks)
 	router.Get("/api/author/{id}", authorHandler.GetByID)
-	router.Get("/api/reviews/trending", reviewHandler.GetTrendingReviews)
+	
 	
 	// protected routes for logged in users
 	router.Group(func(r chi.Router) {
 		r.Use(middleware.RequireAuth)
 		r.Get("/api/auth/me", authHandler.Me)
+		r.Get("/api/books/trending", bookHandler.GetTrendingBooks)
+		r.Get("/api/books/currently-reading", bookHandler.GetCurrentlyReading)
+		
 		r.Get("/api/books", bookHandler.GetAll)
 		r.Get("/api/bookDetail/{id}", bookHandler.GetByID)
 		r.Get("/api/author/{id}", authorHandler.GetByID)
-    r.Get("/api/book/search", bookHandler.SearchBooks)
+		
+    	r.Get("/api/book/search", bookHandler.SearchBooks)
+		r.Get("/api/reviews/trending", reviewHandler.GetTrendingReviews)
 	})
 
 	// protected routes for admin
