@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 
 import { useAuth } from "../features/auth/AuthContext";
+import toast from "react-hot-toast";
 
 export default function UserProfile({ pfp }: { pfp: string }) {
   const [open, setOpen] = useState(false);
@@ -14,6 +15,7 @@ export default function UserProfile({ pfp }: { pfp: string }) {
   const handleLogout = async () => {
     setOpen(false);
     await logout();
+    toast.success("You've been logged out");
   };
   return (
     <div ref={ref} className="relative">
