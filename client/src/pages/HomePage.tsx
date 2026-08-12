@@ -62,7 +62,7 @@ export default function HomePage() {
     fetchCurrentlyReading();
   }, []);
   return (
-    <div className="relative min-h-screen w-full">
+    <div className="mx-auto min-h-screen w-full max-w-2xl">
       <div className="fixed inset-0 z-0 overflow-hidden">
         {Array.from({ length: 10 }, (_, i) => (
           <img
