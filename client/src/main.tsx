@@ -83,12 +83,16 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "*",
-        element: <NotFoundPage />,
+        path: "/search",
+        element: (
+          <ProtectedRoute>
+            <SearchResultPage />
+          </ProtectedRoute>
+        ),
       },
       {
-        path: "/search",
-        element: <SearchResultPage />,
+        path: "*",
+        element: <NotFoundPage />,
       },
     ],
   },

@@ -58,7 +58,7 @@ export default function SearchResultPage() {
           {books.map((book) => (
             <button
               key={book.id}
-              onClick={() => navigate(`/book/${book.id}`)}
+              onClick={() => navigate(`/bookDetail/${book.id}`)}
               className="text-left cursor-pointer"
             >
               <img
