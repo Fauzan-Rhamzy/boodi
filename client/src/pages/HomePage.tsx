@@ -10,10 +10,11 @@ import type { Book } from "../types/book";
 import { getCurrentlyReading, getTrendingBooks } from "../api/books";
 import { getTrendingReviews } from "../api/review";
 import type { TrendingReview } from "../types/review";
+import { getMe, type AuthUser } from "../features/auth/api";
 export default function HomePage() {
   const [trendingBooks, setTrendingBooks] = useState<Book[]>([]);
   const [currentlyReading, setCurrentlyReading] = useState<Book[]>([]);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [trendingReviews, setTrendingReviews] = useState<TrendingReview[]>([]);
   useEffect(() => {
     async function fetchUser() {
