@@ -120,10 +120,10 @@ func main() {
     "/images/*",
     http.StripPrefix(
         "/images/",
-       http.FileServer(http.Dir("../images")),
+       http.FileServer(http.Dir("images")),
     ),
-)
-
+	)
+	
 	fmt.Println("Server is running on http://localhost:" + port)
 	// http.ListenAndServe(":"+port, nil)
 	log.Fatal(http.ListenAndServe(":"+port, router))

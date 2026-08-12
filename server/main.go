@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"os"
+
 	//"log"
 	"encoding/json"
 	"net/http"
@@ -51,7 +54,18 @@ func helloHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
     http.Handle("/api/hello", corsMiddleware(http.HandlerFunc(helloHandler)))
+    wd, err := os.Getwd()
+    if err != nil {
+        log.Fatal(err)
+    }
 
+     _, err = os.Stat("../images/books/book1.png")
+    if err != nil {
+        log.Println("IMAGE NOT FOUND:", err)
+    } else {
+        log.Println("IMAGE FOUND")
+    }
+    log.Println("Working directory:", wd)
     fmt.Println("Server is running on http://localhost:8080")
     http.ListenAndServe(":8080", nil)
 }

@@ -62,17 +62,22 @@ export default function HomePage() {
     fetchCurrentlyReading();
   }, []);
   return (
-    <div
-      className=" relative w-full min-h-screen"
-      style={{
-        backgroundImage: `url(${bgHome})`,
-        backgroundSize: "100% auto",
-        backgroundRepeat: "repeat-y",
-        backgroundPosition: "top center",
-      }}
-    >
+    <div className="relative min-h-screen w-full">
+      <div className="fixed inset-0 z-0 overflow-hidden">
+        {Array.from({ length: 10 }, (_, i) => (
+          <img
+            key={i}
+            src={bgHome}
+            alt=""
+            className={`block min-h-0 w-full ${
+              i % 2 === 1 ? "scale-y-[-1]" : ""
+            }`}
+          />
+        ))}
+      </div>
+
       {/* header */}
-      <div className="flex justify-between mx-7 pt-15">
+      <div className="flex relative z-10 justify-between mx-7 pt-15">
         <div>
           <p className="text-3xl font-bold">
             Hi, {user?.first_name ?? "there"}!
@@ -88,7 +93,7 @@ export default function HomePage() {
       </div>
 
       {/* content */}
-      <div className="mx-6">
+      <div className="mx-6 relative z-10">
         <div className="mt-7 flex justify-center">
           <SearchBar />
         </div>
@@ -116,10 +121,6 @@ export default function HomePage() {
           <div className="mt-6">
             <div className="flex items-center justify-between">
               <p className="text-lg font-bold">Trending Books</p>
-              <button className="flex items-center gap-1 text-md text-gray-500">
-                See all
-                <ChevronsRight className="h-4 w-4" />
-              </button>
             </div>
             <HorizontalBookList title="Trending Books" books={trendingBooks} />
           </div>
