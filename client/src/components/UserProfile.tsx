@@ -2,12 +2,19 @@ import { ChevronDown } from "lucide-react";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 
+import { useAuth } from "../features/auth/AuthContext";
+
 export default function UserProfile({ pfp }: { pfp: string }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  //   const handleOnClick
+  const { logout } = useAuth();
+
+  const handleLogout = async () => {
+    setOpen(false);
+    await logout();
+  };
   return (
     <div ref={ref} className="relative">
       <button
@@ -25,7 +32,10 @@ export default function UserProfile({ pfp }: { pfp: string }) {
           <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
             Edit Profile
           </button>
-          <button className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-50">
+          <button
+            onClick={() => handleLogout()}
+            className="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-50"
+          >
             Logout
           </button>
         </div>
