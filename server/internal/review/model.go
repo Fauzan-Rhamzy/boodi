@@ -10,4 +10,5 @@ type TrendingReview struct {
 	LastName  string `json:"last_name"`
 	Comment   string `json:"comment"`
 	LikeCount int    `json:"like_count"`
+	IsLiked   bool   `json:"is_liked"`
 }

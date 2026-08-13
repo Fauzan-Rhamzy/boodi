@@ -16,6 +16,7 @@ import SearchResultPage from "./pages/SearchResultPage.tsx";
 import { AuthProvider } from "./features/auth/AuthContext.tsx";
 import GuestRoute from "./components/GuestRoute.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
+import LibraryBooksPage from "./pages/LibraryBooksPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -87,6 +88,14 @@ const router = createBrowserRouter([
         element: (
           <ProtectedRoute>
             <SearchResultPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/library/:id",
+        element: (
+          <ProtectedRoute>
+            <LibraryBooksPage />
           </ProtectedRoute>
         ),
       },

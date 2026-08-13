@@ -8,6 +8,6 @@ func NewService(repo *Repository) *Service {
 	return &Service{repo: repo}
 }
 
-func (s *Service) GetTrendingReviews() ([]TrendingReview, error) {
-	return s.repo.GetTrendingReviews()
+func (s *Service) GetTrendingReviews(userID int) ([]TrendingReview, error) {
+	return s.repo.GetTrendingReviews(userID)
 }

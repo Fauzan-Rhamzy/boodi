@@ -2,6 +2,7 @@ package review
 
 import (
 	"net/http"
+	"server/internal/shared/middleware"
 	"server/internal/shared/response"
 )
 type Handler struct {
@@ -13,8 +14,9 @@ func NewHandler(service *Service) *Handler {
 }
 
 func (h *Handler) GetTrendingReviews(w http.ResponseWriter, r *http.Request) {
-	reviews, err := h.service.GetTrendingReviews()
+	user := middleware.GetUser(r)
 
+	reviews, err := h.service.GetTrendingReviews(user.UserID)
 	if err != nil {
 		response.Error(w, http.StatusInternalServerError, err.Error())
 		return

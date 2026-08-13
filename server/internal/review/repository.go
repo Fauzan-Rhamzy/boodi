@@ -10,18 +10,24 @@ func NewRepository(db *sql.DB) *Repository {
 	return &Repository{db: db}
 }
 
-func (r *Repository) GetTrendingReviews() ([]TrendingReview, error) {
+func (r *Repository) GetTrendingReviews(userID int) ([]TrendingReview, error) {
 	rows, err := r.db.Query(`
 		SELECT
 			r.review_id,
 			b.book_id,
-			b.title ,
+			b.title,
 			b.cover,
 			r.rating,
 			u.first_name,
 			u.last_name,
 			r.comment,
-			COUNT(l.like_id) AS like_count
+			COUNT(l.like_id) AS like_count,
+			EXISTS (
+				SELECT 1
+				FROM Likes my_like
+				WHERE my_like.review_id = r.review_id
+				AND my_like.user_id = $1
+			) AS is_liked
 		FROM Review r
 		JOIN Book b
 			ON r.book_id = b.book_id
@@ -40,7 +46,7 @@ func (r *Repository) GetTrendingReviews() ([]TrendingReview, error) {
 			r.comment
 		ORDER BY like_count DESC
 		LIMIT 3
-	`)
+	`, userID)
 
 	if err != nil {
 		return nil, err
@@ -62,6 +68,7 @@ func (r *Repository) GetTrendingReviews() ([]TrendingReview, error) {
 			&review.LastName,
 			&review.Comment,
 			&review.LikeCount,
+			&review.IsLiked,
 		)
 
 		if err != nil {

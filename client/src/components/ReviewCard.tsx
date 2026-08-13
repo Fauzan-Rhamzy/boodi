@@ -46,7 +46,9 @@ export default function ReviewCard({ review }: ReviewCardProps) {
 
         {/* Likes */}
         <div className="flex justify-end items-center gap-1 text-red-600 mr-2">
-          <Heart className="h-4 w-4 fill-current" />
+          <Heart
+            className={`h-4 w-4 ${review.is_liked ? "fill-current" : ""}`}
+          />
           <p className="text-xs font-medium">{review.like_count} likes</p>
         </div>
       </div>
