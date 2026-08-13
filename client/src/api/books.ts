@@ -22,3 +22,8 @@ export async function getCurrentlyReading(): Promise<Book[]> {
 
   return response.data.data;
 }
+
+export async function getById(id: number): Promise<Book> {
+  const response = await api.get<Book>(`/api/bookDetail/${id}`);
+  return response.data.data;
+}

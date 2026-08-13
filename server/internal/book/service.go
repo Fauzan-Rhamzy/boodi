@@ -1,7 +1,5 @@
 package book
 
-import "errors"
-
 type Service struct {
 	repo *Repository
 }
@@ -15,17 +13,13 @@ func (s *Service) GetAll() ([]Book, error) {
 }
 
 func (s *Service) GetByID(id int) (*Book, error) {
-	book, err := s.repo.FindByID(id)
-	if err != nil {
-		return nil, errors.New("book not found")
-	}
-	return book, nil
+	return s.repo.FindByID(id)
 }
 func (s *Service) SearchBooks(query string) ([]Book, error) {
 	return s.repo.SearchBooks(query)
 }
 func (s *Service) GetTrendingBooks() ([]Book, error) {
-    return s.repo.GetTrendingBooks()
+	return s.repo.GetTrendingBooks()
 }
 
 func (s *Service) GetCurrentlyReading(userID int) ([]Book, error) {

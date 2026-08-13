@@ -117,32 +117,32 @@ func (r *Repository) FindAuthorsByBookID(id int) ([]AuthorResponse, error) {
 	return authors, nil
 }
 
-func (r *Repository) SearchBooks(query string)([]Book, error){
+func (r *Repository) SearchBooks(query string) ([]Book, error) {
 	rows, err := r.db.Query(`
 	SELECT book_id, title, cover
 	FROM book
 	WHERE title ILIKE '%'||$1||'%'`, query)
 
-	if err != nil{
+	if err != nil {
 		return nil, err
 	}
 	if err := rows.Err(); err != nil {
-    return nil, err
-}
+		return nil, err
+	}
 	defer rows.Close()
 
 	var books []Book
 	books = make([]Book, 0)
-	for rows.Next(){
+	for rows.Next() {
 		var book Book
 
-		err:= rows.Scan(
+		err := rows.Scan(
 			&book.BookID,
 			&book.Title,
 			&book.Cover,
 		)
 
-		if err != nil{
+		if err != nil {
 			return nil, err
 		}
 
@@ -151,7 +151,7 @@ func (r *Repository) SearchBooks(query string)([]Book, error){
 	return books, nil
 }
 func (r *Repository) GetTrendingBooks() ([]Book, error) {
-    rows, err := r.db.Query(`
+	rows, err := r.db.Query(`
         SELECT
             b.book_id,
             b.title,
@@ -169,37 +169,37 @@ func (r *Repository) GetTrendingBooks() ([]Book, error) {
         LIMIT 10;
     `)
 
-    if err != nil {
-        return nil, err
-    }
+	if err != nil {
+		return nil, err
+	}
 
-    defer rows.Close()
+	defer rows.Close()
 
-    books := make([]Book, 0)
+	books := make([]Book, 0)
 
-    for rows.Next() {
-        var book Book
-        var readerCount int
+	for rows.Next() {
+		var book Book
+		var readerCount int
 
-        err := rows.Scan(
-            &book.BookID,
-            &book.Title,
-            &book.Cover,
-            &readerCount,
-        )
+		err := rows.Scan(
+			&book.BookID,
+			&book.Title,
+			&book.Cover,
+			&readerCount,
+		)
 
-        if err != nil {
-            return nil, err
-        }
+		if err != nil {
+			return nil, err
+		}
 
-        books = append(books, book)
-    }
+		books = append(books, book)
+	}
 
-    if err := rows.Err(); err != nil {
-        return nil, err
-    }
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
 
-    return books, nil
+	return books, nil
 }
 
 func (r *Repository) GetCurrentlyReading(userID int) ([]Book, error) {
@@ -223,7 +223,7 @@ func (r *Repository) GetCurrentlyReading(userID int) ([]Book, error) {
 	defer rows.Close()
 
 	var books []Book
- 	books = make([]Book, 0)
+	books = make([]Book, 0)
 
 	for rows.Next() {
 		var book Book
