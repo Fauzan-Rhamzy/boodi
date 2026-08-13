@@ -3,35 +3,41 @@ import avatar from "../assets/avatar.png"
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import BackArrow from "../components/BackArrow";
-import api from "../lib/axios";
-
-export interface BookResponse {
-    id: number;
-    title: string;
-    cover: string;
-}
-
-export interface Author {
-  id: number;
-  name: string;
-  description: string;
-  profilePict: string;
-  books: BookResponse[];
-}
+import type { Author } from "../types/author";
+import { getMe, type AuthUser } from "../features/auth/api";
+import { getAuthorByID } from "../api/author";
 
 export default function AuthorPage() {
-    const navigate = useNavigate();
-    const { id } = useParams(); 
-    const [author, setAuthor] = useState<Author | null>(null);
+    const { id } = useParams();
+    const [ author, setAuthor ] = useState<Author | null>(null);
+    const [ user, setUser ] = useState<AuthUser | null>(null);
 
     useEffect(() => {
-        api
-        .get(`/api/author/${id}`)
-        .then((res) => setAuthor(res.data.data)) 
-        .catch((err) => console.error("fetch failed:", err));
-    }, [id]);
+        async function fetchUser() {
+            try {
+              const user = await getMe();
+              setUser(user);
+            } catch (error) {
+              console.error(error);
+            }
+          }
     
-    if (!author) {
+          fetchUser();
+    
+          async function fetchAuthorByID() {
+            if (!id) return;
+            try {
+              const book = await getAuthorByID(Number(id));
+              setAuthor(book);
+            } catch (error) {
+              console.error("Failed to get detail book:", error);
+            }
+          }
+          
+          fetchAuthorByID();
+      }, [id]);
+
+      if (!author) {
         return <p>Loading...</p>;
     }
     
@@ -91,7 +97,7 @@ export default function AuthorPage() {
                             className="block hover:scale-102 transition-transform duration-150"
                             >
                             <img
-                                src={`/booksCover/${book.cover}`}
+                                src={`http://localhost:8080/images/${book.cover}`}
                                 alt={book.title}
                                 className="w-full aspect-[2/3] object-cover rounded-[18px] shadow-sm cursor-pointer"
                             />

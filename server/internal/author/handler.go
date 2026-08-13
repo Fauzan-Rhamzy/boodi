@@ -24,7 +24,7 @@ func (h *Handler) GetByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	author, err := h.service.GetByID(id)
+	author, err := h.service.GetAuthorByID(id)
 	if err != nil {
 		response.Error(w, http.StatusNotFound, err.Error())
 		return
