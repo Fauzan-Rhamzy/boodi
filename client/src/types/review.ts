@@ -1,6 +1,8 @@
 export type TrendingReview = {
   review_id: number;
-  book_cover: string;
+  book_id: number;
+  title: string;
+  cover: string;
   rating: number;
   first_name: string;
   last_name: string;
