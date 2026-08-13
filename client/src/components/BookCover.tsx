@@ -2,7 +2,7 @@ import { useNavigate } from "react-router";
 import type { Book } from "../types/book";
 
 type BookCoverProps = {
-  book: Book;
+  book: Pick<Book, "id" | "title" | "cover">;
   className?: string;
 };
 

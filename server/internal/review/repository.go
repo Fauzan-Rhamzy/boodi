@@ -14,7 +14,9 @@ func (r *Repository) GetTrendingReviews() ([]TrendingReview, error) {
 	rows, err := r.db.Query(`
 		SELECT
 			r.review_id,
-			b.cover AS book_cover,
+			b.book_id,
+			b.title ,
+			b.cover,
 			r.rating,
 			u.first_name,
 			u.last_name,
@@ -29,6 +31,8 @@ func (r *Repository) GetTrendingReviews() ([]TrendingReview, error) {
 			ON r.review_id = l.review_id
 		GROUP BY
 			r.review_id,
+			b.book_id,
+			b.title,
 			b.cover,
 			r.rating,
 			u.first_name,
@@ -50,6 +54,8 @@ func (r *Repository) GetTrendingReviews() ([]TrendingReview, error) {
 
 		err := rows.Scan(
 			&review.ReviewID,
+			&review.BookID,
+			&review.BookTitle,
 			&review.BookCover,
 			&review.Rating,
 			&review.FirstName,

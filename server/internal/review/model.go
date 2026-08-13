@@ -2,7 +2,9 @@ package review
 
 type TrendingReview struct {
 	ReviewID  int    `json:"review_id"`
-	BookCover string `json:"book_cover"`
+	BookID    string `json:"book_id"`
+	BookTitle string `json:"title"`
+	BookCover string `json:"cover"`
 	Rating    int    `json:"rating"`
 	FirstName string `json:"first_name"`
 	LastName  string `json:"last_name"`
