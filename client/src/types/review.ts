@@ -8,6 +8,7 @@ export type TrendingReview = {
   last_name: string;
   comment: string;
   like_count: number;
+  is_liked: boolean;
 };
 
 export type TrendingReviewResponse = {
