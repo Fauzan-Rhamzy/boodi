@@ -1,10 +1,11 @@
-import { ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import bg from "../assets/bg-login.png";
 import { useState } from "react";
 import BackArrow from "../components/BackArrow";
 import { useNavigate } from "react-router";
 import { login } from "../features/auth/api";
 import { useAuth } from "../features/auth/AuthContext";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
   const [email, setEmail] = useState<string>("");
@@ -25,6 +26,7 @@ export default function LoginPage() {
       await login({ email, password });
       await refetch();
       navigate("/home");
+      toast.success("You're logeed in");
     } catch (err: any) {
       console.log(err);
       setError(err.response?.data || "Failed to login");

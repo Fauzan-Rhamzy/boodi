@@ -2,37 +2,39 @@ import BackArrow from "../components/BackArrow";
 import bgDetailBook from "../assets/bg-detailBooks.png";
 import { Plus, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import api from "../lib/axios";
-
-interface AuthorResponse {
-  id: number;
-  name: string;
-}
-
-export interface Book {
-  id: number;
-  title: string;
-  price: number;
-  year: number;
-  page: number;
-  language: string;
-  description: string;
-  cover: string;
-  genres: string[];
-  authors: AuthorResponse[];
-}
+import { Link, useParams } from "react-router-dom";
+import { getMe, type AuthUser } from "../features/auth/api";
+import type { Book } from "../types/book";
+import { getById } from "../api/books";
 
 export default function BookDetailPage() {
-  const navigate = useNavigate();
   const { id } = useParams();
-  const [book, setBook] = useState<Book | null>(null);
+  const [ book, setBook ] = useState<Book | null>(null);
+  const [ user, setUser ] = useState<AuthUser | null>(null);
 
   useEffect(() => {
-    api
-      .get(`/api/bookDetail/${id}`)
-      .then((res) => setBook(res.data.data))
-      .catch((err) => console.error("fetch failed:", err));
+    async function fetchUser() {
+        try {
+          const user = await getMe();
+          setUser(user);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      fetchUser();
+
+      async function fetchDetailBook() {
+        if (!id) return;
+        try {
+          const book = await getById(Number(id));
+          setBook(book);
+        } catch (error) {
+          console.error("Failed to get detail book:", error);
+        }
+      }
+      
+      fetchDetailBook();
   }, [id]);
 
   if (!book) {
@@ -41,7 +43,7 @@ export default function BookDetailPage() {
 
   return (
     <div
-      className="w-full min-h-screen relative"
+      className="w-full min-h-screen relative pb-10"
       style={{
         backgroundImage: `url(${bgDetailBook})`,
         backgroundSize: "100% auto",
@@ -55,9 +57,9 @@ export default function BookDetailPage() {
 
       <div className="flex flex-col items-center pt-5 pb-10 px-4">
         <img
-          src={`/booksCover/${book.cover}`}
+          src={`http://localhost:8080/images/${book.cover}`}
           alt={book.title}
-          className="w-45 h-auto object-cover rounded-3xl mt-15"
+          className="w-45 h-64 shrink-0 object-cover rounded-3xl mt-15"
         />
 
         <h1
@@ -138,7 +140,7 @@ export default function BookDetailPage() {
             {book.genres.map((genre) => (
               <span
                 key={genre}
-                className="px-2 py-1 bg-[#8fa4bf] text-white text-xs rounded-full"
+                className="flex items-center justify-center px-2 py-2 bg-[#8fa4bf] text-white text-xs rounded-full leading-none"
               >
                 {genre}
               </span>

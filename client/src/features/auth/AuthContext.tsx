@@ -1,16 +1,18 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { getMe, type AuthUser } from "./api";
+import { getMe, logout, type AuthUser } from "./api";
 
 type AuthContextType = {
   user: AuthUser | null;
   loading: boolean;
   refetch: () => void;
+  logout: () => void;
 };
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
   refetch: () => {},
+  logout: async () => {},
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -28,12 +30,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error("Failed to logout:", error);
+    } finally {
+      setUser(null);
+    }
+  };
+
   useEffect(() => {
     fetchUser();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, refetch: fetchUser }}>
+    <AuthContext.Provider
+      value={{ user, loading, refetch: fetchUser, logout: handleLogout }}
+    >
       {children}
     </AuthContext.Provider>
   );

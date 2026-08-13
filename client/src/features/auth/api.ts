@@ -1,4 +1,5 @@
 import api from "../../lib/axios";
+import { useAuth } from "./AuthContext";
 
 export type LoginRequest = {
   email: string;

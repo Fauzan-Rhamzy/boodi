@@ -1,10 +1,11 @@
-import { ChevronDown, ChevronsRight } from "lucide-react";
+import { ChevronsRight } from "lucide-react";
 import SearchBar from "../components/SearchBar";
 import bgHome from "../assets/bg-home.png";
 import pfp from "../assets/dummy-pfp.png";
 import ReviewCard from "../components/ReviewCard";
 import Navbar from "../components/Navbar";
 import HorizontalBookList from "../components/HorizontalBookList";
+import UserProfile from "../components/UserProfile";
 import { useEffect, useState } from "react";
 import type { Book } from "../types/book";
 import { getCurrentlyReading, getTrendingBooks } from "../api/books";
@@ -77,7 +78,7 @@ export default function HomePage() {
       </div>
 
       {/* header */}
-      <div className="flex relative z-10 justify-between mx-7 pt-15">
+      <div className="flex relative z-11 justify-between mx-7 pt-15">
         <div>
           <p className="text-3xl font-bold">
             Hi, {user?.first_name ?? "there"}!
@@ -87,8 +88,7 @@ export default function HomePage() {
           </p>
         </div>
         <div className="flex items-center gap-1">
-          <img src={pfp} className="w-10 h-10 rounded-full"></img>
-          <ChevronDown className="w-5 h-5" />
+          <UserProfile pfp={pfp} />
         </div>
       </div>
 

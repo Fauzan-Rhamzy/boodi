@@ -1,4 +1,4 @@
-import { ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 import bg from "../assets/bg-register.png";
 import React, { useState } from "react";
 import BackArrow from "../components/BackArrow";
