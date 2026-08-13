@@ -12,8 +12,10 @@ import { getCurrentlyReading, getTrendingBooks } from "../api/books";
 import { getTrendingReviews } from "../api/review";
 import type { TrendingReview } from "../types/review";
 import { getMe, type AuthUser } from "../features/auth/api";
+import { useNavigate } from "react-router";
 export default function HomePage() {
   const [trendingBooks, setTrendingBooks] = useState<Book[]>([]);
+  const navigate = useNavigate();
   const [currentlyReading, setCurrentlyReading] = useState<Book[]>([]);
   const [user, setUser] = useState<AuthUser | null>(null);
   const [trendingReviews, setTrendingReviews] = useState<TrendingReview[]>([]);
@@ -102,7 +104,10 @@ export default function HomePage() {
           <div className="mt-6">
             <div className="flex items-center justify-between">
               <p className="text-lg font-bold">Currently Reading</p>
-              <button className="flex items-center gap-1 text-md text-gray-500">
+              <button
+                className="flex items-center gap-1 text-md text-gray-500"
+                onClick={() => navigate(`/library/recently-read`)}
+              >
                 See all
                 <ChevronsRight className="h-4 w-4" />
               </button>
