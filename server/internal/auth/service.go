@@ -15,6 +15,10 @@ type Service struct {
 	repo *Repository
 }
 
+func (s *Service) GetFirstNameAndProfilePicture(d int) (any, any, any) {
+	panic("unimplemented")
+}
+
 func NewService(repo *Repository) *Service {
 	return &Service{repo: repo}
 }
@@ -73,4 +77,8 @@ func (s *Service) Login(req LoginRequest) (string, error) {
 
 func (s *Service) GetFirstName(userID int) (string, error) {
 	return s.repo.GetFirstName(userID)
+}
+
+func (s *Service) GetProfilePicture(userID int) (string, error) {
+	return s.repo.GetProfilePicture(userID)
 }

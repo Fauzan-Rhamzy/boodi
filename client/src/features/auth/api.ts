@@ -18,6 +18,7 @@ export type AuthUser = {
   user_id: number;
   first_name: string;
   role: string;
+  profile_picture: string;
 };
 
 export async function login(data: LoginRequest): Promise<void> {

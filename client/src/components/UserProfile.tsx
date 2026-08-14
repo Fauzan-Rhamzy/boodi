@@ -9,6 +9,7 @@ export default function UserProfile({ pfp }: { pfp: string }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const { logout } = useAuth();
 
@@ -23,7 +24,10 @@ export default function UserProfile({ pfp }: { pfp: string }) {
         onClick={() => setOpen((prev) => !prev)}
         className="flex items-center gap-1 cursor-pointer"
       >
-        <img src={pfp} className="w-10 h-10 rounded-full" />
+        <img
+          src={`http://localhost:8080/images/${user?.profile_picture}`}
+          className="w-10 h-10 rounded-full"
+        />
         <ChevronDown
           className={`w-5 h-5 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
@@ -31,7 +35,13 @@ export default function UserProfile({ pfp }: { pfp: string }) {
 
       {open && (
         <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg border border-gray-100 ">
-          <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+          <button
+            onClick={() => {
+              setOpen(false);
+              navigate("/profile");
+            }}
+            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+          >
             Edit Profile
           </button>
           <button
