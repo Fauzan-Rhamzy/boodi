@@ -37,7 +37,7 @@ export default function SearchResultPage() {
     >
       {/* Header */}
       <div className="px-6 pt-3">
-        <BackArrow />
+        <BackArrow useHistory={true} />
 
         <h1 className="mt-4 ml-2 pt-20 text-2xl">
           Result for <span className="font-bold">“{query}”</span>
