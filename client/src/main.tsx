@@ -92,6 +92,14 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/currently-reading",
+        element: (
+          <ProtectedRoute>
+            <LibraryBooksPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
         path: "/library/:id",
         element: (
           <ProtectedRoute>
