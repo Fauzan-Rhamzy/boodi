@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"server/internal/shared/middleware"
 	"server/internal/shared/response"
 	"strconv"
 
@@ -68,14 +67,3 @@ func (h *Handler) GetTrendingBooks(w http.ResponseWriter, r *http.Request) {
 	response.JSON(w, http.StatusOK, books)
 }
 
-func (h *Handler) GetCurrentlyReading(w http.ResponseWriter, r *http.Request) {
-    user := middleware.GetUser(r)
-
-    books, err := h.service.GetCurrentlyReading(user.UserID)
-    if err != nil {
-        response.Error(w, http.StatusInternalServerError, err.Error())
-        return
-    }
-
-    response.JSON(w, http.StatusOK, books)
-}

@@ -21,7 +21,3 @@ func (s *Service) SearchBooks(query string) ([]Book, error) {
 func (s *Service) GetTrendingBooks() ([]Book, error) {
 	return s.repo.GetTrendingBooks()
 }
-
-func (s *Service) GetCurrentlyReading(userID int) ([]Book, error) {
-	return s.repo.GetCurrentlyReading(userID)
-}

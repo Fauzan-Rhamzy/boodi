@@ -8,11 +8,11 @@ import HorizontalBookList from "../components/HorizontalBookList";
 import UserProfile from "../components/UserProfile";
 import { useEffect, useState } from "react";
 import type { Book } from "../types/book";
-import { getCurrentlyReading, getTrendingBooks } from "../api/books";
 import { getTrendingReviews } from "../api/review";
 import type { TrendingReview } from "../types/review";
 import { getMe, type AuthUser } from "../features/auth/api";
 import { useNavigate } from "react-router";
+import { getTrendingBooks, getCurrentlyReading } from "../api/collection";
 export default function HomePage() {
   const [trendingBooks, setTrendingBooks] = useState<Book[]>([]);
   const navigate = useNavigate();
@@ -97,7 +97,7 @@ export default function HomePage() {
       {/* content */}
       <div className="mx-6 relative z-10">
         <div className="mt-7 flex justify-center">
-          <SearchBar />
+          <SearchBar className="w-full" />
         </div>
         <div className="mx-0.5">
           {/* currently reading */}
@@ -106,7 +106,7 @@ export default function HomePage() {
               <p className="text-lg font-bold">Currently Reading</p>
               <button
                 className="flex items-center gap-1 text-md text-gray-500"
-                onClick={() => navigate(`/library/recently-read`)}
+                onClick={() => navigate(`/currently-reading`)}
               >
                 See all
                 <ChevronsRight className="h-4 w-4" />
