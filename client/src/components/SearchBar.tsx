@@ -24,7 +24,7 @@ export default function SearchBar() {
           onChange={(event) => {
             setQuery(event.target.value);
           }}
-          className="text-md text-gray-600 border-0"
+          className="text-md focus:border-none focus:outline-none w-full text-gray-600 border-0"
         ></input>
         <button onClick={search}>
           <Search className="h-5 w-5 text-gray-800" />
