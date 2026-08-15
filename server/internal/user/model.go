@@ -11,3 +11,10 @@ type User struct {
 	Role       string `json:"role"`
 	JoinedDate string `json:"joined_date"`
 }
+
+type UpdateProfileRequest struct {
+	FirstName string
+	LastName  string
+	Phone     string
+	PicPath   string
+}

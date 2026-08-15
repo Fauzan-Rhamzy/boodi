@@ -41,3 +41,14 @@ func (r *Repository) GetFirstName(userID int) (string, error) {
 
 	return firstName, err
 }
+
+func (r *Repository) GetProfilePicture(userID int) (string, error) {
+	var profilePicture string
+
+	err := r.db.QueryRow(
+		`SELECT profile_pic FROM Users WHERE user_id = $1`,
+		userID,
+	).Scan(&profilePicture)
+
+	return profilePicture, err
+}
