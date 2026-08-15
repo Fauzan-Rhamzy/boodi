@@ -202,46 +202,4 @@ func (r *Repository) GetTrendingBooks() ([]Book, error) {
 	return books, nil
 }
 
-func (r *Repository) GetCurrentlyReading(userID int) ([]Book, error) {
-	rows, err := r.db.Query(`
-		SELECT
-			b.book_id,
-			b.title,
-			b.cover
-		FROM UserBook ub
-		JOIN Book b
-			ON b.book_id = ub.book_id
-		WHERE ub.user_id = $1
-		  AND ub.current_page < b.page
-		ORDER BY ub.logged_at DESC
-		LIMIT 10
-	`, userID)
 
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	var books []Book
-	books = make([]Book, 0)
-
-	for rows.Next() {
-		var book Book
-
-		if err := rows.Scan(
-			&book.BookID,
-			&book.Title,
-			&book.Cover,
-		); err != nil {
-			return nil, err
-		}
-
-		books = append(books, book)
-	}
-
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-
-	return books, nil
-}

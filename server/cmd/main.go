@@ -15,6 +15,7 @@ import (
 	"server/internal/auth"
 	"server/internal/author"
 	"server/internal/book"
+	"server/internal/collection"
 	"server/internal/review"
 	"server/internal/shared/db"
 	"server/internal/shared/middleware"
@@ -70,7 +71,9 @@ func main() {
 	authorHandler := author.NewHandler(authorService)
 
 	// collection
-
+	collectionRepo := collection.NewRepository(dbCon)
+	collectionService := collection.NewService(collectionRepo)
+	collectionHandler := collection.NewHandler(collectionService)
 	// review
 	reviewRepo := review.NewRepository(dbCon)
 	reviewService := review.NewService(reviewRepo)
@@ -102,7 +105,8 @@ func main() {
 		r.Use(middleware.RequireAuth)
 		r.Get("/api/auth/me", authHandler.Me)
 		r.Get("/api/books/trending", bookHandler.GetTrendingBooks)
-		r.Get("/api/books/currently-reading", bookHandler.GetCurrentlyReading)
+		r.Get("/currently-reading", collectionHandler.GetCurrentlyReading)
+		r.Get("/library/{id}", collectionHandler.GetLibrary)
 
 		r.Get("/api/books", bookHandler.GetAll)
 		r.Get("/api/bookDetail/{id}", bookHandler.GetByID)
