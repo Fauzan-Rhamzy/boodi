@@ -19,6 +19,7 @@ import (
 	"server/internal/review"
 	"server/internal/shared/db"
 	"server/internal/shared/middleware"
+	"server/internal/user"
 )
 
 // type RequestData struct {
@@ -81,6 +82,11 @@ func main() {
 	// reviewService := review.NewService(reviewRepo)
 	// reviewHandler := review.NewHandler(reviewService)
 
+	// users
+	usersRepo := user.NewRepository(dbCon)
+	usersService := user.NewService(usersRepo)
+	usersHandler := user.NewHandler(usersService)
+
 	router := chi.NewRouter()
 
 	// middleware
@@ -108,6 +114,9 @@ func main() {
 
 		r.Get("/api/book/search", bookHandler.SearchBooks)
 		r.Get("/api/reviews/trending", reviewHandler.GetTrendingReviews)
+
+		r.Get("/api/users/{user_id}", usersHandler.GetProfile)
+		r.Put("/api/users/{user_id}", usersHandler.UpdateProfile)
 	})
 
 	// protected routes for admin

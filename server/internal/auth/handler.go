@@ -91,10 +91,17 @@ func (h *Handler) Me(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "failed to get user", http.StatusInternalServerError)
 		return
 	}
+
+	profilePicture, err := h.service.GetProfilePicture(user.UserID)
+	if profilePicture == "" {
+		profilePicture = "profile/dummy.png"
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]any{
-		"user_id": user.UserID,
-		"first_name" : firstName,
-		"role":    user.Role,
+		"user_id":         user.UserID,
+		"first_name":      firstName,
+		"role":            user.Role,
+		"profile_picture": profilePicture,
 	})
 }

@@ -74,3 +74,7 @@ func (s *Service) Login(req LoginRequest) (string, error) {
 func (s *Service) GetFirstName(userID int) (string, error) {
 	return s.repo.GetFirstName(userID)
 }
+
+func (s *Service) GetProfilePicture(userID int) (string, error) {
+	return s.repo.GetProfilePicture(userID)
+}
