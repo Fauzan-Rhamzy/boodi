@@ -31,7 +31,10 @@ export default function UserProfile({ pfp }: { pfp: string }) {
 
       {open && (
         <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg border border-gray-100 ">
-          <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+          <button
+            className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+            onClick={() => navigate("/profile")}
+          >
             Edit Profile
           </button>
           <button
