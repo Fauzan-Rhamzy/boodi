@@ -2,20 +2,37 @@ import BackArrow from "../components/BackArrow";
 import bg from "../assets/bg-login.png";
 import pfp from "../assets/dummy-pfp.png";
 import BigProfile from "../components/BigProfile";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PhoneInput from "react-phone-number-input";
 import toast from "react-hot-toast";
+import { useAuth } from "../features/auth/AuthContext";
+import { getUserProfile, updateProfile } from "../api/users";
 
 export default function ProfilePage() {
-  const [preview, setPreview] = useState(pfp);
+  const { user } = useAuth();
+
+  const defaultPfp = `http://localhost:8080/images/${user?.profile_picture}`;
+  const [preview, setPreview] = useState(
+    user?.profile_picture ? defaultPfp : pfp,
+  );
   const [file, setFile] = useState<File | null>(null);
 
   const [firstName, setFirstname] = useState<string>("");
   const [lastName, setLastname] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  //   const [email, setDate] = useState<string>("");
   const [phoneNumber, setPhoneNumber] = useState<string | undefined>("");
-  const [password, setPassword] = useState<string>("");
+
+  useEffect(() => {
+    if (!user) return;
+    const fetchUserProfile = async () => {
+      const data = await getUserProfile(user?.user_id);
+      setFirstname(data.first_name || "");
+      setLastname(data.last_name || "");
+      console.log(data);
+      setPhoneNumber(data.phone || "");
+    };
+
+    fetchUserProfile();
+  }, [user]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -25,17 +42,40 @@ export default function ProfilePage() {
     }
   };
 
-  const handleUpload = async () => {
-    if (!file) {
-      return toast.loading("wait");
+  const handleCancel = () => {
+    if (user) {
+      setFirstname(user?.first_name || "");
+      // setLastname(user.?last_name || "");
+      // setPhoneNumber(user.?phoneNumber || "");
     }
+    setFile(null);
+    setPreview(defaultPfp);
+    toast.success("Changes cancelled");
+  };
+
+  const handleSaveChanges = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const loading = toast.loading("Saving changes...");
+
     const formData = new FormData();
-    formData.append("pfp", file);
+
+    if (file) {
+      formData.append("pfp", file);
+    }
+
+    formData.append("first_name", firstName);
+    formData.append("last_name", lastName);
+    formData.append("phone_number", phoneNumber || "");
 
     try {
-      toast.success("Photo uploaded");
+      await updateProfile(user?.user_id, formData);
+      toast.dismiss(loading);
+      toast.success("Profile updated");
+      setFile(null);
     } catch (error) {
-      toast.error("Failed to update image");
+      toast.dismiss(loading);
+      toast.error("Failed to update profile");
     }
   };
   return (
@@ -85,6 +125,7 @@ export default function ProfilePage() {
                 required
                 //   autoComplete=""
                 className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                value={firstName}
                 onChange={(e) => setFirstname(e.target.value)}
               />
             </div>
@@ -103,6 +144,7 @@ export default function ProfilePage() {
                 name="lastName"
                 //   autoComplete=""
                 className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                value={lastName}
                 onChange={(e) => setLastname(e.target.value)}
               />
             </div>
@@ -132,10 +174,17 @@ export default function ProfilePage() {
           </div>
         </form>
       </div>
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm mt-6">
+      <div className="flex gap-4 pt-4">
+        <button
+          type="button"
+          onClick={handleCancel}
+          className="w-1/2 bg-gray-200 text-gray-800 py-2 rounded-md font-medium hover:bg-gray-300 hover:cursor-pointer transition-colors"
+        >
+          Cancel
+        </button>
         <button
           className="w-full bg-blue-500 text-white py-2 rounded-md font-medium hover:bg-blue-600 hover:cursor-pointer"
-          onClick={() => handleUpload()}
+          onClick={(e) => handleSaveChanges(e)}
         >
           Save Changes
         </button>

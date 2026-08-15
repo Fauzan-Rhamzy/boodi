@@ -15,10 +15,6 @@ type Service struct {
 	repo *Repository
 }
 
-func (s *Service) GetFirstNameAndProfilePicture(d int) (any, any, any) {
-	panic("unimplemented")
-}
-
 func NewService(repo *Repository) *Service {
 	return &Service{repo: repo}
 }

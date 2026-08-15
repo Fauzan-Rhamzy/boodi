@@ -46,7 +46,7 @@ func (r *Repository) GetProfilePicture(userID int) (string, error) {
 	var profilePicture string
 
 	err := r.db.QueryRow(
-		`SELECT profile_picture FROM Users WHERE user_id = $1`,
+		`SELECT profile_pic FROM Users WHERE user_id = $1`,
 		userID,
 	).Scan(&profilePicture)
 
