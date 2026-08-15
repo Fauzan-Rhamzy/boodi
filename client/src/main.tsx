@@ -17,6 +17,7 @@ import { AuthProvider } from "./features/auth/AuthContext.tsx";
 import GuestRoute from "./components/GuestRoute.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import LibraryBooksPage from "./pages/LibraryBooksPage.tsx";
+import ProfileBooksPage from "./pages/Profile-BooksPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -71,7 +72,7 @@ const router = createBrowserRouter([
         path: "/profile",
         element: (
           <ProtectedRoute>
-            <ProfilePage />
+            <ProfileBooksPage />
           </ProtectedRoute>
         ),
       },
