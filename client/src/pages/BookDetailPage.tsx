@@ -3,27 +3,14 @@ import bgDetailBook from "../assets/bg-detailBooks.png";
 import { Plus, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { getMe, type AuthUser } from "../features/auth/api";
 import type { Book } from "../types/book";
 import { getById } from "../api/books";
 
 export default function BookDetailPage() {
   const { id } = useParams();
   const [ book, setBook ] = useState<Book | null>(null);
-  const [ user, setUser ] = useState<AuthUser | null>(null);
 
   useEffect(() => {
-    async function fetchUser() {
-        try {
-          const user = await getMe();
-          setUser(user);
-        } catch (error) {
-          console.error(error);
-        }
-      }
-
-      fetchUser();
-
       async function fetchDetailBook() {
         if (!id) return;
         try {

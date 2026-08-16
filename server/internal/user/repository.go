@@ -16,9 +16,9 @@ func (r *Repository) FindByID(id int) (*User, error) {
 	var u User
 	err := r.db.QueryRow(`
 		SELECT 
-			user_id, first_name, last_name, email, phone, COALESCE(profile_pic, ''), role
+			user_id, first_name, last_name, email, phone, COALESCE(profile_pic, ''), role, joined_date
 		FROM users 
-		WHERE user_id = $1`, id).Scan(&u.UserID, &u.FirstName, &u.LastName, &u.Email, &u.Phone, &u.ProfilePic, &u.Role)
+		WHERE user_id = $1`, id).Scan(&u.UserID, &u.FirstName, &u.LastName, &u.Email, &u.Phone, &u.ProfilePic, &u.Role, &u.JoinedDate)
 	if err != nil {
 		return nil, err
 	}

@@ -17,6 +17,9 @@ import { AuthProvider } from "./features/auth/AuthContext.tsx";
 import GuestRoute from "./components/GuestRoute.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
 import LibraryBooksPage from "./pages/LibraryBooksPage.tsx";
+import ProfileBooksPage from "./pages/Profile-BooksPage.tsx";
+import ProfileReviewPage from "./pages/Profile-ReviewPage.tsx";
+import ProfileDiaryPage from "./pages/Profile-DiaryPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -69,6 +72,30 @@ const router = createBrowserRouter([
       },
       {
         path: "/profile",
+        element: (
+          <ProtectedRoute>
+            <ProfileBooksPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/profile/reviews",
+        element: (
+          <ProtectedRoute>
+            <ProfileReviewPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/profile/diary",
+        element: (
+          <ProtectedRoute>
+            <ProfileDiaryPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "/profile/edit",
         element: (
           <ProtectedRoute>
             <ProfilePage />

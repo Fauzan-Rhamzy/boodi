@@ -6,5 +6,5 @@ export type User = {
   phone_number?: string;
   profile_pic?: string;
   role?: string;
-  joinde_date?: string;
+  joined_date?: string;
 };
