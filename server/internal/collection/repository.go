@@ -58,6 +58,51 @@ func (r *Repository) GetCurrentlyReading(userID int) ([]CurrentlyReadingBook, er
 
 	return books, nil
 }
+
+func (r *Repository) GetFavourite(userID int) ([]FavouriteBook, error) {
+	rows, err := r.db.Query(`
+		SELECT
+			b.book_id,
+			b.title,
+			b.cover
+		FROM Collection c
+		JOIN BookCollection bc
+			ON c.collection_id = bc.collection_id
+		JOIN Book b
+			ON b.book_id = bc.book_id
+		WHERE c.user_id = $1
+		AND c.name = 'Favorite'
+		ORDER BY b.title ASC
+	`, userID)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	books := make([]FavouriteBook, 0)
+
+	for rows.Next() {
+		var book FavouriteBook
+
+		if err := rows.Scan(
+			&book.BookID,
+			&book.Title,
+			&book.Cover,
+		); err != nil {
+			return nil, err
+		}
+
+		books = append(books, book)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return books, nil
+}
+
 func (r *Repository) GetLibrary(
 	userID int,
 	collectionID int,

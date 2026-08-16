@@ -8,6 +8,13 @@ type CurrentlyReadingBook struct {
 	Cover    string    `json:"cover"`
 	LoggedAt time.Time `json:"logged_at"`
 }
+
+type FavouriteBook struct {
+	BookID int    `json:"id"`
+	Title  string `json:"title"`
+	Cover  string `json:"cover"`
+}
+
 type Book struct {
 	BookID      int              `json:"id"`
 	Title       string           `json:"title"`
@@ -26,7 +33,7 @@ type AuthorResponse struct {
 }
 
 type LibraryResponse struct {
-    CollectionID    int    `json:"id"`
-    Name  string `json:"name"`
-    Books []Book `json:"books"`
+	CollectionID int    `json:"id"`
+	Name         string `json:"name"`
+	Books        []Book `json:"books"`
 }
