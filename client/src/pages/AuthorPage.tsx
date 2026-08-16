@@ -4,26 +4,13 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import BackArrow from "../components/BackArrow";
 import type { Author } from "../types/author";
-import { getMe, type AuthUser } from "../features/auth/api";
 import { getAuthorByID } from "../api/author";
 
 export default function AuthorPage() {
     const { id } = useParams();
     const [ author, setAuthor ] = useState<Author | null>(null);
-    const [ user, setUser ] = useState<AuthUser | null>(null);
 
     useEffect(() => {
-        async function fetchUser() {
-            try {
-              const user = await getMe();
-              setUser(user);
-            } catch (error) {
-              console.error(error);
-            }
-          }
-    
-          fetchUser();
-    
           async function fetchAuthorByID() {
             if (!id) return;
             try {
