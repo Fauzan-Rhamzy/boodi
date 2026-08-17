@@ -5,20 +5,19 @@ import BackArrow from "../components/BackArrow";
 import BookCover from "../components/BookCover";
 import type { Book } from "../types/book";
 import bgLibrary from "../assets/bg-library.png";
-import {
-  Add,
-  SortAlphaDownAlt,
-  SortAlphaUpAlt,
-  SortCalendarAscending,
-  SortCalendarDescending,
-} from "../components/Icons";
+
 import SearchBar from "../components/SearchBar";
-import { getCurrentlyReading, getFavouriteBooks, getLibrary } from "../api/collection";
-import type {
-  CurrentlyReadingBook,
-  FavouriteBooks,
-  LibraryResponse,
-} from "../types/collection";
+import { getCurrentlyReading, getLibrary } from "../api/collection";
+import type { CurrentlyReadingBook } from "../types/collection";
+import {
+  ArrowDownAZ,
+  ArrowDownZA,
+  CirclePlus,
+  CalendarArrowDown,
+  CalendarArrowUp,
+  ArrowDownZa,
+  ArrowDownAz,
+} from "lucide-react";
 
 export default function LibraryBooksPage() {
   const navigate = useNavigate();
@@ -26,15 +25,11 @@ export default function LibraryBooksPage() {
   const { id } = useParams();
 
   const isCurrentlyReading = location.pathname === "/currently-reading";
-  const isFavouriteBooks = location.pathname === "/favourite-books";
 
   const [libraryName, setLibraryName] = useState("");
   const [books, setBooks] = useState<Book[]>([]);
   const [currentlyReading, setCurrentlyReading] = useState<
     CurrentlyReadingBook[]
-  >([]);
-  const [favouriteBooks, setFavouriteBooks] = useState<
-    FavouriteBooks[]
   >([]);
   const [searchQuery, setSearchQuery] = useState("");
   // Alphabet sorting
@@ -55,21 +50,19 @@ export default function LibraryBooksPage() {
         if (isCurrentlyReading) {
           const data = await getCurrentlyReading();
           setCurrentlyReading(data);
-        } else if (isFavouriteBooks) {
-          const data = await getFavouriteBooks(); 
-          setFavouriteBooks(data);
         } else if (id) {
           const data = await getLibrary(Number(id));
+
           setLibraryName(data.name);
           setBooks(data.books);
-        } 
+        }
       } catch (error) {
         console.error("Failed to get library books:", error);
       }
     }
 
     fetchBooks();
-  }, [isCurrentlyReading, isFavouriteBooks, id]);
+  }, [isCurrentlyReading, id]);
 
   const sortedBooks = isCurrentlyReading
     ? [...currentlyReading].sort((a, b) => {
@@ -83,12 +76,6 @@ export default function LibraryBooksPage() {
           ? a.title.localeCompare(b.title)
           : b.title.localeCompare(a.title);
       })
-    : isFavouriteBooks
-    ? [...favouriteBooks].sort((a, b) =>
-        alphabetSort === "az"
-          ? a.title.localeCompare(b.title)
-          : b.title.localeCompare(a.title),
-      )
     : [...books].sort((a, b) =>
         alphabetSort === "az"
           ? a.title.localeCompare(b.title)
@@ -108,16 +95,15 @@ export default function LibraryBooksPage() {
       <div className="px-6 pt-3 pb-2">
         <BackArrow useHistory={true} />
 
-        <h1 className="mb-3 ml-2 pt-20 text-3xl font-bold">
-          {isCurrentlyReading ? "Currently Reading" : isFavouriteBooks
-          ? "Favourite Books" :  libraryName}
+        <h1 className="mb-3 ml-2 pt-20 pb-1 text-3xl font-bold">
+          {isCurrentlyReading ? "Currently Reading" : libraryName}
         </h1>
 
         {/* Buttons */}
-        <div className="ml-2 flex gap-2.5">
+        <div className="ml-2 flex gap-2.5 pb-1">
           {/* Add */}
           <button type="button" className="cursor-pointer">
-            <Add className="h-8 w-8" />
+            <CirclePlus className="h-8 w-8" />
           </button>
 
           {/* Calendar sorting */}
@@ -138,9 +124,9 @@ export default function LibraryBooksPage() {
               }
             >
               {calendarSort === "newest" ? (
-                <SortCalendarDescending className="h-5 w-5" />
+                <CalendarArrowUp className="h-5 w-5" />
               ) : (
-                <SortCalendarAscending className="h-5 w-5" />
+                <CalendarArrowDown className="h-5 w-5" />
               )}
             </button>
           )}
@@ -156,9 +142,9 @@ export default function LibraryBooksPage() {
             aria-label={alphabetSort === "az" ? "Sort Z-A" : "Sort A-Z"}
           >
             {alphabetSort === "az" ? (
-              <SortAlphaDownAlt className="h-5 w-5" />
+              <ArrowDownZa className="h-5 w-5" />
             ) : (
-              <SortAlphaUpAlt className="h-5 w-5" />
+              <ArrowDownAz className="h-5 w-5" />
             )}
           </button>
         </div>
