@@ -150,7 +150,7 @@ export default function LibraryBooksPage() {
         </div>
 
         <SearchBar
-          className="mt-4 w-full"
+          className="mt-4 mb-3 w-full"
           onSearch={(query) => setSearchQuery(query)}
         />
       </div>
