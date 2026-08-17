@@ -107,6 +107,7 @@ func main() {
 		r.Get("/api/books/trending", bookHandler.GetTrendingBooks)
 		r.Get("/currently-reading", collectionHandler.GetCurrentlyReading)
 		r.Get("/library/{id}", collectionHandler.GetLibrary)
+		r.Get("/favourite-books", collectionHandler.GetFavouriteBooks)
 
 		r.Get("/api/books", bookHandler.GetAll)
 		r.Get("/api/bookDetail/{id}", bookHandler.GetByID)
