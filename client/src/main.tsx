@@ -127,6 +127,14 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/favourite-books",
+        element: (
+          <ProtectedRoute>
+            <LibraryBooksPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
         path: "/library/:id",
         element: (
           <ProtectedRoute>

@@ -6,16 +6,16 @@ import type { User } from "../types/users";
 import bgProfile from "../assets/bg-profile.png";
 import { getUserProfile } from "../api/users";
 import type { Book } from "../types/book";
-import { getCurrentlyReading } from "../api/collection";
+import { getCurrentlyReading, getFavouriteBooks } from "../api/collection";
 import HorizontalBookList from "../components/HorizontalBookList";
 import { ChevronsRight } from "lucide-react";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate } from "react-router";
+import type { FavouriteBooks } from "../types/collection";
 
 export default function ProfileBooksPage() {
-    const { id } = useParams();
     const [user, setUser] = useState<User | null>(null);
     const [currentlyReading, setCurrentlyReading] = useState<Book[]>([]);
-    const [currentLibrary, setCurrentLibrary] = useState<Book[]>([]);
+    const [favouriteBooks, setFavouriteBooks] = useState<FavouriteBooks[]>([]);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -31,7 +31,7 @@ export default function ProfileBooksPage() {
 
         fetchUser();
 
-        async function fetchCurrentLibrary() {
+        async function fetchCurrentlyReading() {
             try {
                 const books = await getCurrentlyReading();
                 setCurrentlyReading(books);
@@ -39,8 +39,19 @@ export default function ProfileBooksPage() {
                 console.error("Failed to get currently reading:", error);
             }
         }
-        
-        fetchCurrentLibrary();
+
+        fetchCurrentlyReading();
+
+        async function fetchFavourite() {
+            try {
+                const books = await getFavouriteBooks();
+                setFavouriteBooks(books);
+            } catch (error) {
+                console.error("Failed to get favourite books:", error);
+            }
+        }
+
+        fetchFavourite();
     }, []);
 
   return (
@@ -95,10 +106,10 @@ export default function ProfileBooksPage() {
                         <ChevronsRight className="h-4 w-4" />
                     </button>
                     </div>
-                    {currentlyReading.length > 0 ? (
+                    {favouriteBooks.length > 0 ? (
                     <HorizontalBookList
                         title="Favourite Books"
-                        books={currentlyReading}
+                        books={favouriteBooks}
                     />
                     ) : (
                     <p className="mt-3 text-sm text-gray-500">add a new book~</p>
