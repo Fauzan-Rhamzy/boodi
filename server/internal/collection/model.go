@@ -37,3 +37,9 @@ type LibraryResponse struct {
 	Name         string `json:"name"`
 	Books        []Book `json:"books"`
 }
+
+type Collection struct {
+	CollectionID int    `json:"id"`
+	Name         string `json:"name"`
+	CoverPhoto   string `json:"cover"`
+}
