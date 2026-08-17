@@ -122,3 +122,10 @@ func (r *Repository) GetLibrary(
 
 	return &library, nil
 }
+
+func (r *Repository) GetCollections(userID int) {
+	// rows, err := r.db.Query(`
+	// 	SELECT * FROM collection WHERE user_id = $1
+	// `, userID)
+
+}

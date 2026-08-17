@@ -26,7 +26,7 @@ export default function UserProfile({ pfp }: { pfp: string }) {
       >
         <img
           src={`http://localhost:8080/images/${user?.profile_picture}`}
-          className="w-10 h-10 rounded-full"
+          className="w-10 h-10 rounded-full object-cover"
         />
         <ChevronDown
           className={`w-5 h-5 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
