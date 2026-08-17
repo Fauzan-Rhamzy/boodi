@@ -11,7 +11,7 @@ func (s *Service) GetCurrentlyReading(userID int) ([]CurrentlyReadingBook, error
 	return s.repo.GetCurrentlyReading(userID)
 }
 
-func (s *Service) GetFavouriteBooks(userID int) ([]FavouriteBook, error) {
+func (s *Service) GetFavouriteBooks(userID int) ([]FavouriteBooks, error) {
 	return s.repo.GetFavourite(userID)
 }
 

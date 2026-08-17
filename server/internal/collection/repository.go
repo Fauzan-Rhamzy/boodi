@@ -59,7 +59,7 @@ func (r *Repository) GetCurrentlyReading(userID int) ([]CurrentlyReadingBook, er
 	return books, nil
 }
 
-func (r *Repository) GetFavourite(userID int) ([]FavouriteBook, error) {
+func (r *Repository) GetFavourite(userID int) ([]FavouriteBooks, error) {
 	rows, err := r.db.Query(`
 		SELECT
 			b.book_id,
@@ -80,10 +80,10 @@ func (r *Repository) GetFavourite(userID int) ([]FavouriteBook, error) {
 	}
 	defer rows.Close()
 
-	books := make([]FavouriteBook, 0)
+	books := make([]FavouriteBooks, 0)
 
 	for rows.Next() {
-		var book FavouriteBook
+		var book FavouriteBooks
 
 		if err := rows.Scan(
 			&book.BookID,

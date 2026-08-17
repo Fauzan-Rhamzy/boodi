@@ -9,7 +9,7 @@ type CurrentlyReadingBook struct {
 	LoggedAt time.Time `json:"logged_at"`
 }
 
-type FavouriteBook struct {
+type FavouriteBooks struct {
 	BookID int    `json:"id"`
 	Title  string `json:"title"`
 	Cover  string `json:"cover"`

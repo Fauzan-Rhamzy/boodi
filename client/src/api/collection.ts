@@ -2,6 +2,7 @@ import api from "../lib/axios";
 import type { Book } from "../types/book";
 import type {
   CurrentlyReadingBook,
+  FavouriteBooks,
   LibraryResponse,
 } from "../types/collection";
 
@@ -17,5 +18,10 @@ export async function getCurrentlyReading(): Promise<CurrentlyReadingBook[]> {
 }
 export async function getLibrary(id: number): Promise<LibraryResponse> {
   const response = await api.get(`/library/${id}`);
+  return response.data.data;
+}
+
+export async function getFavouriteBooks(): Promise<FavouriteBooks[]> {
+  const response = await api.get("/favourite-books");
   return response.data.data;
 }
