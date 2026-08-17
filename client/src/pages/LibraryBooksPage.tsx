@@ -13,9 +13,10 @@ import {
   SortCalendarDescending,
 } from "../components/Icons";
 import SearchBar from "../components/SearchBar";
-import { getCurrentlyReading, getLibrary } from "../api/collection";
+import { getCurrentlyReading, getFavouriteBooks, getLibrary } from "../api/collection";
 import type {
   CurrentlyReadingBook,
+  FavouriteBooks,
   LibraryResponse,
 } from "../types/collection";
 
@@ -25,11 +26,15 @@ export default function LibraryBooksPage() {
   const { id } = useParams();
 
   const isCurrentlyReading = location.pathname === "/currently-reading";
+  const isFavouriteBooks = location.pathname === "/favourite-books";
 
   const [libraryName, setLibraryName] = useState("");
   const [books, setBooks] = useState<Book[]>([]);
   const [currentlyReading, setCurrentlyReading] = useState<
     CurrentlyReadingBook[]
+  >([]);
+  const [favouriteBooks, setFavouriteBooks] = useState<
+    FavouriteBooks[]
   >([]);
   const [searchQuery, setSearchQuery] = useState("");
   // Alphabet sorting
@@ -50,19 +55,21 @@ export default function LibraryBooksPage() {
         if (isCurrentlyReading) {
           const data = await getCurrentlyReading();
           setCurrentlyReading(data);
+        } else if (isFavouriteBooks) {
+          const data = await getFavouriteBooks(); 
+          setFavouriteBooks(data);
         } else if (id) {
           const data = await getLibrary(Number(id));
-
           setLibraryName(data.name);
           setBooks(data.books);
-        }
+        } 
       } catch (error) {
         console.error("Failed to get library books:", error);
       }
     }
 
     fetchBooks();
-  }, [isCurrentlyReading, id]);
+  }, [isCurrentlyReading, isFavouriteBooks, id]);
 
   const sortedBooks = isCurrentlyReading
     ? [...currentlyReading].sort((a, b) => {
@@ -76,6 +83,12 @@ export default function LibraryBooksPage() {
           ? a.title.localeCompare(b.title)
           : b.title.localeCompare(a.title);
       })
+    : isFavouriteBooks
+    ? [...favouriteBooks].sort((a, b) =>
+        alphabetSort === "az"
+          ? a.title.localeCompare(b.title)
+          : b.title.localeCompare(a.title),
+      )
     : [...books].sort((a, b) =>
         alphabetSort === "az"
           ? a.title.localeCompare(b.title)
@@ -96,7 +109,8 @@ export default function LibraryBooksPage() {
         <BackArrow useHistory={true} />
 
         <h1 className="mb-3 ml-2 pt-20 text-3xl font-bold">
-          {isCurrentlyReading ? "Currently Reading" : libraryName}
+          {isCurrentlyReading ? "Currently Reading" : isFavouriteBooks
+          ? "Favourite Books" :  libraryName}
         </h1>
 
         {/* Buttons */}

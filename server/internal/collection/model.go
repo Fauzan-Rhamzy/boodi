@@ -8,6 +8,13 @@ type CurrentlyReadingBook struct {
 	Cover    string    `json:"cover"`
 	LoggedAt time.Time `json:"logged_at"`
 }
+
+type FavouriteBooks struct {
+	BookID int    `json:"id"`
+	Title  string `json:"title"`
+	Cover  string `json:"cover"`
+}
+
 type Book struct {
 	BookID      int              `json:"id"`
 	Title       string           `json:"title"`

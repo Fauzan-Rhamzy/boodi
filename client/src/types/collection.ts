@@ -13,3 +13,5 @@ export type LibraryResponseWrapper = {
   data: LibraryResponse;
   success: boolean;
 };
+
+export type FavouriteBooks = Book
