@@ -21,3 +21,15 @@ func (s *Service) GetLibrary(
 ) (*LibraryResponse, error) {
 	return s.repo.GetLibrary(userID, collectionID)
 }
+
+func (s *Service) AddToFavourite(userID int, bookID int) error {
+	return s.repo.AddToFavourite(userID, bookID)
+}
+
+func (s *Service) DeleteFromFavourite(userID int, bookID int) error {
+	return s.repo.DeleteFromFavourite(userID, bookID)
+}
+
+func (s *Service) IsBookFavourited(UserID int, bookID int) (bool, error) {
+	return s.repo.IsBookFavourited(UserID, bookID)
+}

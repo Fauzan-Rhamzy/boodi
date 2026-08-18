@@ -108,6 +108,9 @@ func main() {
 		r.Get("/currently-reading", collectionHandler.GetCurrentlyReading)
 		r.Get("/library/{id}", collectionHandler.GetLibrary)
 		r.Get("/favourite-books", collectionHandler.GetFavouriteBooks)
+		r.Post("/favourite-books/{bookId}", collectionHandler.AddToFavourite)
+		r.Delete("/favourite-books/{bookId}", collectionHandler.DeleteFromFavourite)
+		r.Get("/favourite-books/check/{id}", collectionHandler.IsBookFavourited)
 
 		r.Get("/api/books", bookHandler.GetAll)
 		r.Get("/api/bookDetail/{id}", bookHandler.GetByID)
