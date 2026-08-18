@@ -1,5 +1,5 @@
 import BackArrow from "../components/BackArrow";
-import bg from "../assets/bg-login.png";
+import bg from "../assets/bg-editProfile.png";
 import pfp from "../assets/dummy-pfp.png";
 import BigProfile from "../components/BigProfile";
 import React, { useEffect, useState } from "react";
@@ -9,7 +9,7 @@ import { useAuth } from "../features/auth/AuthContext";
 import { getUserProfile, updateProfile } from "../api/users";
 
 export default function ProfilePage() {
-  const { user } = useAuth();
+  const { user, refetch } = useAuth();
 
   const defaultPfp = `http://localhost:8080/images/${user?.profile_picture}`;
   const [preview, setPreview] = useState(
@@ -56,6 +56,15 @@ export default function ProfilePage() {
   const handleSaveChanges = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (firstName.trim() === "") {
+      toast.error("First name should not be empty");
+      return;
+    }
+
+    if (phoneNumber?.length && phoneNumber?.length < 7) {
+      toast.error("Phone number is too short");
+      return;
+    }
     const loading = toast.loading("Saving changes...");
 
     const formData = new FormData();
@@ -71,6 +80,7 @@ export default function ProfilePage() {
     try {
       await updateProfile(user?.user_id, formData);
       toast.dismiss(loading);
+      refetch();
       toast.success("Profile updated");
       setFile(null);
     } catch (error) {
@@ -87,7 +97,7 @@ export default function ProfilePage() {
         backgroundRepeat: "no-repeat",
       }}
     >
-      <BackArrow />
+      <BackArrow backPath="/home" />
 
       <div className="flex items-center justify-center h-64 mt-2">
         <BigProfile pfp={preview} />
@@ -116,7 +126,7 @@ export default function ProfilePage() {
               htmlFor="firstName"
               className="block text-sm/6 font-medium text-gray-900"
             >
-              First Name
+              First Name <span className="text-red-500 ml-0.5">*</span>
             </label>
             <div className="mt-2">
               <input
@@ -136,8 +146,9 @@ export default function ProfilePage() {
               htmlFor="lastName"
               className="block text-sm/6 font-medium text-gray-900"
             >
-              Last Name
+              Last Name <span className="italic text-gray-400">(optional)</span>
             </label>
+
             <div className="mt-2">
               <input
                 id="lastName"
@@ -155,7 +166,7 @@ export default function ProfilePage() {
               htmlFor="phoneNumber"
               className="block text-sm/6 font-medium text-gray-900"
             >
-              Phone Number
+              Phone Number <span className="text-red-500 ml-0.5">*</span>
             </label>
             <div className="mt-2 ">
               <PhoneInput

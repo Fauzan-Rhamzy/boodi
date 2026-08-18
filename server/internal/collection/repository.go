@@ -218,3 +218,9 @@ func (r *Repository) IsBookFavourited(userID int, bookID int) (bool, error) {
 	err := r.db.QueryRow(query, userID, bookID).Scan(&isFav)
 	return isFav, err
 }
+
+// func (r *Repository) GetCollections(userID int) {
+// 	rows, err := r.db.Query(`
+// 			SELECT * FROM collection WHERE user_id = $1
+// 		`, userID)
+// }

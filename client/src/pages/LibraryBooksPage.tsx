@@ -5,20 +5,19 @@ import BackArrow from "../components/BackArrow";
 import BookCover from "../components/BookCover";
 import type { Book } from "../types/book";
 import bgLibrary from "../assets/bg-library.png";
-import {
-  Add,
-  SortAlphaDownAlt,
-  SortAlphaUpAlt,
-  SortCalendarAscending,
-  SortCalendarDescending,
-} from "../components/Icons";
+
 import SearchBar from "../components/SearchBar";
 import { getCurrentlyReading, getFavouriteBooks, getLibrary } from "../api/collection";
-import type {
-  CurrentlyReadingBook,
-  FavouriteBooks,
-  LibraryResponse,
-} from "../types/collection";
+import type { CurrentlyReadingBook, FavouriteBooks } from "../types/collection";
+import {
+  ArrowDownAZ,
+  ArrowDownZA,
+  CirclePlus,
+  CalendarArrowDown,
+  CalendarArrowUp,
+  ArrowDownZa,
+  ArrowDownAz,
+} from "lucide-react";
 
 export default function LibraryBooksPage() {
   const navigate = useNavigate();
@@ -56,13 +55,14 @@ export default function LibraryBooksPage() {
           const data = await getCurrentlyReading();
           setCurrentlyReading(data);
         } else if (isFavouriteBooks) {
-          const data = await getFavouriteBooks(); 
-          setFavouriteBooks(data);
+          const data = await getFavouriteBooks();
+          setFavouriteBooks(data); 
         } else if (id) {
           const data = await getLibrary(Number(id));
+
           setLibraryName(data.name);
           setBooks(data.books);
-        } 
+        }
       } catch (error) {
         console.error("Failed to get library books:", error);
       }
@@ -83,7 +83,7 @@ export default function LibraryBooksPage() {
           ? a.title.localeCompare(b.title)
           : b.title.localeCompare(a.title);
       })
-    : isFavouriteBooks
+       : isFavouriteBooks
     ? [...favouriteBooks].sort((a, b) =>
         alphabetSort === "az"
           ? a.title.localeCompare(b.title)
@@ -108,16 +108,16 @@ export default function LibraryBooksPage() {
       <div className="px-6 pt-3 pb-2">
         <BackArrow useHistory={true} />
 
-        <h1 className="mb-3 ml-2 pt-20 text-3xl font-bold">
+        <h1 className="mb-3 ml-2 pt-20 pb-1 text-3xl font-bold">
           {isCurrentlyReading ? "Currently Reading" : isFavouriteBooks
-          ? "Favourite Books" :  libraryName}
+            ? "Favourite Books" : libraryName}
         </h1>
 
         {/* Buttons */}
-        <div className="ml-2 flex gap-2.5">
+        <div className="ml-2 flex gap-2.5 pb-1">
           {/* Add */}
           <button type="button" className="cursor-pointer">
-            <Add className="h-8 w-8" />
+            <CirclePlus className="h-8 w-8" />
           </button>
 
           {/* Calendar sorting */}
@@ -138,9 +138,9 @@ export default function LibraryBooksPage() {
               }
             >
               {calendarSort === "newest" ? (
-                <SortCalendarDescending className="h-5 w-5" />
+                <CalendarArrowUp className="h-5 w-5" />
               ) : (
-                <SortCalendarAscending className="h-5 w-5" />
+                <CalendarArrowDown className="h-5 w-5" />
               )}
             </button>
           )}
@@ -156,15 +156,15 @@ export default function LibraryBooksPage() {
             aria-label={alphabetSort === "az" ? "Sort Z-A" : "Sort A-Z"}
           >
             {alphabetSort === "az" ? (
-              <SortAlphaDownAlt className="h-5 w-5" />
+              <ArrowDownZa className="h-5 w-5" />
             ) : (
-              <SortAlphaUpAlt className="h-5 w-5" />
+              <ArrowDownAz className="h-5 w-5" />
             )}
           </button>
         </div>
 
         <SearchBar
-          className="mt-4 w-full"
+          className="mt-4 mb-3 w-full"
           onSearch={(query) => setSearchQuery(query)}
         />
       </div>
@@ -177,7 +177,7 @@ export default function LibraryBooksPage() {
           <p className="mt-1 text-sm text-gray-500">Add a book</p>
         </div>
       ) : (
-        <div className="mx-2 grid grid-cols-3 gap-x-3 gap-y-6 px-6 pt-4">
+        <div className="mx-2 grid grid-cols-3 gap-x-3 gap-y-6 px-6 pt-4 items-start">
           {filteredBooks.map((book) => (
             <button
               key={book.id}
@@ -186,7 +186,6 @@ export default function LibraryBooksPage() {
             >
               <BookCover
                 book={book}
-                className="aspect-2/3 w-full rounded-xl object-cover"
               />
 
               <p className="mt-1 line-clamp-2 text-sm font-medium">

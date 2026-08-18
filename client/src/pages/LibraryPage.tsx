@@ -1,3 +1,186 @@
-export default function template() {
-  return <>library page</>;
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router";
+
+import BackArrow from "../components/BackArrow";
+import BookCover from "../components/BookCover";
+import type { Book } from "../types/book";
+import bgLibrary from "../assets/bg-library.png";
+import {
+  Add,
+  SortAlphaDownAlt,
+  SortAlphaUpAlt,
+  SortCalendarAscending,
+  SortCalendarDescending,
+} from "../components/Icons";
+import SearchBar from "../components/SearchBar";
+import { getCurrentlyReading, getLibrary } from "../api/collection";
+import type {
+  CurrentlyReadingBook,
+  LibraryResponse,
+} from "../types/collection";
+
+export default function LibraryPage() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { id } = useParams();
+
+  const [collections, setCollections] = useState([]);
+
+  const isCurrentlyReading = location.pathname === "/currently-reading";
+
+  const [books, setBooks] = useState<Book[]>([]);
+  const [currentlyReading, setCurrentlyReading] = useState<
+    CurrentlyReadingBook[]
+  >([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  // Alphabet sorting
+  const [alphabetSort, setAlphabetSort] = useState<"az" | "za">("az");
+  // Calendar sorting
+  const [calendarSort, setCalendarSort] = useState<"newest" | "oldest">(
+    "newest",
+  );
+
+  // Which type of sorting is currently being used
+  const [activeSort, setActiveSort] = useState<"alphabet" | "calendar">(
+    isCurrentlyReading ? "calendar" : "alphabet",
+  );
+
+  useEffect(() => {
+    async function fetchBooks() {
+      try {
+        if (isCurrentlyReading) {
+          const data = await getCurrentlyReading();
+          setCurrentlyReading(data);
+        } else if (id) {
+          const data = await getLibrary(Number(id));
+
+          setBooks(data.books);
+        }
+      } catch (error) {
+        console.error("Failed to get library books:", error);
+      }
+    }
+
+    fetchBooks();
+  }, [isCurrentlyReading, id]);
+
+  const sortedBooks = isCurrentlyReading
+    ? [...currentlyReading].sort((a, b) => {
+        if (activeSort === "calendar") {
+          return calendarSort === "newest"
+            ? new Date(b.logged_at).getTime() - new Date(a.logged_at).getTime()
+            : new Date(a.logged_at).getTime() - new Date(b.logged_at).getTime();
+        }
+
+        return alphabetSort === "az"
+          ? a.title.localeCompare(b.title)
+          : b.title.localeCompare(a.title);
+      })
+    : [...books].sort((a, b) =>
+        alphabetSort === "az"
+          ? a.title.localeCompare(b.title)
+          : b.title.localeCompare(a.title),
+      );
+  const filteredBooks = sortedBooks.filter((book) =>
+    book.title.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
+  return (
+    <div
+      className="min-h-screen w-full"
+      style={{
+        backgroundImage: `url(${bgLibrary})`,
+      }}
+    >
+      {/* Header */}
+      <div className="px-6 pt-3 pb-2">
+        <BackArrow useHistory={true} />
+
+        <h1 className="mb-3 ml-2 pt-20 text-3xl font-bold">Library</h1>
+
+        {/* Buttons */}
+        <div className="ml-2 flex gap-2.5">
+          <SearchBar
+            className="mt-4 w-full"
+            onSearch={(query) => setSearchQuery(query)}
+          />
+
+          {/* Add */}
+          <button type="button" className="cursor-pointer">
+            <Add className="h-8 w-8" />
+          </button>
+
+          {/* Calendar sorting */}
+          {isCurrentlyReading && (
+            <button
+              type="button"
+              onClick={() => {
+                setActiveSort("calendar");
+                setCalendarSort((current) =>
+                  current === "newest" ? "oldest" : "newest",
+                );
+              }}
+              className="rounded-full border-2 p-1 transition-colors hover:bg-gray-200"
+              aria-label={
+                calendarSort === "newest"
+                  ? "Sort oldest first"
+                  : "Sort newest first"
+              }
+            >
+              {calendarSort === "newest" ? (
+                <SortCalendarDescending className="h-5 w-5" />
+              ) : (
+                <SortCalendarAscending className="h-5 w-5" />
+              )}
+            </button>
+          )}
+
+          {/* Alphabet sorting */}
+          <button
+            type="button"
+            onClick={() => {
+              setActiveSort("alphabet");
+              setAlphabetSort((current) => (current === "az" ? "za" : "az"));
+            }}
+            className="rounded-full border-2 p-1 transition-colors hover:bg-gray-200"
+            aria-label={alphabetSort === "az" ? "Sort Z-A" : "Sort A-Z"}
+          >
+            {alphabetSort === "az" ? (
+              <SortAlphaDownAlt className="h-5 w-5" />
+            ) : (
+              <SortAlphaUpAlt className="h-5 w-5" />
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Books */}
+      {/* {filteredBooks.length === 0 ? ( */}
+      {false ? (
+        <div className="flex flex-col items-center justify-center px-10 py-10 text-center">
+          <p className="text-lg font-bold text-gray-700">No Collections yet</p>
+
+          <p className="mt-1 text-sm text-gray-500">Add a collection</p>
+        </div>
+      ) : (
+        <div className="mx-2 grid grid-cols-3 gap-x-3 gap-y-6 px-6 pt-4">
+          {filteredBooks.map((collection) => (
+            <button
+              key={collection.id}
+              onClick={() => navigate(`/library/${collection.id}`)}
+              className="cursor-pointer text-left"
+            >
+              <BookCover
+                book={collection}
+                className="aspect-2/3 w-full rounded-xl object-cover"
+              />
+
+              <p className="mt-1 line-clamp-2 text-sm font-medium">
+                {collection.title}
+              </p>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 }
