@@ -25,7 +25,7 @@ export default function UserProfile({ pfp }: { pfp: string }) {
         className="flex items-center gap-1 cursor-pointer"
       >
         <img
-          src={`http://localhost:8080/images/${user?.profile_picture}`}
+          src={`http://localhost:8080/images/profile/dummy.png`}
           className="w-10 h-10 rounded-full object-cover"
         />
         <ChevronDown
