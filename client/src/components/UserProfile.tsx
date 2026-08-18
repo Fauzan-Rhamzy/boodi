@@ -46,7 +46,7 @@ export default function UserProfile({ pfp }: { pfp: string }) {
             }}
             className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
           >
-            Edit Profile
+            Profile
           </button>
           <button
             onClick={() => handleLogout()}
