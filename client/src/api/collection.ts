@@ -25,3 +25,16 @@ export async function getFavouriteBooks(): Promise<FavouriteBooks[]> {
   const response = await api.get("/favourite-books");
   return response.data.data;
 }
+
+export async function AddToFavourite(bookId: number): Promise<void> {
+  await api.post(`/favourite-books/${bookId}`);
+}
+
+export async function DeleteFromFavourite(bookId: number): Promise<void> {
+  await api.delete(`/favourite-books/${bookId}`);
+}
+
+export async function checkIsFavourited(bookId: number): Promise<boolean> {
+  const response = await api.get(`/favourite-books/check/${bookId}`);
+  return response.data.data.is_favourited;  
+}
