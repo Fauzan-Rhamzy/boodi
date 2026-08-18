@@ -27,7 +27,11 @@ export default function ProfileHeader({
                     </div>
 
                     <img
-                        src={`http://localhost:8080/images/profile/dummy.png`}
+                        src={
+                        user?.profile_pic
+                            ? `http://localhost:8080/images/${user.profile_pic}`
+                            : `http://localhost:8080/images/profile/dummy.png`
+                        }
                         alt={user?.first_name}
                         className="w-14 h-14 rounded-full object-cover shrink-0 mt-20"
                     />
