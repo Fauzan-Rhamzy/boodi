@@ -1,6 +1,8 @@
 package collection
 
-import "database/sql"
+import (
+	"database/sql"
+)
 
 type Repository struct {
 	db *sql.DB
@@ -166,6 +168,43 @@ func (r *Repository) GetLibrary(
 	}
 
 	return &library, nil
+}
+
+func (r *Repository) GetUserCollections(userID int) ([]Collection, error) {
+	rows, err := r.db.Query(`
+		SELECT
+			collection_id,
+			name,
+			cover_photo,
+			user_id
+		FROM 
+			collection 
+		WHERE 
+			user_id = $1
+	`, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	var collections []Collection
+	for rows.Next() {
+		var c Collection
+		rows.Scan(&c.CollectionID, &c.Name, &c.CoverPhoto, &c.UserID)
+		collections = append(collections, c)
+	}
+	return collections, nil
+}
+
+func (r *Repository) CreateUserCollections(userID int, name string, coverPhoto string) (int, error) {
+	var id int
+	err := r.db.QueryRow(`
+        INSERT INTO collection (name, user_id, cover_photo)
+        VALUES ($1, $2, $3)
+        RETURNING collection_id
+    `, name, userID, coverPhoto).Scan(&id)
+	return id, err
 }
 
 func (r *Repository) AddToFavourite(userID int, bookID int) error {

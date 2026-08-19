@@ -112,6 +112,9 @@ func main() {
 		r.Delete("/favourite-books/{bookId}", collectionHandler.DeleteFromFavourite)
 		r.Get("/favourite-books/check/{id}", collectionHandler.IsBookFavourited)
 
+		r.Get("/api/collection", collectionHandler.GetUserCollections)
+		r.Post("/api/collection", collectionHandler.CreateUserCollections)
+
 		r.Get("/api/books", bookHandler.GetAll)
 		r.Get("/api/bookDetail/{id}", bookHandler.GetByID)
 		r.Get("/api/author/{id}", authorHandler.GetByID)
