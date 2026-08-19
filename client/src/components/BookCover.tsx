@@ -17,7 +17,7 @@ export default function BookCover({ book, className = "" }: BookCoverProps) {
       <img
         src={`http://localhost:8080/images/${book.cover}`}
         alt={book.title}
-        className="aspect-2/3 w-full rounded-xl object-cover"
+        className="relative aspect-[2/3] w-full rounded-xl object-cover"
       />
     </button>
   );

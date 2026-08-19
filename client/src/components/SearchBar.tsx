@@ -1,4 +1,4 @@
-import { Search, TriangleAlert } from "lucide-react";
+import { Search, TriangleAlert, CircleX } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 
@@ -11,13 +11,15 @@ export default function SearchBar({ className, onSearch }: SearchBarProps) {
   const [query, setQuery] = useState("");
   const navigate = useNavigate();
   const [error, setError] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
 
   const search = () => {
     if (!query.trim()) {
       setError("Please insert a book title!");
+
       return;
     }
-
+    setIsSearching(true);
     setError("");
 
     if (onSearch) {
@@ -26,6 +28,16 @@ export default function SearchBar({ className, onSearch }: SearchBarProps) {
     } else {
       // Default behavior
       navigate(`/search?q=${encodeURIComponent(query.trim())}`);
+    }
+  };
+
+  const clearSearch = () => {
+    setQuery("");
+    setError("");
+    setIsSearching(false);
+
+    if (onSearch) {
+      onSearch("");
     }
   };
 
@@ -39,6 +51,7 @@ export default function SearchBar({ className, onSearch }: SearchBarProps) {
             onChange={(event) => {
               setQuery(event.target.value);
               setError("");
+              setIsSearching(false);
             }}
             onKeyDown={(event) => {
               if (event.key === "Enter") {
@@ -48,8 +61,12 @@ export default function SearchBar({ className, onSearch }: SearchBarProps) {
             className="text-md w-full border-0 text-gray-600 focus:border-none focus:outline-none"
           />
 
-          <button type="button" onClick={search}>
-            <Search className="h-5 w-5 text-gray-800" />
+          <button type="button" onClick={isSearching ? clearSearch : search}>
+            {!isSearching ? (
+              <Search className="h-5 w-5 text-gray-800" />
+            ) : (
+              <CircleX className="h-5 w-5 text-gray-800" />
+            )}
           </button>
         </div>
 

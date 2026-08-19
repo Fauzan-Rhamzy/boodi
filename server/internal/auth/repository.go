@@ -21,14 +21,47 @@ func (r *Repository) FindByEmail(email string) (*User, error) {
 	return &user, nil
 }
 
+// func (r *Repository) Create(req RegisterRequest, hashedPassword string) (int, error) {
+// 	var id int
+// 	err := r.db.QueryRow(`
+// 	INSERT INTO users (email, password, first_name, last_name, phone)
+// 	VALUES ($1, $2, $3, $4, $5)
+// 	RETURNING user_id
+// 	`, req.Email, hashedPassword, req.FirstName, req.LastName, req.Phone).Scan(&id)
+// 	return id, err
+// }
+
 func (r *Repository) Create(req RegisterRequest, hashedPassword string) (int, error) {
+	tx, err := r.db.Begin()
+	if err != nil {
+		return 0, err
+	}
+	defer tx.Rollback()
+
 	var id int
-	err := r.db.QueryRow(`
-	INSERT INTO users (email, password, first_name, last_name, phone)
-	VALUES ($1, $2, $3, $4, $5)
-	RETURNING user_id
+	err = tx.QueryRow(`
+		INSERT INTO users (email, password, first_name, last_name, phone)
+		VALUES ($1, $2, $3, $4, $5)
+		RETURNING user_id
 	`, req.Email, hashedPassword, req.FirstName, req.LastName, req.Phone).Scan(&id)
-	return id, err
+	if err != nil {
+		return 0, err
+	}
+
+	_, err = tx.Exec(`
+		INSERT INTO Collection (name, user_id, cover_photo) VALUES
+		('Currently Reading', $1, 'collections/currently-reading.jpg'),
+		('Favorite', $1, 'collections/favorite.jpg')
+	`, id)
+	if err != nil {
+		return 0, err
+	}
+
+	if err := tx.Commit(); err != nil {
+		return 0, err
+	}
+
+	return id, nil
 }
 
 func (r *Repository) GetFirstName(userID int) (string, error) {

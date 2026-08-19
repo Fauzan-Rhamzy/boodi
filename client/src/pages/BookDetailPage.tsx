@@ -5,24 +5,53 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import type { Book } from "../types/book";
 import { getById } from "../api/books";
+import { AddToFavourite, checkIsFavourited, DeleteFromFavourite } from "../api/collection";
 
 export default function BookDetailPage() {
   const { id } = useParams();
   const [ book, setBook ] = useState<Book | null>(null);
+  const [isFavourited, setIsFavourited] = useState(false);
 
   useEffect(() => {
-      async function fetchDetailBook() {
-        if (!id) return;
-        try {
-          const book = await getById(Number(id));
-          setBook(book);
-        } catch (error) {
-          console.error("Failed to get detail book:", error);
-        }
+    async function fetchDetailBookAndFavorite() {
+      if (!id) return;
+      const bookIdNum = Number(id);
+
+      // 1. Ambil detail buku terlebih dahulu (Wajib)
+      try {
+        const bookData = await getById(bookIdNum);
+        setBook(bookData);
+      } catch (error) {
+        console.error("Failed to get detail book:", error);
       }
-      
-      fetchDetailBook();
+
+      // 2. Ambil status favorit secara terpisah (Opsional)
+      try {
+        const favStatus = await checkIsFavourited(bookIdNum);
+        setIsFavourited(favStatus);
+      } catch (error) {
+        console.error("Failed to get favourite status:", error);
+      }
+    }
+
+    fetchDetailBookAndFavorite();
   }, [id]);
+
+  const handleToggleFavourite = async () => {
+    if (!book) return;
+
+    try {
+      if (isFavourited) {
+        await DeleteFromFavourite(book.id);
+        setIsFavourited(false);
+      } else {
+        await AddToFavourite(book.id);
+        setIsFavourited(true);
+      }
+    } catch (error) {
+      console.error("Failed to toggle favourite:", error);
+    }
+  };
 
   if (!book) {
     return <p>Loading...</p>;
@@ -85,8 +114,11 @@ export default function BookDetailPage() {
             <Plus className="w-4 h-4" />
           </button>
 
-          <button className="w-6 h-6 p-0 shrink-0 flex items-center justify-center rounded-full border border-black text-black hover:bg-black/5">
-            <Heart className="w-4 h-4" />
+          <button
+            onClick={handleToggleFavourite}
+            className="w-6 h-6 p-0 shrink-0 flex items-center justify-center rounded-full border border-black text-black hover:bg-black/5"
+          >
+            <Heart className={`w-4 h-4 ${isFavourited ? "fill-red-500 text-red-500" : ""}`} />
           </button>
         </div>
 
