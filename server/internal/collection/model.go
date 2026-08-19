@@ -39,7 +39,13 @@ type LibraryResponse struct {
 }
 
 type Collection struct {
-	CollectionID int    `json:"id"`
+	CollectionID int    `json:"collection_id"`
 	Name         string `json:"name"`
-	CoverPhoto   string `json:"cover"`
+	UserID       string `json:"user_id"`
+	CoverPhoto   string `json:"cover_photo"`
+}
+
+type CreateCollectionRequest struct {
+	Name       string `json:"name"`
+	CoverPhoto string `json:"cover_photo"`
 }

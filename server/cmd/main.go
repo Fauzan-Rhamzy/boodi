@@ -109,6 +109,9 @@ func main() {
 		r.Get("/library/{id}", collectionHandler.GetLibrary)
 		r.Get("/favourite-books", collectionHandler.GetFavouriteBooks)
 
+		r.Get("/api/collection", collectionHandler.GetUserCollections)
+		r.Post("/api/collection", collectionHandler.CreateUserCollections)
+
 		r.Get("/api/books", bookHandler.GetAll)
 		r.Get("/api/bookDetail/{id}", bookHandler.GetByID)
 		r.Get("/api/author/{id}", authorHandler.GetByID)

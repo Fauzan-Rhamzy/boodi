@@ -14,4 +14,10 @@ export type LibraryResponseWrapper = {
   success: boolean;
 };
 
-export type FavouriteBooks = Book
+export type FavouriteBooks = Book;
+
+export type Collection = {
+  id: number;
+  name: string;
+  cover_photo: string;
+};
