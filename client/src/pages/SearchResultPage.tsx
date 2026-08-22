@@ -4,6 +4,7 @@ import bgHome from "../assets/bg-home.png";
 import { searchBooks } from "../api/books";
 import type { Book } from "../types/book";
 import BackArrow from "../components/BackArrow";
+import BookCover from "../components/BookCover";
 
 export default function SearchResultPage() {
   const navigate = useNavigate();
@@ -61,21 +62,7 @@ export default function SearchResultPage() {
       ) : (
         <div className="grid grid-cols-3 gap-x-3 gap-y-6 px-6 mx-2 pt-4">
           {books.map((book) => (
-            <button
-              key={book.id}
-              onClick={() => navigate(`/bookDetail/${book.id}`)}
-              className="text-left cursor-pointer"
-            >
-              <img
-                src={`http://localhost:8080/images/${book.cover}`}
-                alt={book.title}
-                className="aspect-2/3 w-full rounded-xl object-cover"
-              />
-
-              {/* <p className="mt-2 line-clamp-2 text-sm font-semibold">
-                {book.title}
-              </p> */}
-            </button>
+            <BookCover book={book} key={book.id} />
           ))}
         </div>
       )}

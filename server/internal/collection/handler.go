@@ -1,6 +1,8 @@
 package collection
 
 import (
+	"encoding/json"
+	"mime/multipart"
 	"net/http"
 	"server/internal/shared/middleware"
 	"server/internal/shared/response"
@@ -56,4 +58,107 @@ func (h *Handler) GetLibrary(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response.JSON(w, http.StatusOK, library)
+}
+
+func (h *Handler) GetUserCollections(w http.ResponseWriter, r *http.Request) {
+	currentUser := middleware.GetUser(r)
+
+	collections, err := h.service.GetUserCollections(currentUser.UserID)
+	if err != nil {
+		http.Error(w, "failed to get collections", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(collections)
+}
+
+func (h *Handler) CreateUserCollections(w http.ResponseWriter, r *http.Request) {
+	currentUser := middleware.GetUser(r)
+	r.ParseMultipartForm(5 << 20)
+
+	name := r.FormValue("name")
+	if name == "" {
+		http.Error(w, "name is required", http.StatusBadRequest)
+		return
+	}
+
+	var file multipart.File
+	var fileHeader *multipart.FileHeader
+	var err error
+
+	file, fileHeader, err = r.FormFile("cover_photo")
+	if err != nil && err != http.ErrMissingFile {
+		http.Error(w, "invalid file", http.StatusBadRequest)
+		return
+	}
+	if file != nil {
+		defer file.Close()
+	}
+
+	id, err := h.service.CreateCollection(currentUser.UserID, name, file, fileHeader)
+	if err != nil {
+		http.Error(w, "failed to create collection", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(map[string]any{
+		"message":       "collection created",
+		"collection_id": id,
+	})
+}
+
+func (h *Handler) AddToFavourite(w http.ResponseWriter, r *http.Request) {
+	user := middleware.GetUser(r)
+
+	bookID, err := strconv.Atoi(chi.URLParam(r, "bookId"))
+	if err != nil {
+		response.Error(w, http.StatusBadRequest, "Invalid book ID")
+		return
+	}
+
+	if err := h.service.AddToFavourite(user.UserID, bookID); err != nil {
+		response.Error(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	response.JSON(w, http.StatusOK, map[string]string{"message": "Added to favourite"})
+}
+
+func (h *Handler) DeleteFromFavourite(w http.ResponseWriter, r *http.Request) {
+	user := middleware.GetUser(r)
+
+	bookID, err := strconv.Atoi(chi.URLParam(r, "bookId"))
+	if err != nil {
+		response.Error(w, http.StatusBadRequest, "Invalid book ID")
+		return
+	}
+
+	if err := h.service.DeleteFromFavourite(user.UserID, bookID); err != nil {
+		response.Error(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	response.JSON(w, http.StatusOK, map[string]string{"message": "Deleted from favourite"})
+}
+
+func (h *Handler) IsBookFavourited(w http.ResponseWriter, r *http.Request) {
+	user := middleware.GetUser(r)
+
+	bookIDStr := chi.URLParam(r, "id")
+	bookID, err := strconv.Atoi(bookIDStr)
+	if err != nil {
+		response.Error(w, http.StatusBadRequest, "Invalid book ID")
+		return
+	}
+
+	isFav, err := h.service.IsBookFavourited(user.UserID, bookID)
+	if err != nil {
+		response.Error(w, http.StatusInternalServerError, "Failed to check favorite status")
+		return
+	}
+
+	response.JSON(w, http.StatusOK, map[string]bool{"is_favourited": isFav})
 }

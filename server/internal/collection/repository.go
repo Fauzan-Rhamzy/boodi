@@ -1,6 +1,8 @@
 package collection
 
-import "database/sql"
+import (
+	"database/sql"
+)
 
 type Repository struct {
 	db *sql.DB
@@ -168,9 +170,96 @@ func (r *Repository) GetLibrary(
 	return &library, nil
 }
 
-func (r *Repository) GetCollections(userID int) {
-	// rows, err := r.db.Query(`
-	// 	SELECT * FROM collection WHERE user_id = $1
-	// `, userID)
+func (r *Repository) GetUserCollections(userID int) ([]Collection, error) {
+	rows, err := r.db.Query(`
+		SELECT
+			collection_id,
+			name,
+			cover_photo,
+			user_id
+		FROM 
+			collection 
+		WHERE 
+			user_id = $1
+	`, userID)
+	if err != nil {
+		return nil, err
+	}
 
+	defer rows.Close()
+
+	var collections []Collection
+	for rows.Next() {
+		var c Collection
+		rows.Scan(&c.CollectionID, &c.Name, &c.CoverPhoto, &c.UserID)
+		collections = append(collections, c)
+	}
+	return collections, nil
 }
+
+func (r *Repository) CreateUserCollections(userID int, name string, coverPhoto string) (int, error) {
+	var id int
+	err := r.db.QueryRow(`
+        INSERT INTO collection (name, user_id, cover_photo)
+        VALUES ($1, $2, $3)
+        RETURNING collection_id
+    `, name, userID, coverPhoto).Scan(&id)
+	return id, err
+}
+
+func (r *Repository) AddToFavourite(userID int, bookID int) error {
+	var collectionID int
+	err := r.db.QueryRow(`
+		SELECT collection_id FROM Collection 
+		WHERE user_id = $1 AND name = 'Favorite'
+	`, userID).Scan(&collectionID)
+	if err != nil {
+		return err
+	}
+
+	_, err = r.db.Exec(`
+		INSERT INTO BookCollection (book_id, collection_id) 
+		VALUES ($1, $2)
+		ON CONFLICT DO NOTHING
+	`, bookID, collectionID)
+	return err
+}
+
+func (r *Repository) DeleteFromFavourite(userID int, bookID int) error {
+	var collectionID int
+	err := r.db.QueryRow(`
+		SELECT collection_id FROM Collection 
+		WHERE user_id = $1 AND name = 'Favorite'
+	`, userID).Scan(&collectionID)
+	if err != nil {
+		return err
+	}
+
+	_, err = r.db.Exec(`
+		DELETE FROM BookCollection 
+		WHERE book_id = $1 AND collection_id = $2
+	`, bookID, collectionID)
+	return err
+}
+
+func (r *Repository) IsBookFavourited(userID int, bookID int) (bool, error) {
+	query := `
+        SELECT EXISTS (
+            SELECT 1 
+            FROM BookCollection bc
+            JOIN Collection c ON c.collection_id = bc.collection_id
+            WHERE c.user_id = $1 
+              AND bc.book_id = $2 
+              AND c.name = 'Favorite'
+        )
+    `
+	var isFav bool
+	err := r.db.QueryRow(query, userID, bookID).Scan(&isFav)
+	return isFav, err
+}
+
+// func (r *Repository) GetCollections(userID int) {
+// 	rows, err := r.db.Query(`
+// 			SELECT * FROM collection WHERE user_id = $1
+// 		`, userID)
+// }

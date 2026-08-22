@@ -27,7 +27,11 @@ export default function ProfileHeader({
                     </div>
 
                     <img
-                        src={`http://localhost:8080/images/profile/dummy.png`}
+                        src={
+                        user?.profile_pic
+                            ? `http://localhost:8080/images/${user.profile_pic}`
+                            : `http://localhost:8080/images/profile/dummy.png`
+                        }
                         alt={user?.first_name}
                         className="w-14 h-14 rounded-full object-cover shrink-0 mt-20"
                     />
@@ -43,31 +47,27 @@ export default function ProfileHeader({
                                 className="bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium px-3 py-1 rounded-full transition">
                                 Edit Profile
                                 </button>
-                                <span className="text-sm text-gray-600">Joined since '{user?.joined_date?.slice(2, 4)}</span>
                             </div>
                         </div>
                     </div>
             </div>
 
         {/* Tabs */}
-        <div className="w-full bg-white border-b border-gray-200 mt-6">
-            <div className="flex justify-around items-center">
+        <div className="w-full mt-6">
+            <div className="flex justify-start items-center gap-4 ml-6">
                 {tabs.map((tab) => {
-                    const isActive = location.pathname === tab.path;
+                const isActive = location.pathname === tab.path;
                 return (
                     <button
                     key={tab.path}
                     onClick={() => navigate(tab.path)}
-                    className="relative py-3 text-[13px] font-semibold transition-colors flex flex-col items-center"
+                    className={`px-3 py-2 rounded-full text-[13px] font-semibold transition-colors ${
+                        isActive
+                        ? "bg-[#6750A4] text-white"
+                        : "text-gray-600 hover:text-gray-800"
+                    }`}
                     >
-
-                    <span className={isActive ? "text-[#6750A4] font-bold" : "text-gray-600 hover:text-gray-800"}>
-                        {tab.label}
-                    </span>
-
-                    {isActive && (
-                        <div className="absolute -bottom-[2px] h-1 w-full bg-[#6750A4] rounded-full z-10" />
-                    )}
+                    {tab.label}
                     </button>
                 );
                 })}

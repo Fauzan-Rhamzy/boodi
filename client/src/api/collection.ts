@@ -1,6 +1,7 @@
 import api from "../lib/axios";
 import type { Book } from "../types/book";
 import type {
+  Collection,
   CurrentlyReadingBook,
   FavouriteBooks,
   LibraryResponse,
@@ -24,4 +25,30 @@ export async function getLibrary(id: number): Promise<LibraryResponse> {
 export async function getFavouriteBooks(): Promise<FavouriteBooks[]> {
   const response = await api.get("/favourite-books");
   return response.data.data;
+}
+
+export async function getCollections(): Promise<Collection[]> {
+  const res = await api.get("/api/collection");
+  return res.data;
+}
+
+export async function createCollection(formData: FormData) {
+  const res = await api.post("/api/collection", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return res.data;
+}
+export async function AddToFavourite(bookId: number): Promise<void> {
+  await api.post(`/favourite-books/${bookId}`);
+}
+
+export async function DeleteFromFavourite(bookId: number): Promise<void> {
+  await api.delete(`/favourite-books/${bookId}`);
+}
+
+export async function checkIsFavourited(bookId: number): Promise<boolean> {
+  const response = await api.get(`/favourite-books/check/${bookId}`);
+  return response.data.data.is_favourited;
 }
