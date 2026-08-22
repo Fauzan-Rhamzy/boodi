@@ -1,4 +1,25 @@
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap");
+
 @import "tailwindcss";
+
+@theme {
+  /* Colors */
+  --color-primary: #9c7744;
+  --color-primary-light: #ffd49a;
+
+  --color-text: #2f0e07;
+  --color-text-secondary: #533113;
+
+  --color-background: #fffdfb;
+  --color-surface: #eae5d6;
+
+  --color-accent: #b4c187;
+  --color-accent-dark: #5a6b3a;
+
+  /* Fonts */
+  --font-sans: "Plus Jakarta Sans", sans-serif;
+  --font-caveat: "Caveat", cursive;
+}
 
 * {
   box-sizing: border-box;
@@ -11,7 +32,13 @@ body,
   min-height: 100%;
 }
 
-::-webkit-scrollbar {
+body {
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  background-color: var(--color-background);
+}
+
+*::-webkit-scrollbar {
   width: 0;
   height: 0;
 }
@@ -26,7 +53,7 @@ body,
 }
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans);
   line-height: 1.5;
   font-weight: 400;
 

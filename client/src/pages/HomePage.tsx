@@ -3,7 +3,6 @@ import SearchBar from "../components/SearchBar";
 import bgHome from "../assets/bg-home.png";
 import pfp from "../assets/dummy-pfp.png";
 import ReviewCard from "../components/ReviewCard";
-import Navbar from "../components/Navbar";
 import HorizontalBookList from "../components/HorizontalBookList";
 import UserProfile from "../components/UserProfile";
 import { useEffect, useState } from "react";
@@ -139,10 +138,6 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-      </div>
-      {/* navbar */}
-      <div className="fixed bottom-0 left-1/2 z-50 w-full max-w-sm -translate-x-1/2 bg-white">
-        <Navbar />
       </div>
     </div>
   );
