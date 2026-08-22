@@ -20,26 +20,20 @@ import LibraryBooksPage from "./pages/LibraryBooksPage.tsx";
 import ProfileBooksPage from "./pages/Profile-BooksPage.tsx";
 import ProfileReviewPage from "./pages/Profile-ReviewPage.tsx";
 import ProfileDiaryPage from "./pages/Profile-DiaryPage.tsx";
+import AppLayout from "./AppLayout.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
+      // NO NAVBAR
       {
         index: true,
         element: <LandingPage />,
       },
       {
-        path: "/author/:id",
-        element: (
-          <ProtectedRoute>
-            <AuthorPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/login",
+        path: "login",
         element: (
           <GuestRoute>
             <LoginPage />
@@ -47,101 +41,117 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/register",
+        path: "register",
         element: (
           <GuestRoute>
             <RegisterPage />
           </GuestRoute>
         ),
       },
+
+      // pake NAVBAR
       {
-        path: "/home",
-        element: (
-          <ProtectedRoute>
-            <HomePage />
-          </ProtectedRoute>
-        ),
+        element: <AppLayout />,
+        children: [
+          {
+            path: "author/:id",
+            element: (
+              <ProtectedRoute>
+                <AuthorPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "home",
+            element: (
+              <ProtectedRoute>
+                <HomePage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "library",
+            element: (
+              <ProtectedRoute>
+                <LibraryPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "profile",
+            element: (
+              <ProtectedRoute>
+                <ProfileBooksPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "profile/reviews",
+            element: (
+              <ProtectedRoute>
+                <ProfileReviewPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "profile/diary",
+            element: (
+              <ProtectedRoute>
+                <ProfileDiaryPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "profile/edit",
+            element: (
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "bookDetail/:id",
+            element: (
+              <ProtectedRoute>
+                <BookDetailPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "search",
+            element: (
+              <ProtectedRoute>
+                <SearchResultPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "currently-reading",
+            element: (
+              <ProtectedRoute>
+                <LibraryBooksPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "favourite-books",
+            element: (
+              <ProtectedRoute>
+                <LibraryBooksPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "library/:id",
+            element: (
+              <ProtectedRoute>
+                <LibraryBooksPage />
+              </ProtectedRoute>
+            ),
+          },
+        ],
       },
-      {
-        path: "/library",
-        element: (
-          <ProtectedRoute>
-            <LibraryPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/profile",
-        element: (
-          <ProtectedRoute>
-            <ProfileBooksPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/profile/reviews",
-        element: (
-          <ProtectedRoute>
-            <ProfileReviewPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/profile/diary",
-        element: (
-          <ProtectedRoute>
-            <ProfileDiaryPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/profile/edit",
-        element: (
-          <ProtectedRoute>
-            <ProfilePage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/bookDetail/:id",
-        element: (
-          <ProtectedRoute>
-            <BookDetailPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/search",
-        element: (
-          <ProtectedRoute>
-            <SearchResultPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/currently-reading",
-        element: (
-          <ProtectedRoute>
-            <LibraryBooksPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/favourite-books",
-        element: (
-          <ProtectedRoute>
-            <LibraryBooksPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "/library/:id",
-        element: (
-          <ProtectedRoute>
-            <LibraryBooksPage />
-          </ProtectedRoute>
-        ),
-      },
+
       {
         path: "*",
         element: <NotFoundPage />,
