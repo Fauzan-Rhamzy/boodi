@@ -4,17 +4,17 @@
 
 @theme {
   /* Colors */
-  --color-primary: #9c7744;
-  --color-primary-light: #ffd49a;
+  --color-light-brown: #9c7744; /*light brown*/
+  --color-cream: #ffd49a; /*cream*/
 
-  --color-text: #2f0e07;
-  --color-text-secondary: #533113;
+  --color-text: #2f0e07; /*text dark brown*/
+  --color-brown: #533113; /*brown*/
 
-  --color-background: #fffdfb;
-  --color-surface: #eae5d6;
+  --color-white: #fffdfb; /*white*/
+  --color-bw: #eae5d6;
 
-  --color-accent: #b4c187;
-  --color-accent-dark: #5a6b3a;
+  --color-light-green: #b4c187;
+  --color-dark-green: #5a6b3a;
 
   /* Fonts */
   --font-sans: "Plus Jakarta Sans", sans-serif;
@@ -35,7 +35,7 @@ body,
 body {
   font-family: var(--font-sans);
   color: var(--color-text);
-  background-color: var(--color-background);
+  background-color: var(--color-bw);
 }
 
 *::-webkit-scrollbar {
@@ -50,18 +50,4 @@ body {
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
-}
-
-:root {
-  font-family: var(--font-sans);
-  line-height: 1.5;
-  font-weight: 400;
-
-  --bg-color: #ffffff;
-  --text-color: #2d68ff;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }

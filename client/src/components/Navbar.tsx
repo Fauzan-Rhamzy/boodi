@@ -7,14 +7,14 @@ export default function Navbar() {
 
   return (
     <div className="fixed bottom-0 left-1/2 z-50 w-full max-w-md -translate-x-1/2">
-      <nav className="bg-[#533113] backdrop-blur-md border shadow-2xl rounded-t-3xl py-2 px-8 w-full">
+      <nav className="bg-brown backdrop-blur-md border shadow-2xl rounded-t-3xl py-2 px-8 w-full">
         <div className="flex justify-between items-center max-w-sm mx-auto">
           <Link
             to={"/home"}
             className={` flex flex-col items-center gap-1 p-2 transition-colors duration-200 ${
               isActive("/home")
-                ? "text-[#FFD49A] font-semibold"
-                : "hover:text-[#FFD49A] text-[#fffdfb]"
+                ? "text-cream font-semibold"
+                : "hover:text-cream text-white"
             }`}
           >
             <Home className="h-6 w-6 stroke-[1.75]" />
@@ -25,8 +25,8 @@ export default function Navbar() {
             to={"/search"}
             className={`flex flex-col items-center gap-1 p-2 transition-colors duration-200 ${
               isActive("/search")
-                ? "text-[#FFD49A] font-semibold"
-                : "hover:text-[#FFD49A] text-[#fffdfb] "
+                ? "text-cream font-semibold"
+                : "hover:text-cream text-white"
             }`}
           >
             <Search className="h-6 w-6 stroke-[1.75]" />
@@ -37,8 +37,8 @@ export default function Navbar() {
             to={"/library"}
             className={`flex flex-col items-center gap-1 p-2 transition-colors duration-200 ${
               isActive("/library")
-                ? "text-[#FFD49A] font-semibold"
-                : "hover:text-[#FFD49A] text-[#fffdfb] "
+                ? "text-cream font-semibold"
+                : "hover:text-cream text-white"
             }`}
           >
             <LayoutGrid className="h-6 w-6 stroke-[1.75]" />
@@ -49,8 +49,8 @@ export default function Navbar() {
             to={"/profile"}
             className={`flex flex-col items-center gap-1 p-2 transition-colors duration-200 ${
               isActive("/profile")
-                ? "text-[#FFD49A] font-semibold"
-                : "hover:text-[#FFD49A] text-[#fffdfb] "
+                ? "text-cream font-semibold"
+                : "hover:text-cream text-white"
             }`}
           >
             <User className="h-6 w-6 stroke-[1.75]" />
