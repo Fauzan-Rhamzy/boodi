@@ -1,5 +1,4 @@
 import { Eye, EyeOff } from "lucide-react";
-import bg from "../assets/bg-login.png";
 import { useState } from "react";
 import BackArrow from "../components/BackArrow";
 import { useNavigate } from "react-router";
@@ -34,37 +33,26 @@ export default function LoginPage() {
   };
   return (
     <>
-      {/* <div
-        className="flex min-h-screen flex-col justify-center px-6 py-12 lg:px-8 relative bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${bg})` }}
-      > */}
-      <div
-        className="w-full min-h-screen p-10"
-        style={{
-          backgroundImage: `url(${bg})`,
-          backgroundSize: "100% 100%",
-          backgroundRepeat: "no-repeat",
-        }}
-      >
+      <div className="w-full min-h-screen p-10 bg-bw">
         <BackArrow />
 
         <div className="">
           {/* <div className="sm:mx-auto sm:w-full sm:max-w-sm pt-12 px-4"> */}
           <div className="pt-50">
-            <h2 className="text-6xl font-bold tracking-tight text-black">
+            <h2 className="text-6xl font-bold tracking-tight text-text font-caveat">
               Sign In
             </h2>
-            <h3 className="text-2xl font-bold">to your account</h3>
+            <h3 className="text-2xl text-text font-bold">to your account</h3>
           </div>
 
           <div className="mt-3 mb-3">
-            <span className=" text-gray-500">
+            <span className=" text-text text-sm">
               Enter your email and password to log in
             </span>
           </div>
 
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-            <form onSubmit={handleLogin} className="space-y-6">
+            <form onSubmit={handleLogin} className="space-y-2">
               <div>
                 <label
                   htmlFor="email"
@@ -79,7 +67,7 @@ export default function LoginPage() {
                     type="email"
                     required
                     autoComplete="email"
-                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                    className="block w-full rounded-xl bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                     value={email}
                     onChange={(e) =>
                       setEmail(e.target.value.replace(/\s/g, ""))
@@ -105,14 +93,14 @@ export default function LoginPage() {
                   </a> */}
                   </div>
                 </div>
-                <div className="relative flex items-center">
+                <div className="relative flex items-center mt-2">
                   <input
                     id="password"
                     name="password"
                     type={showPassword ? "password" : "text"}
                     required
                     autoComplete="current-password"
-                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 pr-10"
+                    className="block w-full rounded-xl bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 pr-10"
                     onChange={(e) => setPassword(e.target.value)}
                   />
                   <button
@@ -137,19 +125,19 @@ export default function LoginPage() {
               <div>
                 <button
                   type="submit"
-                  className="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm/6 font-semibold text-white hover:bg-indigo-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 hover:cursor-pointer"
+                  className="flex w-full justify-center rounded-[20px] bg-dark-green px-3 py-2 text-sm/6 font-semibold text-white hover:bg-dark-green-400 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 hover:cursor-pointer mt-6"
                 >
                   Log In
                 </button>
               </div>
             </form>
 
-            <p className="mt-10 text-center text-sm/6 text-gray-500">
+            <p className="mt-2 text-center text-sm/6 text-gray-500">
               Don't have an account?{" "}
               <a
                 // href="/register"
                 onClick={() => navigate("/register")}
-                className="font-semibold text-indigo-400 hover:text-indigo-300 hover:cursor-pointer"
+                className="font-bold text-dark-green hover:text-dark-green hover:cursor-pointer"
               >
                 Sign Up
               </a>
