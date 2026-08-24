@@ -44,8 +44,12 @@ export default function ProfileHeader({
                             <h1 className="text-xl font-bold text-text">{`${user?.first_name} ${user?.last_name}`}</h1>
                             <div className="flex items-center">
                                 <button 
-                                onClick={() => navigate("/profile/edit")}
-                                className="bg-dark-green hover:bg-light-green text-white text-xs font-medium px-3 py-1 rounded-full transition">
+                                onClick={() => {
+                                    setTimeout(() => {
+                                        navigate("/profile/edit");
+                                    }, 70);
+                                }}
+                                className="bg-dark-green active:bg-light-green active:scale-95 duration:200 text-white text-xs font-medium px-3 py-1 rounded-full transition">
                                 Edit Profile
                                 </button>
 
@@ -63,11 +67,15 @@ export default function ProfileHeader({
                 return (
                     <button
                     key={tab.path}
-                    onClick={() => navigate(tab.path)}
+                    onClick={() => {
+                            setTimeout(() => {
+                            navigate(tab.path);
+                        }, 70);
+                    }}
                     className={`px-3 py-1 rounded-full text-[13px] font-bold transition-colors ${
                         isActive
                         ? "bg-dark-green text-white"
-                        : "text-light-brown hover:text-brown"
+                        : "text-light-brown active:text-brown"
                     }`}
                     >
                     {tab.label}
