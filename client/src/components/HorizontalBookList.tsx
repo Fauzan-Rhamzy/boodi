@@ -19,11 +19,6 @@ export default function HorizontalBookList({
           {books.map((book) => (
             <div key={book.id} className="w-28  shrink-0">
               <BookCover key={book.id} book={book}></BookCover>
-              {
-                <p className="mt-1 mx-1 truncate  text-sm font-medium">
-                  {book.title}
-                </p>
-              }
             </div>
           ))}
         </div>

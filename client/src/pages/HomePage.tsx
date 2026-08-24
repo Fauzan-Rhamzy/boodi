@@ -1,5 +1,4 @@
 import { ChevronsRight } from "lucide-react";
-import SearchBar from "../components/SearchBar";
 import bgHome from "../assets/bg-home.png";
 import pfp from "../assets/dummy-pfp.png";
 import ReviewCard from "../components/ReviewCard";
@@ -65,23 +64,10 @@ export default function HomePage() {
   }, []);
   return (
     <div className="mx-auto min-h-screen w-full max-w-2xl">
-      <div className="fixed inset-0 z-0 overflow-hidden">
-        {Array.from({ length: 10 }, (_, i) => (
-          <img
-            key={i}
-            src={bgHome}
-            alt=""
-            className={`block min-h-0 w-full ${
-              i % 2 === 1 ? "scale-y-[-1]" : ""
-            }`}
-          />
-        ))}
-      </div>
-
       {/* header */}
       <div className="flex relative z-11 justify-between mx-7 pt-15">
         <div>
-          <p className="text-3xl font-bold">
+          <p className="text-3xl font-bold font-caveat">
             Hi, {user?.first_name ?? "there"}!
           </p>
           <p className="text-gray-600 text-md font-medium mt-0.5">
@@ -95,9 +81,6 @@ export default function HomePage() {
 
       {/* content */}
       <div className="mx-6 relative z-10">
-        <div className="mt-7 flex justify-center">
-          <SearchBar className="w-full" />
-        </div>
         <div className="mx-0.5">
           {/* currently reading */}
           <div className="mt-6">
