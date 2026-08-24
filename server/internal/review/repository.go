@@ -16,10 +16,11 @@ func (r *Repository) GetTrendingReviews(userID int) ([]TrendingReview, error) {
 			r.review_id,
 			b.book_id,
 			b.title,
-			b.cover,
+			b.cover as book_cover,
 			r.rating,
 			u.first_name,
 			u.last_name,
+			u.profile_pic as user_pic,
 			r.comment,
 			COUNT(l.like_id) AS like_count,
 			EXISTS (
@@ -39,10 +40,11 @@ func (r *Repository) GetTrendingReviews(userID int) ([]TrendingReview, error) {
 			r.review_id,
 			b.book_id,
 			b.title,
-			b.cover,
+			b.cover ,
 			r.rating,
 			u.first_name,
 			u.last_name,
+			u.profile_pic ,
 			r.comment
 		ORDER BY like_count DESC
 		LIMIT 3
@@ -66,6 +68,7 @@ func (r *Repository) GetTrendingReviews(userID int) ([]TrendingReview, error) {
 			&review.Rating,
 			&review.FirstName,
 			&review.LastName,
+			&review.ProfilePic,
 			&review.Comment,
 			&review.LikeCount,
 			&review.IsLiked,

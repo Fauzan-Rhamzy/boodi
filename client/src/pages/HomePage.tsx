@@ -85,7 +85,7 @@ export default function HomePage() {
           {/* currently reading */}
           <div className="mt-6 ">
             <div className="flex items-center justify-between ">
-              <p className="text-lg font-bold pb-1 ">Currently Reading</p>
+              <p className="text-xl font-bold pb-1 ">Currently Reading</p>
               <button
                 className="flex items-center gap-1 text-md text-dark-green"
                 onClick={() => navigate(`/currently-reading`)}
@@ -107,14 +107,14 @@ export default function HomePage() {
           {/* trending book */}
           <div className="mt-6">
             <div className="flex items-center justify-between pb-1">
-              <p className="text-lg font-bold">Trending Books</p>
+              <p className="text-xl font-bold">Trending Books</p>
             </div>
             <HorizontalBookList title="Trending Books" books={trendingBooks} />
           </div>
           {/* trending review */}
           <div className="mt-6 pb-30">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-lg font-bold">Trending Review</p>
+              <p className="text-xl font-bold">Trending Review</p>
             </div>
             {trendingReviews.map((review) => (
               <ReviewCard key={review.review_id} review={review} />
