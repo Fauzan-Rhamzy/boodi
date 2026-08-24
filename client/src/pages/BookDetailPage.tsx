@@ -59,14 +59,7 @@ export default function BookDetailPage() {
 
   return (
     <div
-      className="w-full min-h-screen relative pb-10"
-      style={{
-        backgroundImage: `url(${bgDetailBook})`,
-        backgroundSize: "100% auto",
-        backgroundRepeat: "repeat-y",
-        backgroundPosition: "top center",
-      }}
-    >
+      className="w-full min-h-screen relative pb-10 bg-bw">
       <div className="w-full flex justify-start px-10">
         <BackArrow useHistory={true} backPath="/" />
       </div>
@@ -79,14 +72,14 @@ export default function BookDetailPage() {
         />
 
         <h1
-          className="text-center text-3xl font-bold text-gray-900 mb-2"
+          className="text-center text-3xl font-bold text-text mb-2"
           style={{ marginTop: "5px" }}
         >
           {book.title}
         </h1>
 
-        <div className="flex items-center gap-1 text-gray-700 mb-2">
-          <span className="text-gray-900">{book.year}</span>
+        <div className="flex items-center gap-1 text-light-brown mb-2">
+          <span className="text-text">{book.year}</span>
           <span>•</span>
 
           {book.authors && book.authors.length > 0 ? (
@@ -94,8 +87,7 @@ export default function BookDetailPage() {
               <span>Written by</span>
               <Link
                 to={`/author/${book.authors[0].id}`}
-                className="font-bold underline cursor-pointer text-gray-900 underline-offset-3 hover:text-black"
-              >
+                className="font-bold underline cursor-pointer text-text underline-offset-3 active: light brown active: scale-95 duration 100">
                 {book.authors[0].name}
               </Link>
             </>
@@ -105,18 +97,18 @@ export default function BookDetailPage() {
         </div>
 
         <div className="flex items-center gap-2">
-          <button className="text-xs flex items-center gap-1 bg-neutral-800 hover:bg-neutral-900 text-white font-medium px-3 py-1 rounded-lg transition">
+          <button className="text-xs flex items-center gap-1 bg-text text-white font-medium px-3 py-1 rounded-lg transition">
             <Plus className="w-4 h-4" />
             <span>Track Progress</span>
           </button>
 
-          <button className="w-6 h-6 p-0 shrink-0 flex items-center justify-center rounded-full border border-black text-black hover:bg-black/5">
+          <button className="w-6 h-6 p-0 shrink-0 flex items-center justify-center rounded-full border border-black text-text">
             <Plus className="w-4 h-4" />
           </button>
 
           <button
             onClick={handleToggleFavourite}
-            className="w-6 h-6 p-0 shrink-0 flex items-center justify-center rounded-full border border-black text-black hover:bg-black/5"
+            className="w-6 h-6 p-0 shrink-0 flex items-center justify-center rounded-full border border-black text-text"
           >
             <Heart className={`w-4 h-4 ${isFavourited ? "fill-red-500 text-red-500" : ""}`} />
           </button>
@@ -124,24 +116,24 @@ export default function BookDetailPage() {
 
         <div className="flex items-center text-center mt-4">
           <div className="px-6">
-            <p className="text-sm text-gray-700 font-medium">Price</p>
-            <p className="text-base font-bold text-black mt-0.5">
+            <p className="text-sm text-text font-medium">Price</p>
+            <p className="text-base font-bold text-text mt-0.5">
               ${book.price.toLocaleString("id-ID")}
             </p>
           </div>
 
-          <div className="h-8 w-[1px] bg-black"></div>
+          <div className="h-8 w-[1px] bg-text"></div>
 
           <div className="px-6">
-            <p className="text-sm text-gray-700 font-medium">Pages</p>
-            <p className="text-base font-bold text-black mt-0.5">{book.page}</p>
+            <p className="text-sm text-text font-medium">Pages</p>
+            <p className="text-base font-bold text-text mt-0.5">{book.page}</p>
           </div>
 
-          <div className="h-8 w-[1px] bg-black"></div>
+        <div className="h-8 w-[1px] bg-text"></div>
 
           <div className="px-6">
-            <p className="text-sm text-gray-700 font-medium">Language</p>
-            <p className="text-base font-bold text-black mt-0.5">
+            <p className="text-sm text-text font-medium">Language</p>
+            <p className="text-base font-bold text-text mt-0.5">
               {book.language}
             </p>
           </div>
@@ -149,7 +141,7 @@ export default function BookDetailPage() {
 
         <div className="w-full max-w-md mx-auto space-y-6 text-left px-4 mt-4">
           <h2
-            className="font-bold text-xl mb-3 text-gray-900"
+            className="font-bold text-xl mb-3 text-text"
             style={{ marginBottom: "3px", marginTop: "7px" }}
           >
             Genres
@@ -159,7 +151,7 @@ export default function BookDetailPage() {
             {book.genres.map((genre) => (
               <span
                 key={genre}
-                className="flex items-center justify-center px-2 py-2 bg-[#8fa4bf] text-white text-xs rounded-full leading-none"
+                className="flex items-center justify-center px-2 py-2 bg-dark-green text-white text-xs rounded-full leading-none"
               >
                 {genre}
               </span>
@@ -169,7 +161,7 @@ export default function BookDetailPage() {
 
         <div className="w-full max-w-md mx-auto space-y-6 text-left px-4 mt-2">
           <h2
-            className="font-bold text-xl mb-3 text-gray-900"
+            className="font-bold text-xl mb-3 text-text"
             style={{ marginBottom: "3px", marginTop: "7px" }}
           >
             Description
@@ -179,7 +171,7 @@ export default function BookDetailPage() {
             className="w-full p-6 bg-white rounded-2xl shadow-md border border-gray-100"
             style={{ padding: "15px 17px" }}
           >
-            <p className="text-gray-800 text-sm leading-snug text-justify">
+            <p className="text-text text-sm leading-snug text-justify">
               {book.description}
             </p>
           </div>
@@ -187,7 +179,7 @@ export default function BookDetailPage() {
 
         <div className="w-full max-w-md mx-auto space-y-6 text-left px-4 mt-2">
           <h2
-            className="font-bold text-xl mb-3 text-gray-900"
+            className="font-bold text-xl mb-3 text-text"
             style={{ marginBottom: "3px", marginTop: "7px" }}
           >
             Ratings
@@ -196,11 +188,17 @@ export default function BookDetailPage() {
 
         <div className="w-full max-w-md mx-auto space-y-6 text-left px-4 mt-2">
           <h2
-            className="font-bold text-xl mb-3 text-gray-900"
+            className="font-bold text-xl mb-3 text-text"
             style={{ marginBottom: "3px", marginTop: "7px" }}
           >
             Reviews
           </h2>
+
+          <div className="flex justify-center">
+            <button className="w-full flex justify-center items-center rounded-full bg-dark-green text-white py-1.5 text-sm font-medium active:scale-98 transition-all">
+              Write a Review
+            </button>
+          </div>
         </div>
       </div>
     </div>
