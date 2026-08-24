@@ -26,14 +26,14 @@ export default function OnboardingPage() {
   return (
     <div className="flex min-h-screen w-full  flex-col bg-brown p-2">
       {/* Indicator */}
-      <div className="flex gap-1 px-5 pt-5">
+      <div className="flex gap-1 px-10 pt-15">
         {pages.map((_, index) => (
           <div
             key={index}
             className={
               index === currentPage
-                ? "h-1.5 w-14 rounded-full bg-light-green"
-                : "h-1.5 w-1.5 rounded-full bg-white"
+                ? "h-2 w-14 rounded-full bg-light-green"
+                : "h-2 w-2 rounded-full bg-white"
             }
           />
         ))}
