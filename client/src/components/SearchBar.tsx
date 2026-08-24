@@ -23,10 +23,9 @@ export default function SearchBar({ className, onSearch }: SearchBarProps) {
     setError("");
 
     if (onSearch) {
-      // Let the parent page handle the search
-      onSearch(query.trim());
+      onSearch(query.trim()); //same page search
     } else {
-      // Default behavior
+      //reroute to other page for search result
       navigate(`/search?q=${encodeURIComponent(query.trim())}`);
     }
   };
@@ -44,7 +43,7 @@ export default function SearchBar({ className, onSearch }: SearchBarProps) {
   return (
     <div className={className}>
       <div className="flex flex-col">
-        <div className="flex h-10 w-full items-center justify-between rounded-4xl bg-[#F1E7F8]/30 px-5 shadow-lg ring-2 ring-black/5">
+        <div className="flex h-10 w-full items-center justify-between rounded-4xl bg-white/90 px-5 shadow-lg ring-2 ring-black/5">
           <input
             value={query}
             placeholder="Search a book title..."
@@ -58,14 +57,14 @@ export default function SearchBar({ className, onSearch }: SearchBarProps) {
                 search();
               }
             }}
-            className="text-md w-full border-0 text-gray-600 focus:border-none focus:outline-none"
+            className="text-md w-full border-0 text-dark-green focus:border-none focus:outline-none"
           />
 
           <button type="button" onClick={isSearching ? clearSearch : search}>
             {!isSearching ? (
-              <Search className="h-5 w-5 text-gray-800" />
+              <Search className="h-5 w-5 text-dark-green" />
             ) : (
-              <CircleX className="h-5 w-5 text-gray-800" />
+              <CircleX className="h-5 w-5 text-dark-green" />
             )}
           </button>
         </div>
