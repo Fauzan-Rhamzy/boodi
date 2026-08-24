@@ -8,13 +8,13 @@ type ReviewCardProps = {
 
 export default function ReviewCard({ review }: ReviewCardProps) {
   return (
-    <div className="flex h-36 w-86 shrink-0 gap-4 rounded-2xl bg-[#F1E7F8]/40 p-3 shadow-md ring-1 ring-black/5 my-3">
+    <div className="flex h-36 w-86 shrink-0 gap-4 rounded-2xl bg-white/50 p-3 shadow-md ring-1 ring-black/5 my-3">
       {/* Book Cover */}
       <BookCover
         book={{
           id: review.book_id,
           title: review.title,
-          cover: review.cover,
+          cover: review.book_cover,
         }}
         className="h-full w-24 shrink-0 overflow-hidden rounded-xl shadow-sm"
       />
@@ -28,24 +28,31 @@ export default function ReviewCard({ review }: ReviewCardProps) {
             {Array.from({ length: review.rating }, (_, i) => (
               <Star
                 key={i}
-                className="h-5 w-5 fill-yellow-500 text-yellow-500"
+                className="h-5 w-5 fill-light-green text-light-green"
               />
             ))}
           </div>
 
           {/* User */}
-          <p className="text-md font-bold text-gray-800 pt-1">
-            {review.first_name} {review.last_name} said..
-          </p>
-
+          <div className="flex gap-2 items-center">
+            <img
+              src={`http://localhost:8080/images/${review.user_pic}`}
+              alt=""
+              className="w-6 h-6 rounded-full"
+            />
+            <p className="text-lg font-bold text-gray-800 pt-1">
+              {review.first_name} {review.last_name}{" "}
+              <span className="font-caveat text-xl">said..</span>
+            </p>
+          </div>
           {/* Comment */}
-          <p className="mt-1 line-clamp-3 text-sm leading-snug text-gray-600">
+          <p className="mt-1 line-clamp-2 text-md leading-snug text-gray-600">
             {review.comment}
           </p>
         </div>
 
         {/* Likes */}
-        <div className="flex justify-end items-center gap-1 text-red-600 mr-2">
+        <div className="flex justify-end items-center gap-1 text-dark-green mr-2">
           <Heart
             className={`h-4 w-4 ${review.is_liked ? "fill-current" : ""}`}
           />
