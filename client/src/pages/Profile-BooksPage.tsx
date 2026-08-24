@@ -8,6 +8,7 @@ import { getCurrentlyReading, getFavouriteBooks } from "../api/collection";
 import HorizontalBookList from "../components/HorizontalBookList";
 import { useNavigate } from "react-router";
 import type { FavouriteBooks } from "../types/collection";
+import { ArrowRight } from "lucide-react";
 
 export default function ProfileBooksPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -64,7 +65,7 @@ export default function ProfileBooksPage() {
             <div className="flex items-center justify-between">
               <p className="text-text font-bold text-xl">Currently Reading</p>
               <button
-                className="flex items-center text-text active:text-light-brown active:scale-95 transition-all duration-200 px-3 py-1 bg-light-green text-sm font-medium rounded-full select-none"
+                className="flex items-center gap-1 text-md text-dark-green"
                 onClick={() => {
                   setTimeout(() => {
                     navigate("/currently-reading");
@@ -72,6 +73,7 @@ export default function ProfileBooksPage() {
                 }}
               >
                 See all
+                <ArrowRight className="h-4 w-4" />
               </button>
             </div>
             {currentlyReading.length > 0 ? (
@@ -91,7 +93,7 @@ export default function ProfileBooksPage() {
             <div className="flex items-center justify-between">
               <p className="text-text font-bold text-xl">Favourite Books</p>
               <button
-                className="flex items-center text-text active:text-light-brown active:scale-95 transition-all duration-200 px-3 py-1 bg-light-green text-sm font-medium rounded-full select-none"
+                className="flex items-center gap-1 text-md text-dark-green"
                 onClick={() => {
                   setTimeout(() => {
                     navigate("/favourite-books");
@@ -99,6 +101,7 @@ export default function ProfileBooksPage() {
                 }}
               >
                 See all
+                <ArrowRight className="h-4 w-4" />
               </button>
             </div>
             {favouriteBooks.length > 0 ? (
