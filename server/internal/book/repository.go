@@ -13,7 +13,7 @@ func NewRepository(db *sql.DB) *Repository {
 }
 
 func (r *Repository) FindAll() ([]Book, error) {
-	rows, err := r.db.Query(`SELECT book_id, title, price, year, page, language, description, cover FROM book`)
+	rows, err := r.db.Query(`SELECT book_id, title, price, year, page, language, description, cover FROM book ORDER BY title asc`)
 	if err != nil {
 		return nil, err
 	}

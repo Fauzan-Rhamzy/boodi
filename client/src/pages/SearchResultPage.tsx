@@ -1,55 +1,48 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import bgHome from "../assets/bg-home.png";
-import { searchBooks } from "../api/books";
+import { getAllBooks, searchBooks } from "../api/books";
 import type { Book } from "../types/book";
-import BackArrow from "../components/BackArrow";
 import BookCover from "../components/BookCover";
+import SearchBar from "../components/SearchBar";
 
 export default function SearchResultPage() {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const query = searchParams.get("q") ?? "";
   const [books, setBooks] = useState<Book[]>([]);
-  const hasLongWord = query.split(/\s+/).some((word) => word.length > 20);
+  const hasLongWord = searchQuery.split(/\s+/).some((word) => word.length > 20);
   useEffect(() => {
-    if (!query) {
-      setBooks([]);
-      return;
-    }
+    const fetchBooks = async () => {
+      try {
+        const data = searchQuery
+          ? await searchBooks(searchQuery)
+          : await getAllBooks();
 
-    searchBooks(query)
-      .then((data) => {
         setBooks(data);
-      })
-      .catch((error) => {
-        console.error("Failed to search books:", error);
+      } catch (error) {
+        console.error("Failed to fetch books:", error);
         setBooks([]);
-      });
-  }, [query]);
+      }
+    };
+
+    fetchBooks();
+  }, [searchQuery]);
 
   return (
-    <div
-      className="min-h-screen w-full"
-      style={{
-        backgroundImage: `url(${bgHome})`,
-      }}
-    >
+    <div className=" flex flex-col min-h-screen w-full">
       {/* Header */}
-      <div className="px-6 pt-3">
-        <BackArrow useHistory={true} />
-
-        <h1 className="mt-4 ml-2 pt-20 text-2xl">
-          Result for{" "}
-          <span
-            className={`font-bold ${hasLongWord ? "break-all" : "wrap-break-word"}`}
-          >
-            “{query}”
-          </span>
+      <div className="flex px-6 pt-3">
+        <h1 className="mt-4 ml-2 pt-20 text-5xl font-caveat font-bold pb-3">
+          Find a Book
         </h1>
       </div>
-
+      <div className="flex items-center justify-center pb-2">
+        <SearchBar
+          className="mt-4 mb-3 w-17/20"
+          onSearch={(query) => setSearchQuery(query)}
+        />
+      </div>
       {/* Results */}
       {books.length === 0 ? (
         <div className="flex flex-col items-center justify-center px-10 py-10 text-center">

@@ -1,6 +1,5 @@
-import { ChevronsRight } from "lucide-react";
-import SearchBar from "../components/SearchBar";
-import bgHome from "../assets/bg-home.png";
+import { ArrowRight, ChevronsRight } from "lucide-react";
+
 import pfp from "../assets/dummy-pfp.png";
 import ReviewCard from "../components/ReviewCard";
 import HorizontalBookList from "../components/HorizontalBookList";
@@ -65,23 +64,10 @@ export default function HomePage() {
   }, []);
   return (
     <div className="mx-auto min-h-screen w-full max-w-2xl">
-      <div className="fixed inset-0 z-0 overflow-hidden">
-        {Array.from({ length: 10 }, (_, i) => (
-          <img
-            key={i}
-            src={bgHome}
-            alt=""
-            className={`block min-h-0 w-full ${
-              i % 2 === 1 ? "scale-y-[-1]" : ""
-            }`}
-          />
-        ))}
-      </div>
-
       {/* header */}
       <div className="flex relative z-11 justify-between mx-7 pt-15">
         <div>
-          <p className="text-3xl font-bold">
+          <p className="text-4xl font-bold font-caveat pb-1">
             Hi, {user?.first_name ?? "there"}!
           </p>
           <p className="text-gray-600 text-md font-medium mt-0.5">
@@ -95,20 +81,17 @@ export default function HomePage() {
 
       {/* content */}
       <div className="mx-6 relative z-10">
-        <div className="mt-7 flex justify-center">
-          <SearchBar className="w-full" />
-        </div>
         <div className="mx-0.5">
           {/* currently reading */}
-          <div className="mt-6">
-            <div className="flex items-center justify-between">
-              <p className="text-lg font-bold">Currently Reading</p>
+          <div className="mt-6 ">
+            <div className="flex items-center justify-between ">
+              <p className="text-xl font-bold pb-1 ">Currently Reading</p>
               <button
-                className="flex items-center gap-1 text-md text-gray-500"
+                className="flex items-center gap-1 text-md text-dark-green"
                 onClick={() => navigate(`/currently-reading`)}
               >
                 See all
-                <ChevronsRight className="h-4 w-4" />
+                <ArrowRight className="h-4 w-4" />
               </button>
             </div>
             {currentlyReading.length > 0 ? (
@@ -117,21 +100,21 @@ export default function HomePage() {
                 books={currentlyReading}
               />
             ) : (
-              <p className="mt-3 text-sm text-gray-500">Read a new book~</p>
+              <p className="mt-3 text-sm text-dark-green">Read a new book~</p>
             )}
           </div>
 
           {/* trending book */}
           <div className="mt-6">
-            <div className="flex items-center justify-between">
-              <p className="text-lg font-bold">Trending Books</p>
+            <div className="flex items-center justify-between pb-1">
+              <p className="text-xl font-bold">Trending Books</p>
             </div>
             <HorizontalBookList title="Trending Books" books={trendingBooks} />
           </div>
           {/* trending review */}
           <div className="mt-6 pb-30">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-lg font-bold">Trending Review</p>
+              <p className="text-xl font-bold">Trending Review</p>
             </div>
             {trendingReviews.map((review) => (
               <ReviewCard key={review.review_id} review={review} />

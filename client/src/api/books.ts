@@ -14,3 +14,7 @@ export async function getById(id: number): Promise<Book> {
   const response = await api.get<Book>(`/api/bookDetail/${id}`);
   return response.data.data;
 }
+export const getAllBooks = async (): Promise<Book[]> => {
+  const response = await api.get(`/api/books`);
+  return response.data.data;
+};
