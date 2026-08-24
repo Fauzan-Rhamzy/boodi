@@ -1,5 +1,4 @@
 import BackArrow from "../components/BackArrow";
-import bg from "../assets/bg-editProfile.png";
 import pfp from "../assets/dummy-pfp.png";
 import BigProfile from "../components/BigProfile";
 import React, { useEffect, useState } from "react";
@@ -89,14 +88,7 @@ export default function ProfilePage() {
     }
   };
   return (
-    <div
-      className="w-full min-h-screen p-10"
-      style={{
-        backgroundImage: `url(${bg})`,
-        backgroundSize: "100% 100%",
-        backgroundRepeat: "no-repeat",
-      }}
-    >
+    <div className="w-full min-h-screen p-10 bg-bw">
       <BackArrow backPath="/home" />
 
       <div className="flex items-center justify-center h-64 mt-2">
@@ -106,7 +98,7 @@ export default function ProfilePage() {
       <div className="flex items-center justify-center ">
         <label
           htmlFor="photoInput"
-          className="bg-blue-500 text-white pl-2 pr-2 rounded-2xl hover:cursor-pointer"
+          className="bg-dark-green py-2 px-2 text-white text-sm pl-2 pr-2 rounded-[20px] hover:cursor-pointer"
         >
           Change Profile Picture
         </label>
@@ -122,19 +114,16 @@ export default function ProfilePage() {
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <form className="space-y-6">
           <div>
-            <label
-              htmlFor="firstName"
-              className="block text-sm/6 font-medium text-gray-900"
-            >
+            <label htmlFor="firstName" className="block text-sm/6 font-bold">
               First Name <span className="text-red-500 ml-0.5">*</span>
             </label>
-            <div className="mt-2">
+            <div className="mt-1">
               <input
                 id="firstName"
                 name="firstName"
                 required
                 //   autoComplete=""
-                className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                className="block w-full rounded-xl bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2  sm:text-sm/6"
                 value={firstName}
                 onChange={(e) => setFirstname(e.target.value)}
               />
@@ -142,19 +131,16 @@ export default function ProfilePage() {
           </div>
 
           <div>
-            <label
-              htmlFor="lastName"
-              className="block text-sm/6 font-medium text-gray-900"
-            >
+            <label htmlFor="lastName" className="block text-sm/6 font-bold">
               Last Name <span className="italic text-gray-400">(optional)</span>
             </label>
 
-            <div className="mt-2">
+            <div className="mt-1">
               <input
                 id="lastName"
                 name="lastName"
                 //   autoComplete=""
-                className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                className="block w-full rounded-xl bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 sm:text-sm/6"
                 value={lastName}
                 onChange={(e) => setLastname(e.target.value)}
               />
@@ -162,24 +148,17 @@ export default function ProfilePage() {
           </div>
 
           <div>
-            <label
-              htmlFor="phoneNumber"
-              className="block text-sm/6 font-medium text-gray-900"
-            >
+            <label htmlFor="phoneNumber" className="block text-sm/6 font-bold">
               Phone Number <span className="text-red-500 ml-0.5">*</span>
             </label>
-            <div className="mt-2 ">
+            <div className="mt-1">
               <PhoneInput
                 international
                 countryCallingCodeEditable={false}
                 value={phoneNumber}
                 onChange={setPhoneNumber}
                 defaultCountry="ID"
-                className="flex w-full rounded-md bg-white px-3 py-1.5 outline-1 -outline-offset-1 outline-gray-300 focus-within:outline-2 focus-within:-outline-offset-2 focus-within:outline-indigo-600 sm:text-sm/6 items-center
-                    [&_.PhoneInputCountry]:flex [&_.PhoneInputCountry]:items-center [&_.PhoneInputCountry]:mr-2 [&_.PhoneInputCountry]:pr-2 [&_.PhoneInputCountry]:border-r [&_.PhoneInputCountry]:border-gray-200
-                    [&_.PhoneInputCountrySelect]:w-12 [&_.PhoneInputCountrySelect]:cursor-pointer
-                    [&_.PhoneInputCountryIcon]:w-6 [&_.PhoneInputCountryIcon]:h-4 [&_.PhoneInputCountryIcon]:shadow-sm
-                    [&_input]:w-full [&_input]:bg-transparent [&_input]:outline-none [&_input]:text-gray-900 [&_input]:placeholder:text-gray-400 [&_input]:ml-1"
+                className="flex w-full items-center rounded-xl bg-white px-4 py-2.5 shadow-sm ring-1 ring-inset ring-gray-200 transition-all duration-200 focus-within:ring-2 focus-within:ring-indigo-600 focus-within:shadow-md focus-within:shadow-indigo-50 sm:text-sm/6 [&_.PhoneInputCountry]:flex [&_.PhoneInputCountry]:items-center [&_.PhoneInputCountry]:relative [&_.PhoneInputCountry]:mr-3 [&_.PhoneInputCountry]:pr-3 [&_.PhoneInputCountry]:border-r [&_.PhoneInputCountry]:border-gray-200 [&_.PhoneInputCountrySelect]:absolute [&_.PhoneInputCountrySelect]:top-0 [&_.PhoneInputCountrySelect]:left-0 [&_.PhoneInputCountrySelect]:w-full [&_.PhoneInputCountrySelect]:h-full [&_.PhoneInputCountrySelect]:opacity-0 [&_.PhoneInputCountrySelect]:cursor-pointer [&_.PhoneInputCountryIcon]:w-6 [&_.PhoneInputCountryIcon]:h-auto [&_.PhoneInputCountryIcon]:rounded-sm [&_.PhoneInputCountryIcon]:object-cover [&_.PhoneInputCountryIcon]:shadow-sm [&_.PhoneInputCountrySelectArrow]:border-t-gray-400 [&_.PhoneInputCountrySelectArrow]:border-t-4 [&_.PhoneInputCountrySelectArrow]:border-x-transparent [&_.PhoneInputCountrySelectArrow]:border-x-4 [&_.PhoneInputCountrySelectArrow]:ml-1.5 [&_.PhoneInputCountrySelectArrow]:opacity-70 [&_input]:w-full [&_input]:bg-transparent [&_input]:outline-none [&_input]:text-gray-900 [&_input]:placeholder:text-gray-400 [&_input]:font-medium"
               />
             </div>
           </div>
@@ -189,12 +168,12 @@ export default function ProfilePage() {
         <button
           type="button"
           onClick={handleCancel}
-          className="w-1/2 bg-gray-200 text-gray-800 py-2 rounded-md font-medium hover:bg-gray-300 hover:cursor-pointer transition-colors"
+          className="w-1/2 border-2 border-dark-green py-2 rounded-md hover:bg-gray-300 transition-colors font-bold text-dark-green hover:cursor-pointer"
         >
           Cancel
         </button>
         <button
-          className="w-full bg-blue-500 text-white py-2 rounded-md font-medium hover:bg-blue-600 hover:cursor-pointer"
+          className="w-full bg-dark-green text-white py-2 rounded-md font-medium hover:cursor-pointer"
           onClick={(e) => handleSaveChanges(e)}
         >
           Save Changes
