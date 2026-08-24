@@ -24,8 +24,8 @@ export default function LoginPage() {
     try {
       await login({ email, password });
       await refetch();
+      toast.success("You're logged in");
       navigate("/home");
-      toast.success("You're logeed in");
     } catch (err: any) {
       console.log(err);
       setError(err.response?.data || "Failed to login");

@@ -21,6 +21,7 @@ import ProfileBooksPage from "./pages/Profile-BooksPage.tsx";
 import ProfileReviewPage from "./pages/Profile-ReviewPage.tsx";
 import ProfileDiaryPage from "./pages/Profile-DiaryPage.tsx";
 import AppLayout from "./AppLayout.tsx";
+import { Toaster } from "react-hot-toast";
 
 const router = createBrowserRouter([
   {
@@ -161,6 +162,7 @@ const router = createBrowserRouter([
 ]);
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
+    <Toaster />
     <AuthProvider>
       <RouterProvider router={router} />
     </AuthProvider>
