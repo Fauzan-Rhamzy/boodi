@@ -27,7 +27,7 @@ export default function ProfilePage() {
       const data = await getUserProfile(user?.user_id);
       setFirstname(data.first_name || "");
       setLastname(data.last_name || "");
-      console.log(data);
+      // console.log(data);
       setPhoneNumber(data.phone || "");
     };
 

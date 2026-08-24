@@ -10,7 +10,7 @@ export default function BookCover({ book, className = "" }: BookCoverProps) {
   const navigate = useNavigate();
 
   return (
-    <button
+    <div
       onClick={() => navigate(`/bookDetail/${book.id}`)}
       className={`cursor-pointer text-left ${className}`}
     >
@@ -19,6 +19,6 @@ export default function BookCover({ book, className = "" }: BookCoverProps) {
         alt={book.title}
         className="relative aspect-[2/3] w-full rounded-xl object-cover"
       />
-    </button>
+    </div>
   );
 }

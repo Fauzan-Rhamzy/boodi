@@ -2,12 +2,10 @@ import { useEffect, useState } from "react";
 import { getMe } from "../features/auth/api";
 import ProfileHeader from "../components/ProfileHeader";
 import type { User } from "../types/users";
-import bgProfile from "../assets/bg-profile.png";
 import { getUserProfile } from "../api/users";
 import type { Book } from "../types/book";
 import { getCurrentlyReading, getFavouriteBooks } from "../api/collection";
 import HorizontalBookList from "../components/HorizontalBookList";
-import { ChevronsRight } from "lucide-react";
 import { useNavigate } from "react-router";
 import type { FavouriteBooks } from "../types/collection";
 
@@ -54,8 +52,7 @@ export default function ProfileBooksPage() {
   }, []);
   
   return (
-    <div
-      className="w-full min-h-screen relative pb-24 bg-bw">
+    <div className="w-full min-h-screen relative pb-24 bg-bw">
       <div>
         <ProfileHeader user={user} />
       </div>
@@ -67,8 +64,12 @@ export default function ProfileBooksPage() {
             <div className="flex items-center justify-between">
               <p className="text-text font-bold text-xl">Currently Reading</p>
               <button
-                className="flex items-center text-text hover:text-light-brown px-3 py-1 bg-light-green text-sm font-medium rounded-full"
-                onClick={() => navigate(`/currently-reading`)}
+                className="flex items-center text-text active:text-light-brown active:scale-95 transition-all duration-200 px-3 py-1 bg-light-green text-sm font-medium rounded-full select-none"
+                onClick={() => {
+                  setTimeout(() => {
+                    navigate("/currently-reading");
+                  }, 150);
+                }}
               >
                 See all
               </button>
@@ -90,8 +91,12 @@ export default function ProfileBooksPage() {
             <div className="flex items-center justify-between">
               <p className="text-text font-bold text-xl">Favourite Books</p>
               <button
-                className="flex items-center text-text hover:text-light-brown px-3 py-1 bg-light-green text-sm font-medium rounded-full"
-                onClick={() => navigate(`/favourite-books`)}
+                className="flex items-center text-text active:text-light-brown active:scale-95 transition-all duration-200 px-3 py-1 bg-light-green text-sm font-medium rounded-full select-none"
+                onClick={() => {
+                  setTimeout(() => {
+                    navigate("/favourite-books");
+                  }, 150);
+                }}
               >
                 See all
               </button>

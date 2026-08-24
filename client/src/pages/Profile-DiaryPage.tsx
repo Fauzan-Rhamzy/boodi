@@ -12,9 +12,7 @@ export default function ProfileDiaryPage() {
     async function fetchUser() {
       try {
         const user = await getMe();
-        console.log("ME:", user);
         const fullProfile = await getUserProfile(user.user_id);
-        console.log("FULL PROFILE:", fullProfile);
         setUser(fullProfile);
       } catch (error) {
         console.error(error);
