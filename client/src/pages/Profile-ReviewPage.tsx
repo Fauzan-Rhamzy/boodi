@@ -26,14 +26,7 @@ export default function ProfileReviewsPage() {
 
   return (
     <div
-      className="w-full min-h-screen relative pb-10"
-      style={{
-        backgroundImage: `url(${bgProfile})`,
-        backgroundSize: "100% auto",
-        backgroundRepeat: "repeat-y",
-        backgroundPosition: "top center",
-      }}
-    >
+      className="w-full min-h-screen relative pb-24 bg-bw">
       <div>
         <ProfileHeader user={user} />
       </div>

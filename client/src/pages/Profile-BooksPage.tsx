@@ -52,33 +52,25 @@ export default function ProfileBooksPage() {
 
     fetchFavourite();
   }, []);
-
+  
   return (
     <div
-      className="w-full min-h-screen relative pb-30"
-      style={{
-        backgroundImage: `url(${bgProfile})`,
-        backgroundSize: "100% auto",
-        backgroundRepeat: "repeat-y",
-        backgroundPosition: "top center",
-      }}
-    >
+      className="w-full min-h-screen relative pb-24 bg-bw">
       <div>
         <ProfileHeader user={user} />
       </div>
 
-      <div className="mx-6 relative z-10">
+      <div className="px-4 relative z-10">
         <div className="mx-0.5">
           {/* currently reading */}
           <div className="mt-6">
             <div className="flex items-center justify-between">
-              <p className="text-lg font-bold">Currently Reading</p>
+              <p className="text-text font-bold text-xl">Currently Reading</p>
               <button
-                className="flex items-center gap-1 text-md text-gray-500"
+                className="flex items-center text-text hover:text-light-brown px-3 py-1 bg-light-green text-sm font-medium rounded-full"
                 onClick={() => navigate(`/currently-reading`)}
               >
                 See all
-                <ChevronsRight className="h-4 w-4" />
               </button>
             </div>
             {currentlyReading.length > 0 ? (
@@ -96,13 +88,12 @@ export default function ProfileBooksPage() {
           {/* favourite books */}
           <div className="mt-6">
             <div className="flex items-center justify-between">
-              <p className="text-lg font-bold">Favourite Books</p>
+              <p className="text-text font-bold text-xl">Favourite Books</p>
               <button
-                className="flex items-center gap-1 text-md text-gray-500"
+                className="flex items-center text-text hover:text-light-brown px-3 py-1 bg-light-green text-sm font-medium rounded-full"
                 onClick={() => navigate(`/favourite-books`)}
               >
                 See all
-                <ChevronsRight className="h-4 w-4" />
               </button>
             </div>
             {favouriteBooks.length > 0 ? (

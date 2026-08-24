@@ -22,7 +22,7 @@ export default function BackArrow({ useHistory = false, backPath = "/" }: BackAr
       <button
         type="button"
         onClick={handleBack}
-        className="flex items-center justify-center text-gray-700 hover:text-black transition-colors duration-200 hover:cursor-pointer"
+        className="flex items-center justify-center text-text hover:text-brown transition-colors duration-200 hover:cursor-pointer"
         aria-label="Go back"
       >
         <ArrowLeft className="" />
