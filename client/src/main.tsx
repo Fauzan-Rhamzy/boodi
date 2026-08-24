@@ -1,7 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import LandingPage from "./pages/LandingPage.tsx";
 import AuthorPage from "./pages/AuthorPage.tsx";
 import "../index.css";
 import App from "./App.tsx";
@@ -22,6 +21,7 @@ import ProfileReviewPage from "./pages/Profile-ReviewPage.tsx";
 import ProfileDiaryPage from "./pages/Profile-DiaryPage.tsx";
 import AppLayout from "./AppLayout.tsx";
 import { Toaster } from "react-hot-toast";
+import OnboardingPage from "./pages/OnboardingPage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -31,7 +31,7 @@ const router = createBrowserRouter([
       // NO NAVBAR
       {
         index: true,
-        element: <LandingPage />,
+        element: <OnboardingPage />,
       },
       {
         path: "login",
