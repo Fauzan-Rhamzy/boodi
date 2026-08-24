@@ -1,5 +1,5 @@
-import { ChevronsRight } from "lucide-react";
-import bgHome from "../assets/bg-home.png";
+import { ArrowRight, ChevronsRight } from "lucide-react";
+
 import pfp from "../assets/dummy-pfp.png";
 import ReviewCard from "../components/ReviewCard";
 import HorizontalBookList from "../components/HorizontalBookList";
@@ -67,7 +67,7 @@ export default function HomePage() {
       {/* header */}
       <div className="flex relative z-11 justify-between mx-7 pt-15">
         <div>
-          <p className="text-3xl font-bold font-caveat">
+          <p className="text-4xl font-bold font-caveat pb-1">
             Hi, {user?.first_name ?? "there"}!
           </p>
           <p className="text-gray-600 text-md font-medium mt-0.5">
@@ -83,15 +83,15 @@ export default function HomePage() {
       <div className="mx-6 relative z-10">
         <div className="mx-0.5">
           {/* currently reading */}
-          <div className="mt-6">
-            <div className="flex items-center justify-between">
-              <p className="text-lg font-bold">Currently Reading</p>
+          <div className="mt-6 ">
+            <div className="flex items-center justify-between ">
+              <p className="text-lg font-bold pb-1 ">Currently Reading</p>
               <button
-                className="flex items-center gap-1 text-md text-gray-500"
+                className="flex items-center gap-1 text-md text-dark-green"
                 onClick={() => navigate(`/currently-reading`)}
               >
                 See all
-                <ChevronsRight className="h-4 w-4" />
+                <ArrowRight className="h-4 w-4" />
               </button>
             </div>
             {currentlyReading.length > 0 ? (
@@ -100,13 +100,13 @@ export default function HomePage() {
                 books={currentlyReading}
               />
             ) : (
-              <p className="mt-3 text-sm text-gray-500">Read a new book~</p>
+              <p className="mt-3 text-sm text-dark-green">Read a new book~</p>
             )}
           </div>
 
           {/* trending book */}
           <div className="mt-6">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between pb-1">
               <p className="text-lg font-bold">Trending Books</p>
             </div>
             <HorizontalBookList title="Trending Books" books={trendingBooks} />
