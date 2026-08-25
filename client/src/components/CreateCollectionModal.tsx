@@ -89,7 +89,7 @@ export default function CreateCollectionModal({
             {/* cover photo */}
             <div className="flex flex-col items-center gap-2">
               <div
-                className="w-24 h-36 rounded-xl bg-gray-100 overflow-hidden cursor-pointer flex items-center justify-center"
+                className="aspect-square w-full rounded-xl bg-gray-100 overflow-hidden cursor-pointer flex items-center justify-center"
                 onClick={() =>
                   document.getElementById("collectionCover")?.click()
                 }
@@ -147,7 +147,7 @@ export default function CreateCollectionModal({
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-2 rounded-md bg-indigo-500 text-white text-sm font-medium hover:bg-indigo-400 cursor-pointer transition-colors disabled:opacity-50"
+                className="w-full py-2 rounded-md bg-dark-green text-white text-sm font-medium cursor-pointer transition-colors disabled:opacity-50"
               >
                 {loading ? "Creating..." : "Create"}
               </button>

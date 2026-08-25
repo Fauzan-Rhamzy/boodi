@@ -42,7 +42,7 @@ func (s *Service) CreateCollection(userID int, name string, file multipart.File,
 
 		ext := filepath.Ext(fileHeader.Filename)
 		filename := fmt.Sprintf("%d_%d%s", userID, time.Now().Unix(), ext)
-		savePath := filepath.Join("images/collection", filename)
+		savePath := filepath.Join("images/collections", filename)
 
 		dst, err := os.Create(savePath)
 		if err != nil {
@@ -54,7 +54,7 @@ func (s *Service) CreateCollection(userID int, name string, file multipart.File,
 			return 0, err
 		}
 
-		coverPhoto = "collection/" + filename
+		coverPhoto = "collections/" + filename
 	}
 
 	return s.repo.CreateUserCollections(userID, name, coverPhoto)
