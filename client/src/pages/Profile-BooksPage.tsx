@@ -51,7 +51,7 @@ export default function ProfileBooksPage() {
 
     fetchFavourite();
   }, []);
-  
+
   return (
     <div className="w-full min-h-screen relative pb-24 bg-bw">
       <div>
