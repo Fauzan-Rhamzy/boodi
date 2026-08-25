@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router";
-
 import BackArrow from "../components/BackArrow";
 import BookCover from "../components/BookCover";
 import type { Book } from "../types/book";
-import bgLibrary from "../assets/bg-library.png";
 
 import SearchBar from "../components/SearchBar";
 import {
@@ -20,6 +18,7 @@ import {
   ArrowDownZa,
   ArrowDownAz,
 } from "lucide-react";
+import MoreButton from "../components/moreButton";
 
 export default function LibraryBooksPage() {
   const navigate = useNavigate();
@@ -99,16 +98,14 @@ export default function LibraryBooksPage() {
   );
   return (
     <div
-      className="min-h-screen w-full"
-      style={{
-        backgroundImage: `url(${bgLibrary})`,
-      }}
-    >
+      className="min-h-screen w-full bg-bw">
       {/* Header */}
       <div className="px-6 pt-3 pb-2">
         <BackArrow useHistory={true} />
 
-        <h1 className="mb-3 ml-2 pt-20 pb-1 text-3xl font-bold">
+        <MoreButton/>
+
+        <h1 className="mb-3 ml-2 pt-20 pb-1 text-3xl text-text font-bold">
           {isCurrentlyReading
             ? "Currently Reading"
             : isFavouriteBooks
@@ -118,11 +115,6 @@ export default function LibraryBooksPage() {
 
         {/* Buttons */}
         <div className="ml-2 flex gap-2.5 pb-1">
-          {/* Add */}
-          <button type="button" className="cursor-pointer">
-            <CirclePlus className="h-8 w-8" />
-          </button>
-
           {/* Calendar sorting */}
           {isCurrentlyReading && (
             <button
@@ -175,9 +167,9 @@ export default function LibraryBooksPage() {
       {/* Books */}
       {filteredBooks.length === 0 ? (
         <div className="flex flex-col items-center justify-center px-10 py-10 text-center">
-          <p className="text-lg font-bold text-gray-700">No book yet</p>
+          <p className="text-lg font-bold text-brown">No book yet</p>
 
-          <p className="mt-1 text-sm text-gray-500">Add a book</p>
+          <p className="mt-1 text-sm text-light-brown">Add a book</p>
         </div>
       ) : (
         <div className="mx-2 grid grid-cols-3 gap-x-3 gap-y-6 px-6 pt-4 items-start">
@@ -188,10 +180,6 @@ export default function LibraryBooksPage() {
               className="cursor-pointer text-left"
             >
               <BookCover book={book} />
-
-              <p className="mt-1 line-clamp-2 text-sm font-medium">
-                {book.title}
-              </p>
             </button>
           ))}
         </div>
