@@ -2,6 +2,6 @@ export type Author = {
     id: number; 
     name: string; 
     description: string;
-    profilePic: string;
+    profile_pic: string;
     books: { id: number; title: string, cover: Text }[];
 }

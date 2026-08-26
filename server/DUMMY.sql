@@ -38,14 +38,13 @@ INSERT INTO Book (title, price, year, page, language, description, cover) VALUES
 ('El Misterio', 12.99, 2020, 210, 'ES', 'A Spanish thriller that keeps you on the edge of your seat.', 'books/book4.png'),
 ('History of the World', 29.99, 2015, 800, 'EN', 'A comprehensive look at human history from ancient to modern times.', 'books/book5.png');
 
-
 -- AUTHORS
 INSERT INTO Author (name, description, profile_pic) VALUES
-('Arthur Conan', 'Master of mystery and suspense writing with over 20 bestsellers.', NULL),
-('Stella Nova', 'Award-winning science fiction author and astrophysicist.', NULL),
-('Dr. Alan Mind', 'Renowned psychologist, speaker, and self-help guru.', NULL),
-('Carlos Ruiz', 'Bestselling thriller author originating from Madrid, Spain.', NULL),
-('Eleanor Vance', 'Historian and professor at Oxford University.', NULL);
+('Arthur Conan', 'Master of mystery and suspense writing with over 20 bestsellers.', 'profile/author/author-1.png'),
+('Stella Nova', 'Award-winning science fiction author and astrophysicist.', 'profile/author/author-2.png'),
+('Dr. Alan Mind', 'Renowned psychologist, speaker, and self-help guru.', 'profile/author/author-3.png'),
+('Carlos Ruiz', 'Bestselling thriller author originating from Madrid, Spain.', 'profile/author/author-4.png'),
+('Eleanor Vance', 'Historian and professor at Oxford University.', 'profile/author/author-5.png');
 
 -- AUTHOR_BOOK (Linking Authors to Books)
 INSERT INTO AuthorBook (author_id, book_id) VALUES

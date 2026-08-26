@@ -1,6 +1,4 @@
-import bg from "../assets/bg-author.png";
-import avatar from "../assets/avatar.png";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import BackArrow from "../components/BackArrow";
 import type { Author } from "../types/author";
@@ -37,19 +35,23 @@ export default function AuthorPage() {
       <div className="flex flex-col items-center pt-2 pb-10 px-4">
         {/* profile pict dan nama */}
         <img
-          src={avatar}
-          alt="Avatar"
-          className="w-[174px] h-[174px] object-cover mt-15"
+          src={
+            author?.profile_pic
+            ? `http://localhost:8080/images/${author.profile_pic}`
+            : `http://localhost:8080/images/profile/dummy.png`
+          }
+          alt={author.name}
+          className="w-40 h-40 rounded-full object-cover shrink-0 mt-15"
         />
 
-        <h1 className="text-center text-2xl font-bold text-gray-900 mt-3 ">
+        <h1 className="text-center text-2xl font-bold text-text mt-3 ">
           {author.name}
         </h1>
 
         <div className="w-full max-w-md mx-auto space-y-6 text-left px-4 mt-2">
           {/* decription box */}
           <h2
-            className="font-bold text-xl mb-5 pt-3 pb-2 text-gray-900"
+            className="font-bold text-xl mb-5 pt-3 pb-2 text-text"
             style={{ marginBottom: "3px", marginTop: "7px" }}
           >
             Description
@@ -67,7 +69,7 @@ export default function AuthorPage() {
           {/* Buku-buku author */}
           <div>
             <h2
-              className="font-bold text-xl pb-2 text-gray-900"
+              className="font-bold text-xl pb-2 text-text"
               style={{ marginBottom: "7px", marginTop: "10px" }}
             >
               Books by {author.name}
