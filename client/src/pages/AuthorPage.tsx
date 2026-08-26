@@ -44,14 +44,14 @@ export default function AuthorPage() {
           className="w-40 h-40 rounded-full object-cover shrink-0 mt-15"
         />
 
-        <h1 className="text-center text-2xl font-bold text-gray-900 mt-3 ">
+        <h1 className="text-center text-2xl font-bold text-text mt-3 ">
           {author.name}
         </h1>
 
         <div className="w-full max-w-md mx-auto space-y-6 text-left px-4 mt-2">
           {/* decription box */}
           <h2
-            className="font-bold text-xl mb-5 pt-3 pb-2 text-gray-900"
+            className="font-bold text-xl mb-5 pt-3 pb-2 text-text"
             style={{ marginBottom: "3px", marginTop: "7px" }}
           >
             Description
@@ -69,7 +69,7 @@ export default function AuthorPage() {
           {/* Buku-buku author */}
           <div>
             <h2
-              className="font-bold text-xl pb-2 text-gray-900"
+              className="font-bold text-xl pb-2 text-text"
               style={{ marginBottom: "7px", marginTop: "10px" }}
             >
               Books by {author.name}
