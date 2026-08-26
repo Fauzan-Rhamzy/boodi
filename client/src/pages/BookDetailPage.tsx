@@ -1,15 +1,20 @@
 import BackArrow from "../components/BackArrow";
-import bgDetailBook from "../assets/bg-detailBooks.png";
+
 import { Plus, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import type { Book } from "../types/book";
 import { getById } from "../api/books";
-import { AddToFavourite, checkIsFavourited, DeleteFromFavourite } from "../api/collection";
+import {
+  AddToFavourite,
+  checkIsFavourited,
+  DeleteFromFavourite,
+} from "../api/collection";
+import RatingBox from "../components/RatingBox";
 
 export default function BookDetailPage() {
   const { id } = useParams();
-  const [ book, setBook ] = useState<Book | null>(null);
+  const [book, setBook] = useState<Book | null>(null);
   const [isFavourited, setIsFavourited] = useState(false);
 
   useEffect(() => {
@@ -58,8 +63,7 @@ export default function BookDetailPage() {
   }
 
   return (
-    <div
-      className="w-full min-h-screen relative pb-10 bg-bw">
+    <div className="w-full min-h-screen relative pb-10 bg-bw">
       <div className="w-full flex justify-start px-10">
         <BackArrow useHistory={true} backPath="/" />
       </div>
@@ -87,7 +91,8 @@ export default function BookDetailPage() {
               <span>Written by</span>
               <Link
                 to={`/author/${book.authors[0].id}`}
-                className="font-bold underline cursor-pointer text-text underline-offset-3 active: light brown active: scale-95 duration 100">
+                className="font-bold underline cursor-pointer text-text underline-offset-3 active: light brown active: scale-95 duration 100"
+              >
                 {book.authors[0].name}
               </Link>
             </>
@@ -110,7 +115,9 @@ export default function BookDetailPage() {
             onClick={handleToggleFavourite}
             className="w-6 h-6 p-0 shrink-0 flex items-center justify-center rounded-full border border-black text-text"
           >
-            <Heart className={`w-4 h-4 ${isFavourited ? "fill-red-500 text-red-500" : ""}`} />
+            <Heart
+              className={`w-4 h-4 ${isFavourited ? "fill-red-500 text-red-500" : ""}`}
+            />
           </button>
         </div>
 
@@ -122,14 +129,14 @@ export default function BookDetailPage() {
             </p>
           </div>
 
-          <div className="h-8 w-[1px] bg-text"></div>
+          <div className="h-8 w-px bg-text"></div>
 
           <div className="px-6">
             <p className="text-sm text-text font-medium">Pages</p>
             <p className="text-base font-bold text-text mt-0.5">{book.page}</p>
           </div>
 
-        <div className="h-8 w-[1px] bg-text"></div>
+          <div className="h-8 w-px bg-text"></div>
 
           <div className="px-6">
             <p className="text-sm text-text font-medium">Language</p>
@@ -184,6 +191,7 @@ export default function BookDetailPage() {
           >
             Ratings
           </h2>
+          <RatingBox />
         </div>
 
         <div className="w-full max-w-md mx-auto space-y-6 text-left px-4 mt-2">
