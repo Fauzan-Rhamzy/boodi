@@ -43,6 +43,14 @@ body {
   height: 0;
 }
 
+.header-style {
+  padding-top: calc(var(--spacing) * 20);
+  font-size: var(--text-5xl) /* 3rem = 48px */;
+  line-height: var(--tw-leading, var(--text-5xl--line-height));
+  --tw-font-weight: var(--font-weight-extrabold) /* 800 */;
+  font-weight: var(--font-weight-extrabold);
+  font-family: var(--font-caveat);
+}
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
