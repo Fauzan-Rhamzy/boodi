@@ -69,8 +69,8 @@ export default function LibraryPage() {
 
   return (
     <div className="w-full h-screen overflow-y-auto p-10 pb-36 bg-bw">
-      <div className="pt-3 pb-2">
-        <h1 className="mb-3 ml-2 header-style">Library</h1>
+      <div className=" pb-4">
+        <h1 className="mb-3 ml-2 pb-2 header-style">Library</h1>
         <div className="ml-2 flex items-center gap-2.5">
           {/* Alphabet sorting */}
           <button
