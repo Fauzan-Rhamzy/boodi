@@ -41,11 +41,11 @@ INSERT INTO Book (title, price, year, page, language, description, cover) VALUES
 
 -- AUTHORS
 INSERT INTO Author (name, description, profile_pic) VALUES
-('Arthur Conan', 'Master of mystery and suspense writing with over 20 bestsellers.', 'profile/user-1.png'),
-('Stella Nova', 'Award-winning science fiction author and astrophysicist.', 'profile/user-2.png'),
-('Dr. Alan Mind', 'Renowned psychologist, speaker, and self-help guru.', 'profile/user-3.png'),
-('Carlos Ruiz', 'Bestselling thriller author originating from Madrid, Spain.', 'profile/user-4.png'),
-('Eleanor Vance', 'Historian and professor at Oxford University.', 'profile/user-5.png');
+('Arthur Conan', 'Master of mystery and suspense writing with over 20 bestsellers.', 'profile/author/user-1.png'),
+('Stella Nova', 'Award-winning science fiction author and astrophysicist.', 'profile/author/user-2.png'),
+('Dr. Alan Mind', 'Renowned psychologist, speaker, and self-help guru.', 'profile/author/user-3.png'),
+('Carlos Ruiz', 'Bestselling thriller author originating from Madrid, Spain.', 'profile/author/user-4.png'),
+('Eleanor Vance', 'Historian and professor at Oxford University.', 'profile/author/user-5.png');
 
 -- AUTHOR_BOOK (Linking Authors to Books)
 INSERT INTO AuthorBook (author_id, book_id) VALUES
