@@ -1,14 +1,23 @@
 import { Heart, Star } from "lucide-react";
-import type { BookReviews } from "../types/review.ts";
+import type { TrendingReview } from "../types/review.ts";
+import BookCover from "./BookCover.tsx";
 
 type ReviewCardProps = {
-  review: BookReviews;
+  review: TrendingReview;
 };
 
-export default function ReviewCard({ review }: ReviewCardProps) {
+export default function TrendingReviewCard({ review }: ReviewCardProps) {
   return (
     <div className="flex h-36 w-86 shrink-0 gap-4 rounded-2xl bg-white/50 p-3 shadow-md ring-1 ring-black/5 my-3">
       {/* Book Cover */}
+      <BookCover
+        book={{
+          id: review.book_id,
+          title: review.title,
+          cover: review.book_cover,
+        }}
+        className="h-full w-24 shrink-0 overflow-hidden rounded-xl shadow-sm"
+      />
 
       {/* Review Content */}
       <div className="flex min-w-0 flex-1 flex-col justify-between py-1">

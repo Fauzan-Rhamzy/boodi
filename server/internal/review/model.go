@@ -13,3 +13,16 @@ type TrendingReview struct {
 	LikeCount  int    `json:"like_count"`
 	IsLiked    bool   `json:"is_liked"`
 }
+
+type BookReview struct {
+	ReviewID   int    `json:"review_id"`
+	BookID     int    `json:"book_id"`
+	Rating     int    `json:"rating"`
+	FirstName  string `json:"first_name"`
+	LastName   string `json:"last_name"`
+	ProfilePic string `json:"user_pic"`
+	Comment    string `json:"comment"`
+	LikeCount  int    `json:"like_count"`
+	IsLiked    bool   `json:"is_liked"`
+	ReplyCount int    `json:"reply_count"`
+}

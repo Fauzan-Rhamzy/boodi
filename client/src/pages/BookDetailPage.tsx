@@ -11,12 +11,14 @@ import {
   DeleteFromFavourite,
 } from "../api/collection";
 import RatingBox from "../components/RatingBox";
-
+import ReviewCard from "../components/ReviewCard";
+import { getBookReviews } from "../api/review";
+import type { BookReviews } from "../types/review";
 export default function BookDetailPage() {
   const { id } = useParams();
   const [book, setBook] = useState<Book | null>(null);
   const [isFavourited, setIsFavourited] = useState(false);
-
+  const [reviews, setReviews] = useState<BookReviews[]>([]);
   useEffect(() => {
     async function fetchDetailBookAndFavorite() {
       if (!id) return;
@@ -36,6 +38,14 @@ export default function BookDetailPage() {
         setIsFavourited(favStatus);
       } catch (error) {
         console.error("Failed to get favourite status:", error);
+      }
+      try {
+        const reviewData = await getBookReviews(bookIdNum);
+        setReviews(reviewData ?? []);
+
+        console.log("BOOK REVIEWS:", reviewData);
+      } catch (error) {
+        console.error("Failed to get book reviews:", error);
       }
     }
 
@@ -155,7 +165,7 @@ export default function BookDetailPage() {
           </h2>
 
           <div className="flex flex-wrap gap-1.5">
-            {book.genres.map((genre) => (
+            {(book.genres ?? []).map((genre) => (
               <span
                 key={genre}
                 className="flex items-center justify-center px-2 py-2 bg-dark-green text-white text-xs rounded-full leading-none"
@@ -206,6 +216,9 @@ export default function BookDetailPage() {
             <button className="w-full flex justify-center items-center rounded-full bg-dark-green text-white py-1.5 text-sm font-medium active:scale-98 transition-all">
               Write a Review
             </button>
+            {reviews.map((review) => (
+              <ReviewCard key={review.review_id} review={review} />
+            ))}
           </div>
         </div>
       </div>
