@@ -1,7 +1,6 @@
-import { ArrowRight, ChevronsRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 import pfp from "../assets/dummy-pfp.png";
-import ReviewCard from "../components/ReviewCard";
 import HorizontalBookList from "../components/HorizontalBookList";
 import UserProfile from "../components/UserProfile";
 import { useEffect, useState } from "react";
@@ -11,6 +10,7 @@ import type { TrendingReview } from "../types/review";
 import { getMe, type AuthUser } from "../features/auth/api";
 import { useNavigate } from "react-router";
 import { getTrendingBooks, getCurrentlyReading } from "../api/collection";
+import TrendingReviewCard from "../components/TrendingReviewCard";
 export default function HomePage() {
   const [trendingBooks, setTrendingBooks] = useState<Book[]>([]);
   const navigate = useNavigate();
@@ -117,7 +117,7 @@ export default function HomePage() {
               <p className="text-xl font-bold">Trending Review</p>
             </div>
             {trendingReviews.map((review) => (
-              <ReviewCard key={review.review_id} review={review} />
+              <TrendingReviewCard key={review.review_id} review={review} />
             ))}
           </div>
         </div>

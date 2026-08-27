@@ -1,17 +1,24 @@
 import BackArrow from "../components/BackArrow";
-import bgDetailBook from "../assets/bg-detailBooks.png";
+
 import { Plus, Heart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import type { Book } from "../types/book";
 import { getById } from "../api/books";
-import { AddToFavourite, checkIsFavourited, DeleteFromFavourite } from "../api/collection";
-
+import {
+  AddToFavourite,
+  checkIsFavourited,
+  DeleteFromFavourite,
+} from "../api/collection";
+import RatingBox from "../components/RatingBox";
+import ReviewCard from "../components/ReviewCard";
+import { getBookReviews } from "../api/review";
+import type { BookReviews } from "../types/review";
 export default function BookDetailPage() {
   const { id } = useParams();
-  const [ book, setBook ] = useState<Book | null>(null);
+  const [book, setBook] = useState<Book | null>(null);
   const [isFavourited, setIsFavourited] = useState(false);
-
+  const [reviews, setReviews] = useState<BookReviews[]>([]);
   useEffect(() => {
     async function fetchDetailBookAndFavorite() {
       if (!id) return;
@@ -31,6 +38,12 @@ export default function BookDetailPage() {
         setIsFavourited(favStatus);
       } catch (error) {
         console.error("Failed to get favourite status:", error);
+      }
+      try {
+        const reviewData = await getBookReviews(bookIdNum);
+        setReviews(reviewData ?? []);
+      } catch (error) {
+        console.error("Failed to get book reviews:", error);
       }
     }
 
@@ -58,9 +71,8 @@ export default function BookDetailPage() {
   }
 
   return (
-    <div
-      className="w-full min-h-screen relative pb-10 bg-bw">
-      <div className="w-full flex justify-start px-10">
+    <div className="w-full min-h-screen relative pb-10 bg-bw">
+      <div className="w-full flex justify-start px-6">
         <BackArrow useHistory={true} backPath="/" />
       </div>
 
@@ -87,7 +99,8 @@ export default function BookDetailPage() {
               <span>Written by</span>
               <Link
                 to={`/author/${book.authors[0].id}`}
-                className="font-bold underline cursor-pointer text-text underline-offset-3 active: light brown active: scale-95 duration 100">
+                className="font-bold underline cursor-pointer text-text underline-offset-3 active: light brown active: scale-95 duration 100"
+              >
                 {book.authors[0].name}
               </Link>
             </>
@@ -96,21 +109,23 @@ export default function BookDetailPage() {
           )}
         </div>
 
-        <div className="flex items-center gap-2">
-          <button className="text-xs flex items-center gap-1 bg-text text-white font-medium px-3 py-1 rounded-lg transition">
-            <Plus className="w-4 h-4" />
-            <span>Track Progress</span>
+        <div className="flex items-center gap-2 mt-1.5">
+          <button className="text-sm flex items-center gap-1 bg-text text-white font-medium px-3 py-1 rounded-lg transition">
+            <Plus className="w-6 h-6" />
+            <span className="text-md">Track Progress</span>
           </button>
 
-          <button className="w-6 h-6 p-0 shrink-0 flex items-center justify-center rounded-full border border-black text-text">
-            <Plus className="w-4 h-4" />
+          <button className="w-8 h-8 p-0 shrink-0 flex items-center justify-center rounded-full border border-black text-text">
+            <Plus className="w-6 h-6" />
           </button>
 
           <button
             onClick={handleToggleFavourite}
-            className="w-6 h-6 p-0 shrink-0 flex items-center justify-center rounded-full border border-black text-text"
+            className="w-8 h-8 p-0 shrink-0 flex items-center justify-center rounded-full border border-black text-text"
           >
-            <Heart className={`w-4 h-4 ${isFavourited ? "fill-red-500 text-red-500" : ""}`} />
+            <Heart
+              className={`w-6 h-6 ${isFavourited ? "fill-red-500 text-red-500" : ""}`}
+            />
           </button>
         </div>
 
@@ -122,14 +137,14 @@ export default function BookDetailPage() {
             </p>
           </div>
 
-          <div className="h-8 w-[1px] bg-text"></div>
+          <div className="h-8 w-px shrink-0 bg-text"></div>
 
           <div className="px-6">
             <p className="text-sm text-text font-medium">Pages</p>
             <p className="text-base font-bold text-text mt-0.5">{book.page}</p>
           </div>
 
-        <div className="h-8 w-[1px] bg-text"></div>
+          <div className="h-8 w-px shrink-0 bg-text"></div>
 
           <div className="px-6">
             <p className="text-sm text-text font-medium">Language</p>
@@ -147,14 +162,15 @@ export default function BookDetailPage() {
             Genres
           </h2>
 
-          <div className="flex flex-wrap gap-1.5">
-            {book.genres.map((genre) => (
-              <span
-                key={genre}
-                className="flex items-center justify-center px-2 py-2 bg-dark-green text-white text-xs rounded-full leading-none"
+          <div className="flex flex-wrap gap-1.5 mt-2">
+            {(book.genres ?? []).map((genre) => (
+              <Link
+                key={genre.id}
+                to={`/genre/${genre.id}`}
+                className="flex items-center justify-center p-2 px-5 bg-dark-green text-white text-md rounded-full leading-none"
               >
-                {genre}
-              </span>
+                {genre.name}
+              </Link>
             ))}
           </div>
         </div>
@@ -168,10 +184,10 @@ export default function BookDetailPage() {
           </h2>
 
           <div
-            className="w-full p-6 bg-white rounded-2xl shadow-md border border-gray-100"
+            className="w-full p-6 bg-white rounded-2xl shadow-md border mt-2 border-gray-100"
             style={{ padding: "15px 17px" }}
           >
-            <p className="text-text text-sm leading-snug text-justify">
+            <p className="text-text text-md leading-snug text-justify">
               {book.description}
             </p>
           </div>
@@ -184,6 +200,7 @@ export default function BookDetailPage() {
           >
             Ratings
           </h2>
+          <RatingBox bookId={book.id} className="pt-1" />
         </div>
 
         <div className="w-full max-w-md mx-auto space-y-6 text-left px-4 mt-2">
@@ -194,10 +211,13 @@ export default function BookDetailPage() {
             Reviews
           </h2>
 
-          <div className="flex justify-center">
-            <button className="w-full flex justify-center items-center rounded-full bg-dark-green text-white py-1.5 text-sm font-medium active:scale-98 transition-all">
+          <div className="flex flex-col items-center  justify-center mt-2 gap-2 pb-6">
+            <button className="w-19/20 flex justify-center items-center rounded-full bg-dark-green text-white py-2.5 text-md font-medium active:scale-98 transition-all">
               Write a Review
             </button>
+            {reviews.map((review) => (
+              <ReviewCard key={review.review_id} review={review} />
+            ))}
           </div>
         </div>
       </div>

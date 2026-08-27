@@ -121,8 +121,9 @@ func main() {
 
 		r.Get("/api/book/search", bookHandler.SearchBooks)
 		r.Get("/api/reviews/trending", reviewHandler.GetTrendingReviews)
-
+		r.Get("/api/reviews/book/{book_id}", reviewHandler.GetBookReviews)
 		r.Get("/api/users/{user_id}", usersHandler.GetProfile)
+		r.Get("/api/book/{book_id}/ratings", reviewHandler.GetBookRatings)
 		r.Put("/api/users/{user_id}", usersHandler.UpdateProfile)
 	})
 

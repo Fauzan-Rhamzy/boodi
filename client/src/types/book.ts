@@ -7,6 +7,9 @@ export type Book = {
   language: string;
   description: string;
   cover: string;
-  genres: string[];
+  genres: {
+    id: number;
+    name: string;
+  }[];
   authors: { id: number; name: string }[];
 };
