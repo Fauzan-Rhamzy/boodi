@@ -2,6 +2,7 @@ import api from "../lib/axios";
 import type {
   BookReviews,
   BookReviewsResponse,
+  RatingSummaryResponse,
   TrendingReview,
 } from "../types/review";
 
@@ -12,6 +13,13 @@ export async function getTrendingReviews(): Promise<TrendingReview[]> {
 }
 export async function getBookReviews(bookId: number): Promise<BookReviews[]> {
   const response = await api.get<BookReviews[]>(`/api/reviews/book/${bookId}`);
-  console.log("API RESPONSE:", response.data);
   return response.data.data;
 }
+
+export const getBookRatings = async (
+  bookId: number,
+): Promise<RatingSummaryResponse> => {
+  const response = await api.get(`/api/book/${bookId}/ratings`);
+  console.log("RATING API RESPONSE:", response.data);
+  return response.data.data;
+};

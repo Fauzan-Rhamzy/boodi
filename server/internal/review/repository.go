@@ -160,3 +160,71 @@ func (r *Repository) GetBookReviews(userID int, bookID int) ([]BookReview, error
 
 	return reviews, nil
 }
+
+func (r *Repository) GetBookRating(bookID int) (*RatingSummaryResponse, error) {
+    rows, err := r.db.Query(`
+        SELECT
+            stars.rating,
+            COUNT(r.review_id) AS count
+        FROM generate_series(1, 5) AS stars(rating)
+        LEFT JOIN Review r
+            ON r.rating = stars.rating
+            AND r.book_id = $1
+        GROUP BY stars.rating
+        ORDER BY stars.rating DESC
+    `, bookID)
+
+    if err != nil {
+        return nil, err
+    }
+    defer rows.Close()
+
+    ratings := make([]RatingSummary, 0)
+
+    for rows.Next() {
+       var rating RatingSummary
+
+        err := rows.Scan(
+            &rating.Rating,
+            &rating.Count,
+        )
+
+        if err != nil {
+            return nil, err
+        }
+
+        ratings = append(ratings, rating)
+    }
+
+    if err := rows.Err(); err != nil {
+        return nil, err
+    }
+
+    var average float64
+    var total int
+
+    err = r.db.QueryRow(`
+        SELECT
+            COALESCE(AVG(rating), 0),
+            COUNT(*)
+        FROM Review
+        WHERE book_id = $1
+    `, bookID).Scan(&average, &total)
+
+    if err != nil {
+        return nil, err
+    }
+
+    for i := range ratings {
+        if total > 0 {
+            ratings[i].Percentage =
+                float64(ratings[i].Count) / float64(total) * 100
+        }
+    }
+
+    return &RatingSummaryResponse{
+        Average:    average,
+        Total:      total,
+        Ratings:    ratings,
+    }, nil
+}

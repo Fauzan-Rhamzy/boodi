@@ -7,7 +7,7 @@ type ReviewCardProps = {
 
 export default function ReviewCard({ review }: ReviewCardProps) {
   return (
-    <div className="flex h-fit w-fullshrink-0  gap-4 rounded-2xl bg-white/90 p-3 shadow-lg ring-1 ring-black/5 my-3">
+    <div className="flex h-fit w-fullshrink-0  gap-4 rounded-2xl bg-white p-3 shadow-lg ring-1 ring-black/5 my-3">
       {/* Book Cover */}
 
       {/* Review Content */}
@@ -35,7 +35,7 @@ export default function ReviewCard({ review }: ReviewCardProps) {
             </div>
           </div>
           {/* Comment */}
-          <p className="mt-1 ml-10 line-clamp-2 text-md leading-snug text-gray-600">
+          <p className="mt-1 ml-10 mr-2 line-clamp-2 text-md leading-snug font-medium text-dark-green">
             {review.comment}
           </p>
         </div>

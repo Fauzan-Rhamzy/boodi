@@ -26,3 +26,14 @@ type BookReview struct {
 	IsLiked    bool   `json:"is_liked"`
 	ReplyCount int    `json:"reply_count"`
 }
+type RatingSummary struct {
+	Rating     int     `json:"rating"`
+	Count      int     `json:"count"`
+	Percentage float64 `json:"percentage"`
+}
+
+type RatingSummaryResponse struct {
+	Average float64         `json:"average"`
+	Total   int             `json:"total"`
+	Ratings []RatingSummary `json:"ratings"`
+}

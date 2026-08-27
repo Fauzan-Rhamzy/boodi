@@ -36,3 +36,15 @@ export type BookReviewsResponse = {
   data: BookReviews[];
   success: boolean;
 };
+
+export interface RatingSummary {
+  rating: number;
+  count: number;
+  percentage: number;
+}
+
+export interface RatingSummaryResponse {
+  average: number;
+  total: number;
+  ratings: RatingSummary[];
+}

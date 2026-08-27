@@ -201,7 +201,7 @@ export default function BookDetailPage() {
           >
             Ratings
           </h2>
-          <RatingBox />
+          <RatingBox bookId={book.id} />
         </div>
 
         <div className="w-full max-w-md mx-auto space-y-6 text-left px-4 mt-2">
