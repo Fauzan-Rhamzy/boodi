@@ -52,3 +52,13 @@ export async function checkIsFavourited(bookId: number): Promise<boolean> {
   const response = await api.get(`/favourite-books/check/${bookId}`);
   return response.data.data.is_favourited;
 }
+
+export async function addBookToCollection(
+  collectionID: number,
+  bookID: number,
+) {
+  const res = await api.post(`/api/collections/${collectionID}/books`, {
+    book_id: bookID,
+  });
+  return res.data;
+}

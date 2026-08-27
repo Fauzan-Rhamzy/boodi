@@ -5,12 +5,19 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import type { Book } from "../types/book";
 import { getById } from "../api/books";
-import { AddToFavourite, checkIsFavourited, DeleteFromFavourite } from "../api/collection";
+import {
+  addBookToCollection,
+  AddToFavourite,
+  checkIsFavourited,
+  DeleteFromFavourite,
+} from "../api/collection";
+import AddToCollectionModal from "../components/AddToCollectionModal";
 
 export default function BookDetailPage() {
   const { id } = useParams();
-  const [ book, setBook ] = useState<Book | null>(null);
+  const [book, setBook] = useState<Book | null>(null);
   const [isFavourited, setIsFavourited] = useState(false);
+  const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
 
   useEffect(() => {
     async function fetchDetailBookAndFavorite() {
@@ -58,8 +65,7 @@ export default function BookDetailPage() {
   }
 
   return (
-    <div
-      className="w-full min-h-screen relative pb-10 bg-bw">
+    <div className="w-full min-h-screen relative pb-10 bg-bw">
       <div className="w-full flex justify-start px-10">
         <BackArrow useHistory={true} backPath="/" />
       </div>
@@ -87,7 +93,8 @@ export default function BookDetailPage() {
               <span>Written by</span>
               <Link
                 to={`/author/${book.authors[0].id}`}
-                className="font-bold underline cursor-pointer text-text underline-offset-3 active: light brown active: scale-95 duration 100">
+                className="font-bold underline cursor-pointer text-text underline-offset-3 active: light brown active: scale-95 duration 100"
+              >
                 {book.authors[0].name}
               </Link>
             </>
@@ -102,15 +109,20 @@ export default function BookDetailPage() {
             <span>Track Progress</span>
           </button>
 
-          <button className="w-6 h-6 p-0 shrink-0 flex items-center justify-center rounded-full border border-black text-text">
+          <button
+            className="w-6 h-6 p-0 shrink-0 flex items-center justify-center rounded-full border border-black text-text hover:cursor-pointer"
+            onClick={() => setIsCollectionModalOpen(true)}
+          >
             <Plus className="w-4 h-4" />
           </button>
 
           <button
             onClick={handleToggleFavourite}
-            className="w-6 h-6 p-0 shrink-0 flex items-center justify-center rounded-full border border-black text-text"
+            className="w-6 h-6 p-0 shrink-0 flex items-center justify-center rounded-full border border-black text-text hover:cursor-pointer"
           >
-            <Heart className={`w-4 h-4 ${isFavourited ? "fill-red-500 text-red-500" : ""}`} />
+            <Heart
+              className={`w-4 h-4 ${isFavourited ? "fill-red-500 text-red-500" : ""}`}
+            />
           </button>
         </div>
 
@@ -129,7 +141,7 @@ export default function BookDetailPage() {
             <p className="text-base font-bold text-text mt-0.5">{book.page}</p>
           </div>
 
-        <div className="h-8 w-[1px] bg-text"></div>
+          <div className="h-8 w-[1px] bg-text"></div>
 
           <div className="px-6">
             <p className="text-sm text-text font-medium">Language</p>
@@ -201,6 +213,14 @@ export default function BookDetailPage() {
           </div>
         </div>
       </div>
+
+      {book && (
+        <AddToCollectionModal
+          isOpen={isCollectionModalOpen}
+          onClose={() => setIsCollectionModalOpen(false)}
+          bookID={book.id}
+        />
+      )}
     </div>
   );
 }

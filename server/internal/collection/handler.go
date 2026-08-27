@@ -162,3 +162,39 @@ func (h *Handler) IsBookFavourited(w http.ResponseWriter, r *http.Request) {
 
 	response.JSON(w, http.StatusOK, map[string]bool{"is_favourited": isFav})
 }
+
+func (h *Handler) AddBook(w http.ResponseWriter, r *http.Request) {
+	currentUser := middleware.GetUser(r)
+	collectionID, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		http.Error(w, "invalid collection id", http.StatusBadRequest)
+		return
+	}
+
+	var body struct {
+		BookID int `json:"book_id"`
+	}
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		http.Error(w, "invalid request", http.StatusBadRequest)
+		return
+	}
+
+	if err := h.service.AddBook(currentUser.UserID, collectionID, body.BookID); err != nil {
+		if err.Error() == "unauthorized" {
+			http.Error(w, err.Error(), http.StatusForbidden)
+			return
+		}
+		if err.Error() == "book already in collection" {
+			http.Error(w, err.Error(), http.StatusConflict)
+			return
+		}
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	json.NewEncoder(w).Encode(map[string]string{
+		"message": "book added to collection",
+	})
+}

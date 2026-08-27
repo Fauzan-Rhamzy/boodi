@@ -17,7 +17,7 @@ export type LibraryResponseWrapper = {
 export type FavouriteBooks = Book;
 
 export type Collection = {
-  collection_id: string;
+  collection_id: number;
   name: string;
   cover_photo: string;
 };

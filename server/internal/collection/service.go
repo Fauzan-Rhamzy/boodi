@@ -1,6 +1,7 @@
 package collection
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -70,4 +71,24 @@ func (s *Service) DeleteFromFavourite(userID int, bookID int) error {
 
 func (s *Service) IsBookFavourited(UserID int, bookID int) (bool, error) {
 	return s.repo.IsBookFavourited(UserID, bookID)
+}
+
+func (s *Service) AddBook(userID, collectionID, bookID int) error {
+	collection, err := s.repo.FindByID(collectionID)
+	if err != nil {
+		return errors.New("collection not found")
+	}
+	if collection.UserID != userID {
+		return errors.New("unauthorized")
+	}
+
+	exists, err := s.repo.IsBookInCollection(collectionID, bookID)
+	if err != nil {
+		return err
+	}
+	if exists {
+		return errors.New("book already in collection")
+	}
+
+	return s.repo.AddBook(collectionID, bookID)
 }
