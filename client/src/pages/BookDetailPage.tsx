@@ -212,7 +212,7 @@ export default function BookDetailPage() {
             Reviews
           </h2>
 
-          <div className="flex justify-center">
+          <div className="flex flex-col  justify-center">
             <button className="w-full flex justify-center items-center rounded-full bg-dark-green text-white py-1.5 text-sm font-medium active:scale-98 transition-all">
               Write a Review
             </button>
