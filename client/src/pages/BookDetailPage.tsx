@@ -42,8 +42,6 @@ export default function BookDetailPage() {
       try {
         const reviewData = await getBookReviews(bookIdNum);
         setReviews(reviewData ?? []);
-
-        console.log("BOOK REVIEWS:", reviewData);
       } catch (error) {
         console.error("Failed to get book reviews:", error);
       }
@@ -74,7 +72,7 @@ export default function BookDetailPage() {
 
   return (
     <div className="w-full min-h-screen relative pb-10 bg-bw">
-      <div className="w-full flex justify-start px-10">
+      <div className="w-full flex justify-start px-6">
         <BackArrow useHistory={true} backPath="/" />
       </div>
 
@@ -112,7 +110,7 @@ export default function BookDetailPage() {
         </div>
 
         <div className="flex items-center gap-2 mt-1.5">
-          <button className="text-xs flex items-center gap-1 bg-text text-white font-medium px-3 py-1 rounded-lg transition">
+          <button className="text-sm flex items-center gap-1 bg-text text-white font-medium px-3 py-1 rounded-lg transition">
             <Plus className="w-6 h-6" />
             <span className="text-md">Track Progress</span>
           </button>
@@ -166,12 +164,13 @@ export default function BookDetailPage() {
 
           <div className="flex flex-wrap gap-1.5 mt-2">
             {(book.genres ?? []).map((genre) => (
-              <span
-                key={genre}
-                className="flex items-center justify-center px-2 py-2 bg-dark-green text-white text-xs rounded-full leading-none"
+              <Link
+                key={genre.id}
+                to={`/genre/${genre.id}`}
+                className="flex items-center justify-center p-2 px-5 bg-dark-green text-white text-md rounded-full leading-none"
               >
-                {genre}
-              </span>
+                {genre.name}
+              </Link>
             ))}
           </div>
         </div>

@@ -28,7 +28,7 @@ export default function RatingBox({ className, bookId }: RatingBoxProps) {
 
   return (
     <div className={className}>
-      <div className="bg-white w-full h-fit p-7 pb-2 rounded-xl shadow-md">
+      <div className="bg-white w-full h-fit p-7  rounded-xl shadow-md">
         {ratingSummary && (
           <div className="gap-2 flex flex-col">
             {/* Average */}

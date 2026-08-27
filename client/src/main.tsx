@@ -22,6 +22,7 @@ import ProfileDiaryPage from "./pages/Profile-DiaryPage.tsx";
 import AppLayout from "./AppLayout.tsx";
 import { Toaster } from "react-hot-toast";
 import OnboardingPage from "./pages/OnboardingPage.tsx";
+import GenrePage from "./pages/GenrePage.tsx";
 
 const router = createBrowserRouter([
   {
@@ -147,6 +148,14 @@ const router = createBrowserRouter([
             element: (
               <ProtectedRoute>
                 <LibraryBooksPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "genre/:id",
+            element: (
+              <ProtectedRoute>
+                <GenrePage />
               </ProtectedRoute>
             ),
           },

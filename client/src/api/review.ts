@@ -20,6 +20,6 @@ export const getBookRatings = async (
   bookId: number,
 ): Promise<RatingSummaryResponse> => {
   const response = await api.get(`/api/book/${bookId}/ratings`);
-  console.log("RATING API RESPONSE:", response.data);
+
   return response.data.data;
 };
