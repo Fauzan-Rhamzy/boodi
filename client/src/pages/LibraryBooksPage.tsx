@@ -17,8 +17,11 @@ import {
   CalendarArrowUp,
   ArrowDownZa,
   ArrowDownAz,
+  BookA,
+  BookPlus,
 } from "lucide-react";
 import MoreButton from "../components/MoreButton";
+import AddBookToCollectionModal from "../components/AddBookToCollectionModal";
 
 export default function LibraryBooksPage() {
   const navigate = useNavigate();
@@ -46,6 +49,15 @@ export default function LibraryBooksPage() {
   const [activeSort, setActiveSort] = useState<"alphabet" | "calendar">(
     isCurrentlyReading ? "calendar" : "alphabet",
   );
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const fetchBooks = async () => {
+    if (id) {
+      const data = await getLibrary(Number(id));
+      setLibraryName(data.name);
+      setBooks(data.books);
+    }
+  };
 
   useEffect(() => {
     async function fetchBooks() {
@@ -97,13 +109,12 @@ export default function LibraryBooksPage() {
     book.title.toLowerCase().includes(searchQuery.toLowerCase()),
   );
   return (
-    <div
-      className="min-h-screen w-full bg-bw">
+    <div className="min-h-screen w-full bg-bw">
       {/* Header */}
       <div className="px-6 pt-3 pb-2">
         <BackArrow useHistory={true} />
 
-        <MoreButton/>
+        <MoreButton />
 
         <h1 className="mb-3 ml-2 pt-20 pb-1 text-3xl text-text font-bold">
           {isCurrentlyReading
@@ -114,7 +125,7 @@ export default function LibraryBooksPage() {
         </h1>
 
         {/* Buttons */}
-        <div className="ml-2 flex gap-2.5 pb-1">
+        <div className="ml-2 flex gap-2.5 pb-1 items-center">
           {/* Calendar sorting */}
           {isCurrentlyReading && (
             <button
@@ -156,12 +167,17 @@ export default function LibraryBooksPage() {
               <ArrowDownAz className="h-5 w-5" />
             )}
           </button>
+
+          <SearchBar
+            className="mt-4 mb-3 w-full"
+            onSearch={(query) => setSearchQuery(query)}
+          />
         </div>
 
-        <SearchBar
+        {/* <SearchBar
           className="mt-4 mb-3 w-full"
           onSearch={(query) => setSearchQuery(query)}
-        />
+        /> */}
       </div>
 
       {/* Books */}
@@ -173,6 +189,15 @@ export default function LibraryBooksPage() {
         </div>
       ) : (
         <div className="mx-2 grid grid-cols-3 gap-x-3 gap-y-6 px-6 pt-4 items-start">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="group cursor-pointer relative aspect-[2/3] w-full rounded-xl border-2 border-dashed border-dark-green/30 bg-light-green/40 flex flex-col items-center justify-center p-3 text-center transition-all duration-200 hover:bg-light-green/70 hover:border-dark-green/60 hover:shadow-sm"
+          >
+            <div className="rounded-full bg-white p-2.5 shadow-sm transition-transform duration-200 group-hover:scale-110">
+              <BookPlus className="w-5 h-5 text-brown" />
+            </div>
+          </button>
+
           {filteredBooks.map((book) => (
             <button
               key={book.id}
@@ -183,6 +208,15 @@ export default function LibraryBooksPage() {
             </button>
           ))}
         </div>
+      )}
+
+      {id && (
+        <AddBookToCollectionModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          collectionID={Number(id)}
+          onSuccess={fetchBooks}
+        />
       )}
     </div>
   );
