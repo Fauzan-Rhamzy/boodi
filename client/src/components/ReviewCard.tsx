@@ -3,15 +3,26 @@ import type { BookReviews } from "../types/review.ts";
 
 type ReviewCardProps = {
   review: BookReviews;
+  userID: number;
 };
 
-export default function ReviewCard({ review }: ReviewCardProps) {
+export default function ReviewCard({ review, userID }: ReviewCardProps) {
+  const isCurrentUser = review.user_id === userID;
   return (
-    <div className="flex h-fit w-fullshrink-0  gap-4 rounded-2xl bg-white p-3 shadow-lg ring-1 ring-black/5 my-3">
+    <div className="flex h-fit w-full shrink-0  gap-4 rounded-2xl bg-white p-3 shadow-lg ring-1 ring-black/5 my-3">
       {/* Book Cover */}
 
       {/* Review Content */}
       <div className="flex min-w-0 flex-1 flex-col justify-between py-1 ">
+        <div className="">
+          {isCurrentUser ? (
+            <p className=" font-sans font-extrabold  text-lg pb-1.5 pt-1 ml-1 mb-3 bg-light-green w-fit px-2 rounded-full">
+              Your Review
+            </p>
+          ) : (
+            <></>
+          )}
+        </div>
         {/* Top */}
         <div className="pb-3">
           {/* User */}
@@ -21,8 +32,17 @@ export default function ReviewCard({ review }: ReviewCardProps) {
               alt=""
               className="w-9 h-9 rounded-full"
             />
-            <p className="text-lg font-extrabold text-dark-green ">
-              {review.first_name} {review.last_name}{" "}
+            <p className="text-lg font-bold text-dark-green pt-1">
+              {isCurrentUser ? (
+                <p className="font-caveat font-extrabold  text-3xl">
+                  You <span className="text-xl">said..</span>
+                </p>
+              ) : (
+                <>
+                  {review.first_name} {review.last_name}{" "}
+                  <span className="font-caveat text-xl">said..</span>
+                </>
+              )}
             </p>
             {/* Rating */}
             <div className=" flex items-center gap-1">

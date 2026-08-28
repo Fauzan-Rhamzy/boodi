@@ -18,6 +18,7 @@ type BookReview struct {
 	ReviewID   int    `json:"review_id"`
 	BookID     int    `json:"book_id"`
 	Rating     int    `json:"rating"`
+	UserID     int    `json:"user_id"`
 	FirstName  string `json:"first_name"`
 	LastName   string `json:"last_name"`
 	ProfilePic string `json:"user_pic"`

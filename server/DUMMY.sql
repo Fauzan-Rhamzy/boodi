@@ -128,7 +128,8 @@ INSERT INTO Review (comment, rating, book_id, user_id) VALUES
 ('A bit slow in the middle, but great world-building.', 4, 2, 3),
 ('Changed my perspective entirely. Highly recommend.', 5, 3, 4),
 ('Decent thriller, but the ending was a bit predictable.', 3, 4, 1),
-('Incredibly detailed and well-researched.', 5, 5, 2);
+('Incredibly detailed and well-researched.', 5, 5, 2),
+('ANGIE FAUZAN NAD TIF JUN', 5,1,6);
 
 -- LIKES (Likes on Reviews)
 INSERT INTO Likes (user_id, review_id) VALUES
@@ -136,7 +137,8 @@ INSERT INTO Likes (user_id, review_id) VALUES
 (3, 1),
 (4, 2),
 (1, 3),
-(5, 5);
+(5, 5),
+(6, 6);
 
 -- REPLY (Replies to Reviews)
 INSERT INTO Reply (comment, user_id, review_id) VALUES
@@ -144,4 +146,5 @@ INSERT INTO Reply (comment, user_id, review_id) VALUES
 ('Did you find the technical jargon hard to follow?', 1, 2),
 ('Which chapter helped you the most?', 5, 3),
 ('I actually really liked the ending!', 3, 4),
-('Thanks for the recommendation, adding it to my list.', 4, 5);
+('Thanks for the recommendation, adding it to my list.', 4, 5),
+('replynya ini ya', 1,6);
