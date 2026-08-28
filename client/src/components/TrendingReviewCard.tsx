@@ -8,7 +8,7 @@ type ReviewCardProps = {
 
 export default function TrendingReviewCard({ review }: ReviewCardProps) {
   return (
-    <div className="flex h-36 w-86 shrink-0 gap-4 rounded-2xl bg-white/50 p-3 shadow-md ring-1 ring-black/5 my-3">
+    <div className="flex h-fit w-full shrink-0 gap-4 rounded-2xl bg-white/50 p-3 shadow-md ring-1 ring-black/5 my-3">
       {/* Book Cover */}
       <BookCover
         book={{
