@@ -23,10 +23,6 @@ export default function ProfileHeader({
     return (
         <div className="w-full">
             <div className="w-full flex justify-start items-center gap-4 px-10">
-                    <div className="shrink-0">
-                        <BackArrow useHistory={true} backPath="/" />
-                    </div>
-
                     <img
                         src={
                         user?.profile_pic
