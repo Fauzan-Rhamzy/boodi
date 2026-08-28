@@ -52,3 +52,15 @@ func (h *Handler) GetBookRatings(w http.ResponseWriter, r *http.Request) {
 
 	response.JSON(w, http.StatusOK, reviews)
 }
+
+func (h *Handler) GetUserReviews(w http.ResponseWriter, r *http.Request) {
+	user := middleware.GetUser(r)
+
+	reviews, err := h.service.GetUserReviews(user.UserID)
+	if err != nil {
+		response.Error(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	response.JSON(w, http.StatusOK, reviews)
+}

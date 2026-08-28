@@ -6,6 +6,7 @@ type TrendingReview struct {
 	BookTitle  string `json:"title"`
 	BookCover  string `json:"book_cover"`
 	Rating     int    `json:"rating"`
+	UserID     int    `json:"user_id"`
 	FirstName  string `json:"first_name"`
 	LastName   string `json:"last_name"`
 	ProfilePic string `json:"user_pic"`

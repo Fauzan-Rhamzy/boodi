@@ -55,7 +55,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
       </div>
 
       {/* Tabs */}
-      <div className="w-full mt-6 px-13">
+      <div className="w-full mt-8 px-13">
         <div className="flex justify-between items-center bg-white p-1.5 px-3 rounded-full shadow-sm">
           {tabs.map((tab) => {
             const isActive = location.pathname === tab.path;
