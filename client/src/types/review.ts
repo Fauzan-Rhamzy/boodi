@@ -23,6 +23,7 @@ export type BookReviews = {
   review_id: number;
   book_id: number;
   rating: number;
+  user_id: number;
   first_name: string;
   last_name: string;
   user_pic: string;
