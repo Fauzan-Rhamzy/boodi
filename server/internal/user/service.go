@@ -1,6 +1,7 @@
 package user
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -42,4 +43,16 @@ func (s *Service) UpdateProfile(id int, req UpdateProfileRequest, file multipart
 	}
 
 	return s.repo.Update(id, req)
+}
+
+func (s *Service) TrackBookProgress(userId int, bookId int, req TrackBookProgress) error {
+	if req.PagesRead <= 0 {
+		return errors.New("Pages must be bigger than zero")
+	}
+
+	if req.ReadDate == "" {
+		return errors.New("Date cannot be empty")
+	}
+
+	return s.repo.TrackBookProgress(userId, bookId, req)
 }

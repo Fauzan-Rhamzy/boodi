@@ -47,7 +47,7 @@ CREATE TABLE UserBook(
 );
 
 CREATE TABLE ReadingHistory (
-    reading_log_id SERIAL PRIMARY KEY,
+    reading_history_id SERIAL PRIMARY KEY,
     user_id INT REFERENCES users(user_id) NOT NULL,
     book_id INT REFERENCES book(book_id) NOT NULL,
     pages_read INT NOT NULL,  

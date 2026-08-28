@@ -73,3 +73,38 @@ func (h *Handler) UpdateProfile(w http.ResponseWriter, r *http.Request) {
 		"message": "profile updated",
 	})
 }
+
+func (h *Handler) TrackBookProgress(w http.ResponseWriter, r *http.Request) {
+	currentUser := middleware.GetUser(r)
+
+	id, err := strconv.Atoi(chi.URLParam(r, "user_id"))
+	if err != nil || currentUser.UserID != id {
+		http.Error(w, "unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	bookID, err := strconv.Atoi(chi.URLParam(r, "book_id"))
+	if err != nil {
+		http.Error(w, "invalid book id", http.StatusBadRequest)
+		return
+	}
+
+	var req TrackBookProgress
+	err = json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		http.Error(w, "invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	err = h.service.TrackBookProgress(currentUser.UserID, bookID, req)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"message": "Book tracked successfully",
+	})
+}
