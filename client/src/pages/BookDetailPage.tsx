@@ -13,7 +13,7 @@ import {
 import RatingBox from "../components/RatingBox";
 import ReviewCard from "../components/ReviewCard";
 import { getBookReviews } from "../api/review";
-import type { BookReviews, TrendingReview } from "../types/review";
+import type { BookReviews } from "../types/review";
 import { type AuthUser, getMe } from "../features/auth/api";
 export default function BookDetailPage() {
   const { id } = useParams();

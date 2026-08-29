@@ -17,3 +17,7 @@ func (s *Service) GetBookReviews(userID int, bookID int) ([]BookReview, error) {
 func (s *Service) GetBookRating(bookID int) (*RatingSummaryResponse, error) {
 	return s.repo.GetBookRating(bookID)
 }
+
+func (s *Service) GetUserReviews(userID int) ([]TrendingReview, error) {
+	return s.repo.GetUserReviews(userID)
+}

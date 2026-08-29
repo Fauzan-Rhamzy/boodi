@@ -125,6 +125,7 @@ func main() {
 		r.Get("/api/users/{user_id}", usersHandler.GetProfile)
 		r.Get("/api/book/{book_id}/ratings", reviewHandler.GetBookRatings)
 		r.Put("/api/users/{user_id}", usersHandler.UpdateProfile)
+		r.Get("/api/profile/reviews", reviewHandler.GetUserReviews)
 	})
 
 	// protected routes for admin
