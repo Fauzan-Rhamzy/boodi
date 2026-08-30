@@ -153,7 +153,7 @@ export default function TrackProgressPopUp({ initialBook, isOpen, onClose, onSav
           </div>
         </div>
 
-        <div className="flex gap-4 pt-4">
+        <div className="flex gap-4 pt-4 p-4">
             <button
               type="button"
               onClick={handleCancel}
