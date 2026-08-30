@@ -16,7 +16,7 @@ import ReviewCard from "../components/ReviewCard";
 import { getBookReviews } from "../api/review";
 import type { BookReviews } from "../types/review";
 import { type AuthUser, getMe } from "../features/auth/api";
-import { getUserBookProgress, trackBookProgress, type TrackProgressPayload } from "../api/users";
+import { getUserBookProgress, trackBookProgress } from "../api/users";
 import toast from "react-hot-toast";
 export default function BookDetailPage() {
   const { id } = useParams();

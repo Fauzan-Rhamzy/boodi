@@ -15,12 +15,6 @@ export async function updateProfile(userId: number, data: FormData) {
   return res.data;
 }
 
-export interface TrackProgressPayload {
-  book_id: number;
-  pages_read: number;
-  read_date: string;
-}
-
 export async function trackBookProgress(bookId: number, pagesRead: number, readDate: string) {
   const res = await api.post("/api/users/track-progress", {
     book_id: bookId,
