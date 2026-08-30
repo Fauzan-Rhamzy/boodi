@@ -1,7 +1,7 @@
 import BackArrow from "../components/BackArrow";
 
 import { Plus, Heart } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import type { Book } from "../types/book";
 import { getById } from "../api/books";
@@ -10,17 +10,22 @@ import {
   checkIsFavourited,
   DeleteFromFavourite,
 } from "../api/collection";
+import TrackProgressPopUp from "../components/TrackProgressPopUP";
 import RatingBox from "../components/RatingBox";
 import ReviewCard from "../components/ReviewCard";
 import { getBookReviews } from "../api/review";
 import type { BookReviews } from "../types/review";
 import { type AuthUser, getMe } from "../features/auth/api";
+import { getUserBookProgress, trackBookProgress } from "../api/users";
+import toast from "react-hot-toast";
 export default function BookDetailPage() {
   const { id } = useParams();
   const [book, setBook] = useState<Book | null>(null);
   const [isFavourited, setIsFavourited] = useState(false);
   const [reviews, setReviews] = useState<BookReviews[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [user, setUser] = useState<AuthUser | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(0);
 
   useEffect(() => {
     async function fetchUser() {
@@ -33,11 +38,11 @@ export default function BookDetailPage() {
     }
 
     fetchUser();
-  });
+  }, []);
 
   const sortedReviews = [...reviews].sort((a, b) => {
-    if (a.user_id === user.user_id) return -1;
-    if (b.user_id === user.user_id) return 1;
+    if (a.user_id === user?.user_id) return -1;
+    if (b.user_id === user?.user_id) return 1;
     return 0;
   });
 
@@ -67,6 +72,12 @@ export default function BookDetailPage() {
       } catch (error) {
         console.error("Failed to get book reviews:", error);
       }
+      try {
+        const progress = await getUserBookProgress(bookIdNum);
+        setCurrentPage(progress.current_page || 0);
+      } catch (error) {
+        console.error("Failed to get progress:", error);
+      }
     }
 
     fetchDetailBookAndFavorite();
@@ -87,6 +98,32 @@ export default function BookDetailPage() {
       console.error("Failed to toggle favourite:", error);
     }
   };
+
+  const memoizedInitialBook = useMemo(() => {
+    if (!book) return null;
+    return {
+      id: book.id,
+      title: book.title,
+      cover: book.cover,
+      page: book.page,
+      current_page: currentPage, 
+    };
+  }, [book?.id, book?.title, book?.cover, currentPage]);
+
+  const handleSave = useCallback(async (data: { book_id: number; pages_read: number; read_date: string }) => {
+    const loading = toast.loading("Saving progress...");
+
+    try {
+      await trackBookProgress(data.book_id, data.pages_read, data.read_date);
+      setCurrentPage(data.pages_read);
+      toast.dismiss(loading);
+      toast.success("Track updated!");
+    } catch (error) {
+      toast.dismiss(loading);
+      toast.error("Failed to track book update");
+      throw error;
+    }
+  }, []);
 
   if (!book) {
     return <p>Loading...</p>;
@@ -132,7 +169,9 @@ export default function BookDetailPage() {
         </div>
 
         <div className="flex items-center gap-2 mt-1.5">
-          <button className="text-sm flex items-center gap-1 bg-text text-white font-medium px-3 py-1 rounded-lg transition">
+          <button 
+          onClick={() => setIsModalOpen(true)}
+          className="text-sm flex items-center gap-1 bg-text text-white font-medium px-3 py-1 rounded-lg transition">
             <Plus className="w-6 h-6" />
             <span className="text-md">Track Progress</span>
           </button>
@@ -247,6 +286,13 @@ export default function BookDetailPage() {
           </div>
         </div>
       </div>
+
+      <TrackProgressPopUp
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        initialBook={memoizedInitialBook}
+        onSave={handleSave}
+      />
     </div>
   );
 }

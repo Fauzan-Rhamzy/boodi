@@ -111,6 +111,8 @@ func main() {
 		r.Post("/favourite-books/{bookId}", collectionHandler.AddToFavourite)
 		r.Delete("/favourite-books/{bookId}", collectionHandler.DeleteFromFavourite)
 		r.Get("/favourite-books/check/{id}", collectionHandler.IsBookFavourited)
+		r.Post("/api/users/track-progress", usersHandler.TrackBookProgress)
+		r.Get("/api/users/books/{book_id}/progress", usersHandler.GetUserBookProgress)
 
 		r.Get("/api/collection", collectionHandler.GetUserCollections)
 		r.Post("/api/collection", collectionHandler.CreateUserCollections)

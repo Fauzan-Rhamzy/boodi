@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS Collection;
 DROP TABLE IF EXISTS AuthorBook;
 DROP TABLE IF EXISTS BookGenre;
 DROP TABLE IF EXISTS UserBook;
+DROP TABLE IF EXISTS ReadingHistory;
 
 DROP TABLE IF EXISTS Author;
 DROP TABLE IF EXISTS Genre;
@@ -43,6 +44,14 @@ CREATE TABLE UserBook(
     book_id INT REFERENCES book(book_id), 
     current_page INT,
     logged_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE ReadingHistory (
+    reading_history_id SERIAL PRIMARY KEY,
+    user_id INT REFERENCES users(user_id) NOT NULL,
+    book_id INT REFERENCES book(book_id) NOT NULL,
+    pages_read INT NOT NULL,  
+    read_date DATE NOT NULL   
 );
 
 CREATE TABLE Genre (

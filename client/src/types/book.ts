@@ -7,6 +7,7 @@ export type Book = {
   language: string;
   description: string;
   cover: string;
+  current_page: number;
   genres: {
     id: number;
     name: string;
