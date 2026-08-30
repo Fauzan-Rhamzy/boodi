@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { Add } from "./Icons";
 import toast from "react-hot-toast";
+import { getUserBookProgress } from "../api/users";
 
 type TrackProgressModalProps = {
   isOpen: boolean;
@@ -10,6 +11,7 @@ type TrackProgressModalProps = {
     id: number;      
     title: string;
     cover: string;
+    page: number;
     current_page?: number;
   } | null;
   onSave?: (data: {
@@ -17,25 +19,40 @@ type TrackProgressModalProps = {
     pages_read: number;
     read_date: string;
   }) => void
+  onOpenSearch?: () => void;
 };
 
-export default function TrackProgressPopUp({ initialBook, isOpen, onClose, onSave }: TrackProgressModalProps) {
+export default function TrackProgressPopUp({ initialBook, isOpen, onClose, onSave, onOpenSearch }: TrackProgressModalProps) {
   const [selectedBook, setSelectedBook] = useState(initialBook || null);
   const [date, setDate] = useState<string>(new Date().toISOString().split("T")[0]);
   const [pages, setPages] = useState<number | string>(initialBook?.current_page || 1);
-  const [file, setFile] = useState<File | null>(null);
 
   useEffect(() => {
-  if (isOpen) {
-    if (initialBook) {
-      setSelectedBook(initialBook);
-      setPages(initialBook.current_page ?? 1);
-    } else {
-      setSelectedBook(null);
-      setPages(1);
-    }
+  if (!isOpen) return;
+
+  if (initialBook) {
+    setSelectedBook(initialBook);
+
+    const fetchProgress = async () => {
+      try {
+        const progress = await getUserBookProgress(initialBook.id); 
+
+        if (progress && progress.current_page) {
+          setPages(progress.current_page); 
+        } else {
+          setPages(initialBook.current_page ?? 1);
+        }
+      } catch (error) {
+        setPages(initialBook.current_page ?? 1);
+      }
+    };
+
+    fetchProgress();
+  } else {
+    setSelectedBook(null);
+    setPages(1);
   }
-}, [isOpen, initialBook, initialBook?.current_page]);
+}, [isOpen, initialBook]);
 
   const handleCancel = () => {
     setSelectedBook(initialBook || null);
@@ -116,6 +133,10 @@ export default function TrackProgressPopUp({ initialBook, isOpen, onClose, onSav
               {/* kondisi 2: kalo buka track buku dari page profile diary -> belom tau buku yang ditrack mau yang mana  */}
               <button
                 type="button"
+                onClick={() => {
+                  onClose();        
+                  onOpenSearch?.(); 
+                }}
                 className="bg-light-green/60 hover:bg-light-green text-white p-4 w-[111px] h-[176px] rounded-[16px] shadow-lg flex items-center justify-center transition-all active:scale-95 cursor-pointer"
               >
                 <Add className="w-8 h-8 text-dark-green stroke-[3]" />
@@ -141,15 +162,28 @@ export default function TrackProgressPopUp({ initialBook, isOpen, onClose, onSav
           </div>
 
           <div className="flex items-center justify-start pt-2 gap-4">
-            <label className="text-l font-bold text-text">Pages Read</label>
-            <input
-              type="number"
-              inputMode="numeric"
-              autoFocus
-              value={pages}
-              onChange={(e) => setPages(e.target.value)}
-              className="w-15 text-center py-1.5 rounded-lg border border-light-green text-sm font-semibold focus:outline-none"
-            />
+            <label className="text-l font-bold text-text">Current Page</label>
+            <div className="flex items-center gap-1.5">
+              <input
+                type="number"
+                inputMode="numeric"
+                autoFocus
+                value={pages}
+                onChange={(e) => {
+                const val = e.target.value;
+                
+                if (/^0\d+/.test(val)) {
+                  return; 
+                }
+                
+                setPages(e.target.value)}}
+                className="w-15 text-center py-1.5 rounded-lg border border-light-green text-sm font-semibold focus:outline-none"
+              />
+
+              <span className="text-l font-bold text-text">
+                / {selectedBook?.page} Pages
+              </span>
+            </div>
           </div>
         </div>
 

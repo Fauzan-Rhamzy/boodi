@@ -31,7 +31,6 @@ export async function trackBookProgress(bookId: number, pagesRead: number, readD
   return res.data;
 }
 
-// users.ts
 export async function getUserBookProgress(bookId: number) {
   const res = await api.get(`/api/users/books/${bookId}/progress`, {
   });

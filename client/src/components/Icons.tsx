@@ -3,20 +3,20 @@ import type { SVGProps } from "react";
 export const Add = (props: SVGProps<SVGSVGElement>) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
-    width="1em"
-    height="1em"
+    width="50"
+    height="50"
     viewBox="0 0 256 256"
     {...props}
   >
     <g
       fill="none"
-      stroke="#000000"
+      stroke="var(--color-text)"
       strokeDasharray="none"
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeMiterlimit="4"
       strokeOpacity="1"
-      strokeWidth="16"
+      strokeWidth="14"
     >
       <circle cx="128" cy="128" r="112" />
       <path d="M 79.999992,128 H 176.0001" />

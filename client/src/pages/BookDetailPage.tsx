@@ -105,6 +105,7 @@ export default function BookDetailPage() {
       id: book.id,
       title: book.title,
       cover: book.cover,
+      page: book.page,
       current_page: currentPage, 
     };
   }, [book?.id, book?.title, book?.cover, currentPage]);

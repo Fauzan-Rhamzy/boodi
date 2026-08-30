@@ -8,9 +8,3 @@ export type User = {
   role?: string;
   joined_date?: string;
 };
-
-export type TrackProgressPayload = {
-  book_id: number;
-  pages_read: number;
-  read_date: string;
-};
