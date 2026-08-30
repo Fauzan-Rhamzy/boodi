@@ -56,3 +56,7 @@ func (s *Service) TrackBookProgress(userId int, bookId int, req TrackBookProgres
 
 	return s.repo.TrackBookProgress(userId, bookId, req)
 }
+
+func (s *Service) GetUserBookProgress(userId int, bookId int) (int, error) {
+	return s.repo.GetUserBookProgress(userId, bookId)
+}

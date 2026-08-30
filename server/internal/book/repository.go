@@ -43,42 +43,42 @@ func (r *Repository) FindAll() ([]Book, error) {
 }
 
 func (r *Repository) FindByID(id int) (Book, error) {
-    var b Book
+	var b Book
 
-    err := r.db.QueryRow(`
+	err := r.db.QueryRow(`
         SELECT book_id, title, price, year, page, language, description, cover
         FROM book
         WHERE book_id = $1
     `, id).Scan(
-        &b.BookID,
-        &b.Title,
-        &b.Price,
-        &b.Year,
-        &b.Page,
-        &b.Language,
-        &b.Description,
-        &b.Cover,
-    )
+		&b.BookID,
+		&b.Title,
+		&b.Price,
+		&b.Year,
+		&b.Page,
+		&b.Language,
+		&b.Description,
+		&b.Cover,
+	)
 
-    if err != nil {
-        return Book{}, err
-    }
+	if err != nil {
+		return Book{}, err
+	}
 
-    genres, err := r.FindGenresByBookID(b.BookID)
-    if err != nil {
-        return Book{}, err
-    }
+	genres, err := r.FindGenresByBookID(b.BookID)
+	if err != nil {
+		return Book{}, err
+	}
 
-    b.Genres = genres
+	b.Genres = genres
 
-    authors, err := r.FindAuthorsByBookID(b.BookID)
-    if err != nil {
-        return Book{}, err
-    }
+	authors, err := r.FindAuthorsByBookID(b.BookID)
+	if err != nil {
+		return Book{}, err
+	}
 
-    b.Authors = authors
+	b.Authors = authors
 
-    return b, nil
+	return b, nil
 }
 func (r *Repository) FindGenresByBookID(id int) ([]GenreResponse, error) {
 	rows, err := r.db.Query(`SELECT g.genre_id, g.name 
@@ -91,25 +91,25 @@ func (r *Repository) FindGenresByBookID(id int) ([]GenreResponse, error) {
 	}
 	defer rows.Close()
 
-	 genres := make([]GenreResponse, 0)
+	genres := make([]GenreResponse, 0)
 	for rows.Next() {
-        var genre GenreResponse
+		var genre GenreResponse
 
-        if err := rows.Scan(
-            &genre.ID,
-            &genre.Name,
-        ); err != nil {
-            return nil, err
-        }
+		if err := rows.Scan(
+			&genre.ID,
+			&genre.Name,
+		); err != nil {
+			return nil, err
+		}
 
-        genres = append(genres, genre)
-    }
+		genres = append(genres, genre)
+	}
 
-    if err := rows.Err(); err != nil {
-        return nil, err
-    }
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
 
-    return genres, nil
+	return genres, nil
 }
 func (r *Repository) FindAuthorsByBookID(id int) ([]AuthorResponse, error) {
 	rows, err := r.db.Query(`SELECT a.author_id, a.name 
@@ -217,5 +217,3 @@ func (r *Repository) GetTrendingBooks() ([]Book, error) {
 
 	return books, nil
 }
-
-

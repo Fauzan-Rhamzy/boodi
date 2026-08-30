@@ -20,10 +20,10 @@ type UpdateProfileRequest struct {
 }
 
 type TrackBookProgress struct {
-	UserID    int
-	BookID    int
-	PagesRead int
-	ReadDate  string
+	UserID    int    `json:"user_id"`
+	BookID    int    `json:"book_id"`
+	PagesRead int    `json:"pages_read"`
+	ReadDate  string `json:"read_date"`
 }
 
 // type UserBook struct {

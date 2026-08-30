@@ -18,6 +18,7 @@ func (r *Repository) GetTrendingReviews(userID int) ([]TrendingReview, error) {
 			b.title,
 			b.cover as book_cover,
 			r.rating,
+			u.user_id,
 			u.first_name,
 			u.last_name,
 			u.profile_pic as user_pic,
@@ -42,6 +43,7 @@ func (r *Repository) GetTrendingReviews(userID int) ([]TrendingReview, error) {
 			b.title,
 			b.cover ,
 			r.rating,
+			u.user_id,
 			u.first_name,
 			u.last_name,
 			u.profile_pic ,
@@ -66,6 +68,7 @@ func (r *Repository) GetTrendingReviews(userID int) ([]TrendingReview, error) {
 			&review.BookTitle,
 			&review.BookCover,
 			&review.Rating,
+			&review.UserID,
 			&review.FirstName,
 			&review.LastName,
 			&review.ProfilePic,
@@ -93,6 +96,7 @@ func (r *Repository) GetBookReviews(userID int, bookID int) ([]BookReview, error
 			r.review_id,
 			r.book_id,
 			r.rating,
+			u.user_id,
 			u.first_name,
 			u.last_name,
 			u.profile_pic as user_pic,
@@ -117,6 +121,7 @@ func (r *Repository) GetBookReviews(userID int, bookID int) ([]BookReview, error
 			r.review_id,
 			r.book_id,
 			r.rating,
+			u.user_id,
 			u.first_name,
 			u.last_name,
 			u.profile_pic ,
@@ -138,6 +143,7 @@ func (r *Repository) GetBookReviews(userID int, bookID int) ([]BookReview, error
 			&review.ReviewID,
 			&review.BookID,
 			&review.Rating,
+			&review.UserID,
 			&review.FirstName,
 			&review.LastName,
 			&review.ProfilePic,
@@ -227,4 +233,87 @@ func (r *Repository) GetBookRating(bookID int) (*RatingSummaryResponse, error) {
         Total:      total,
         Ratings:    ratings,
     }, nil
+}
+
+func (r *Repository) GetUserReviews(userID int) ([]TrendingReview, error) {
+	rows, err := r.db.Query(`
+		SELECT
+			r.review_id,
+			r.book_id,
+			b.title,
+			b.cover as book_cover,
+			r.rating,
+			u.user_id,
+			u.first_name,
+			u.last_name,
+			u.profile_pic as user_pic,
+			r.comment,
+			COUNT(DISTINCT l.like_id) AS like_count,
+			EXISTS (
+				SELECT 1
+				FROM Likes my_like
+				WHERE my_like.review_id = r.review_id
+				AND my_like.user_id = $1
+			) AS is_liked
+		FROM Review r
+		JOIN Users u
+			ON r.user_id = u.user_id
+		LEFT JOIN Book b
+			ON r.book_id = b.book_id
+		LEFT JOIN Likes l
+			ON r.review_id = l.review_id
+		LEFT JOIN Reply re
+			ON r.review_id = re.review_id
+		WHERE r.user_id=$1
+		GROUP BY
+			r.review_id,
+			r.book_id,
+			b.title,
+			b.cover,
+			r.rating,
+			u.user_id,
+			u.first_name,
+			u.last_name,
+			u.profile_pic ,
+			r.comment
+		ORDER BY r.review_id DESC
+	`, userID)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var reviews []TrendingReview
+
+	for rows.Next() {
+		var review TrendingReview
+
+		err := rows.Scan(
+			&review.ReviewID,
+			&review.BookID,
+			&review.BookTitle,
+			&review.BookCover,
+			&review.Rating,
+			&review.UserID,
+			&review.FirstName,
+			&review.LastName,
+			&review.ProfilePic,
+			&review.Comment,
+			&review.LikeCount,
+			&review.IsLiked,
+		)
+
+		if err != nil {
+			return nil, err
+		}
+
+		reviews = append(reviews, review)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return reviews, nil
 }

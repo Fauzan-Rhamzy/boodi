@@ -23,3 +23,8 @@ export const getBookRatings = async (
 
   return response.data.data;
 };
+
+export async function getUserReviews(): Promise<TrendingReview[]> {
+  const response = await api.get<TrendingReview[]>("/api/profile/reviews");
+  return response.data.data;
+}
