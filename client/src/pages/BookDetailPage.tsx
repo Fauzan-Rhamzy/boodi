@@ -10,6 +10,7 @@ import {
   checkIsFavourited,
   DeleteFromFavourite,
 } from "../api/collection";
+import TrackProgressPopUp from "../components/TrackProgressPopUP";
 import RatingBox from "../components/RatingBox";
 import ReviewCard from "../components/ReviewCard";
 import { getBookReviews } from "../api/review";
@@ -19,6 +20,7 @@ export default function BookDetailPage() {
   const [book, setBook] = useState<Book | null>(null);
   const [isFavourited, setIsFavourited] = useState(false);
   const [reviews, setReviews] = useState<BookReviews[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   useEffect(() => {
     async function fetchDetailBookAndFavorite() {
       if (!id) return;
@@ -110,7 +112,9 @@ export default function BookDetailPage() {
         </div>
 
         <div className="flex items-center gap-2 mt-1.5">
-          <button className="text-sm flex items-center gap-1 bg-text text-white font-medium px-3 py-1 rounded-lg transition">
+          <button 
+          onClick={() => setIsModalOpen(true)}
+          className="text-sm flex items-center gap-1 bg-text text-white font-medium px-3 py-1 rounded-lg transition">
             <Plus className="w-6 h-6" />
             <span className="text-md">Track Progress</span>
           </button>
@@ -221,6 +225,11 @@ export default function BookDetailPage() {
           </div>
         </div>
       </div>
+
+      <TrackProgressPopUp
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
     </div>
   );
 }
