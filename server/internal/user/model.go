@@ -18,3 +18,26 @@ type UpdateProfileRequest struct {
 	Phone     string
 	PicPath   string
 }
+
+type TrackBookProgress struct {
+	UserID    int    `json:"user_id"`
+	BookID    int    `json:"book_id"`
+	PagesRead int    `json:"pages_read"`
+	ReadDate  string `json:"read_date"`
+}
+
+// type UserBook struct {
+// 	UserBookID  int    `json:"user_book_id"`
+// 	UserID      int    `json:"user_id"`
+// 	BookID      int    `json:"book_id"`
+// 	CurrentPage int    `json:"current_page"`
+// 	LoggedAt    string `json:"logged_at"`
+// }
+
+// type ReadingHistory struct {
+// 	ReadingHistoryID int    `json:"reading_log_id"`
+// 	UserID           int    `json:"user_id"`
+// 	BookID           int    `json:"book_id"`
+// 	PagesRead        int    `json:"pages_read"`
+// 	ReadDate         string `json:"read_date"`
+// }

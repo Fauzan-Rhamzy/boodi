@@ -2,6 +2,8 @@ package user
 
 import (
 	"database/sql"
+	"errors"
+	"fmt"
 )
 
 type Repository struct {
@@ -31,4 +33,95 @@ func (r *Repository) Update(id int, req UpdateProfileRequest) error {
 		SET first_name = $1, last_name = $2, phone = $3, profile_pic = $4	WHERE user_id = $5
 	`, req.FirstName, req.LastName, req.Phone, req.PicPath, id)
 	return err
+}
+
+func (r *Repository) TrackBookProgress(userId int, bookId int, req TrackBookProgress) error {
+	tx, err := r.db.Begin()
+	if err != nil {
+		return err
+	}
+	defer tx.Rollback()
+
+	req.UserID = userId
+	req.BookID = bookId
+
+	var maxPage int
+	err = tx.QueryRow(`
+		SELECT page 
+		FROM Book WHERE book_id = $1`, req.BookID).Scan(&maxPage)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return errors.New("Book not found!")
+		}
+		return err
+	}
+
+	if req.PagesRead > maxPage {
+		return fmt.Errorf("page number (%d) exceeds total book pages (%d)", req.PagesRead, maxPage)
+	}
+
+	// Cek apakah udah ada di UserBook
+	var currPage int
+	err = tx.QueryRow(`
+		SELECT 
+			current_page
+		FROM UserBook 
+		WHERE user_id = $1 AND book_id = $2`, req.UserID, req.BookID).Scan(&currPage)
+
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+		return err
+	}
+
+	isNewRecord := errors.Is(err, sql.ErrNoRows)
+
+	// kalo belom ada di UserBook, insert baru
+	if isNewRecord {
+		_, err := tx.Exec(`
+			INSERT INTO UserBook (user_id, book_id, current_page, logged_at)
+			VALUES ($1, $2, $3, NOW())`, req.UserID, req.BookID, req.PagesRead)
+
+		if err != nil {
+			return err
+		}
+	} else {
+		// kalo udah ada, update buku yang udah ada di UserBook
+		_, err := tx.Exec(`
+			UPDATE UserBook 
+			SET current_page = $1, logged_at = NOW() WHERE user_id = $2 AND book_id = $3`, req.PagesRead, req.UserID, req.BookID)
+
+		if err != nil {
+			return err
+		}
+	}
+
+	pagesAdded := req.PagesRead - currPage
+	if pagesAdded == 0 {
+		return tx.Commit()
+	}
+
+	//update ke reading history
+	if pagesAdded > 0 {
+		_, err = tx.Exec(`
+			INSERT INTO ReadingHistory (user_id, book_id, pages_read, read_date)
+			VALUES ($1, $2, $3, $4::timestamptz)`, req.UserID, req.BookID, pagesAdded, req.ReadDate)
+		if err != nil {
+			return err
+		}
+	}
+
+	return tx.Commit()
+}
+
+func (r *Repository) GetUserBookProgress(userID int, bookID int) (int, error) {
+	var currentPage int
+	query := `SELECT current_page FROM UserBook WHERE user_id = $1 AND book_id = $2`
+
+	err := r.db.QueryRow(query, userID, bookID).Scan(&currentPage)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return 0, nil
+		}
+		return 0, err
+	}
+	return currentPage, nil
 }

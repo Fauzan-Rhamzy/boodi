@@ -73,3 +73,56 @@ func (h *Handler) UpdateProfile(w http.ResponseWriter, r *http.Request) {
 		"message": "profile updated",
 	})
 }
+
+func (h *Handler) TrackBookProgress(w http.ResponseWriter, r *http.Request) {
+	currentUser := middleware.GetUser(r)
+	if currentUser.UserID == 0 {
+		http.Error(w, "unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	var req TrackBookProgress
+	err := json.NewDecoder(r.Body).Decode(&req)
+	if err != nil {
+		http.Error(w, "invalid request body", http.StatusBadRequest)
+		return
+	}
+
+	err = h.service.TrackBookProgress(currentUser.UserID, req.BookID, req)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"message": "Book tracked successfully",
+	})
+}
+
+func (h *Handler) GetUserBookProgress(w http.ResponseWriter, r *http.Request) {
+	currentUser := middleware.GetUser(r)
+	if currentUser.UserID == 0 {
+		http.Error(w, "unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	bookIDStr := chi.URLParam(r, "book_id")
+	bookID, err := strconv.Atoi(bookIDStr)
+	if err != nil {
+		http.Error(w, "invalid book id", http.StatusBadRequest)
+		return
+	}
+
+	currentPage, err := h.service.repo.GetUserBookProgress(currentUser.UserID, bookID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"current_page": currentPage,
+	})
+}

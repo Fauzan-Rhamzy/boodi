@@ -42,9 +42,14 @@ func (r *Repository) FindAll() ([]Book, error) {
 	return books, nil
 }
 
-func (r *Repository) FindByID(id int) (*Book, error) {
+func (r *Repository) FindByID(id int) (Book, error) {
 	var b Book
-	err := r.db.QueryRow(`SELECT book_id, title, price, year, page, language, description, cover FROM book WHERE book_id = $1`, id).Scan(
+
+	err := r.db.QueryRow(`
+        SELECT book_id, title, price, year, page, language, description, cover
+        FROM book
+        WHERE book_id = $1
+    `, id).Scan(
 		&b.BookID,
 		&b.Title,
 		&b.Price,
@@ -54,27 +59,29 @@ func (r *Repository) FindByID(id int) (*Book, error) {
 		&b.Description,
 		&b.Cover,
 	)
+
 	if err != nil {
-		return nil, err
+		return Book{}, err
 	}
 
 	genres, err := r.FindGenresByBookID(b.BookID)
 	if err != nil {
-		return nil, err
+		return Book{}, err
 	}
+
 	b.Genres = genres
 
 	authors, err := r.FindAuthorsByBookID(b.BookID)
 	if err != nil {
-		return nil, err
+		return Book{}, err
 	}
+
 	b.Authors = authors
 
-	return &b, nil
+	return b, nil
 }
-
-func (r *Repository) FindGenresByBookID(id int) ([]string, error) {
-	rows, err := r.db.Query(`SELECT g.name 
+func (r *Repository) FindGenresByBookID(id int) ([]GenreResponse, error) {
+	rows, err := r.db.Query(`SELECT g.genre_id, g.name 
 							FROM Genre g
 							JOIN BookGenre bg ON bg.book_genre_id = g.genre_id
 							WHERE bg.book_id = $1`, id)
@@ -84,17 +91,26 @@ func (r *Repository) FindGenresByBookID(id int) ([]string, error) {
 	}
 	defer rows.Close()
 
-	var genres []string
+	genres := make([]GenreResponse, 0)
 	for rows.Next() {
-		var name string
-		if err := rows.Scan(&name); err != nil {
+		var genre GenreResponse
+
+		if err := rows.Scan(
+			&genre.ID,
+			&genre.Name,
+		); err != nil {
 			return nil, err
 		}
-		genres = append(genres, name)
+
+		genres = append(genres, genre)
 	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
 	return genres, nil
 }
-
 func (r *Repository) FindAuthorsByBookID(id int) ([]AuthorResponse, error) {
 	rows, err := r.db.Query(`SELECT a.author_id, a.name 
 							FROM Author a
@@ -201,5 +217,3 @@ func (r *Repository) GetTrendingBooks() ([]Book, error) {
 
 	return books, nil
 }
-
-

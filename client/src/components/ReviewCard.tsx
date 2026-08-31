@@ -1,62 +1,81 @@
-import { Heart, Star } from "lucide-react";
-import type { TrendingReview } from "../types/review.ts";
-import BookCover from "./BookCover.tsx";
+import { Heart, MessageSquare, MessageSquareReply, Star } from "lucide-react";
+import type { BookReviews } from "../types/review.ts";
 
 type ReviewCardProps = {
-  review: TrendingReview;
+  review: BookReviews;
+  userID: number;
 };
 
-export default function ReviewCard({ review }: ReviewCardProps) {
+export default function ReviewCard({ review, userID }: ReviewCardProps) {
+  const isCurrentUser = review.user_id === userID;
   return (
-    <div className="flex h-36 w-86 shrink-0 gap-4 rounded-2xl bg-white/50 p-3 shadow-md ring-1 ring-black/5 my-3">
+    <div className="flex h-fit w-full shrink-0  gap-4 rounded-2xl bg-white p-3 shadow-lg ring-1 ring-black/5 my-3">
       {/* Book Cover */}
-      <BookCover
-        book={{
-          id: review.book_id,
-          title: review.title,
-          cover: review.book_cover,
-        }}
-        className="h-full w-24 shrink-0 overflow-hidden rounded-xl shadow-sm"
-      />
 
       {/* Review Content */}
-      <div className="flex min-w-0 flex-1 flex-col justify-between py-1">
+      <div className="flex min-w-0 flex-1 flex-col justify-between py-1 ">
+        <div className="">
+          {isCurrentUser ? (
+            <p className=" font-sans font-extrabold  text-lg pb-1.5 pt-1 ml-1 mb-3 bg-light-green w-fit px-2 rounded-full">
+              Your Review
+            </p>
+          ) : (
+            <></>
+          )}
+        </div>
         {/* Top */}
-        <div>
-          {/* Rating */}
-          <div className="mb-1 flex items-center gap-1">
-            {Array.from({ length: review.rating }, (_, i) => (
-              <Star
-                key={i}
-                className="h-5 w-5 fill-light-green text-light-green"
-              />
-            ))}
-          </div>
-
+        <div className="pb-3">
           {/* User */}
           <div className="flex gap-2 items-center">
             <img
               src={`http://localhost:8080/images/${review.user_pic}`}
               alt=""
-              className="w-6 h-6 rounded-full"
+              className="w-9 h-9 rounded-full"
             />
-            <p className="text-lg font-bold text-gray-800 pt-1">
-              {review.first_name} {review.last_name}{" "}
-              <span className="font-caveat text-xl">said..</span>
+            <p className="text-lg font-bold text-dark-green pt-1">
+              {isCurrentUser ? (
+                <p className="font-caveat font-extrabold  text-3xl">
+                  You <span className="text-xl">said..</span>
+                </p>
+              ) : (
+                <>
+                  {review.first_name} {review.last_name}{" "}
+                  <span className="font-caveat text-xl">said..</span>
+                </>
+              )}
             </p>
+            {/* Rating */}
+            <div className=" flex items-center gap-1">
+              {Array.from({ length: review.rating }, (_, i) => (
+                <Star
+                  key={i}
+                  className="h-5 w-5 fill-light-green text-light-green"
+                />
+              ))}
+            </div>
           </div>
           {/* Comment */}
-          <p className="mt-1 line-clamp-2 text-md leading-snug text-gray-600">
+          <p className="mt-1 ml-10 mr-2 line-clamp-2 text-md leading-snug font-medium text-dark-green">
             {review.comment}
           </p>
         </div>
 
-        {/* Likes */}
-        <div className="flex justify-end items-center gap-1 text-dark-green mr-2">
-          <Heart
-            className={`h-4 w-4 ${review.is_liked ? "fill-current" : ""}`}
-          />
-          <p className="text-xs font-medium">{review.like_count} likes</p>
+        <div className="flex justify-left gap-5 pt-0.5 pb-1 mx-10">
+          {/* Likes */}
+          <div className="flex justify-end items-center gap-1 text-dark-green mr-2">
+            <Heart
+              className={`h-5 w-5 font-bold ${review.is_liked ? "fill-current" : ""}`}
+            />
+            <p className="text-sm pl-0.5 font-medium">
+              {review.like_count} likes
+            </p>
+          </div>
+          <div className="flex justify-end items-center gap-1 text-dark-green mr-2">
+            <MessageSquare className="h-5 w-5 " />
+            <p className="text-sm pl-0.5 font-medium">
+              {review.reply_count} replies
+            </p>
+          </div>
         </div>
       </div>
     </div>
