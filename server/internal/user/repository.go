@@ -125,3 +125,42 @@ func (r *Repository) GetUserBookProgress(userID int, bookID int) (int, error) {
 	}
 	return currentPage, nil
 }
+
+func (r *Repository) GetReadingSessions(userID, year, month int) ([]ReadingSession, error) {
+	rows, err := r.db.Query(`
+        SELECT 
+            ub.logged_at,
+            ub.current_page,
+            b.book_id,
+            b.title,
+            b.cover,
+            b.page AS total_pages
+        FROM UserBook ub
+        JOIN Book b ON b.book_id = ub.book_id
+        WHERE ub.user_id = $1
+        AND EXTRACT(YEAR FROM ub.logged_at) = $2
+        AND EXTRACT(MONTH FROM ub.logged_at) = $3
+        ORDER BY ub.logged_at DESC
+    `, userID, year, month)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	sessions := make([]ReadingSession, 0)
+	for rows.Next() {
+		var s ReadingSession
+		if err := rows.Scan(
+			&s.LoggedAt,
+			&s.CurrentPage,
+			&s.BookID,
+			&s.Title,
+			&s.Cover,
+			&s.TotalPages,
+		); err != nil {
+			return nil, err
+		}
+		sessions = append(sessions, s)
+	}
+	return sessions, nil
+}

@@ -15,18 +15,29 @@ export async function updateProfile(userId: number, data: FormData) {
   return res.data;
 }
 
-export async function trackBookProgress(bookId: number, pagesRead: number, readDate: string) {
-  const res = await api.post("/api/users/track-progress", {
-    book_id: bookId,
-    pages_read: pagesRead,
-    read_date: readDate,
-  }, {
-  });
+export async function trackBookProgress(
+  bookId: number,
+  pagesRead: number,
+  readDate: string,
+) {
+  const res = await api.post(
+    "/api/users/track-progress",
+    {
+      book_id: bookId,
+      pages_read: pagesRead,
+      read_date: readDate,
+    },
+    {},
+  );
   return res.data;
 }
 
 export async function getUserBookProgress(bookId: number) {
-  const res = await api.get(`/api/users/books/${bookId}/progress`, {
-  });
-  return res.data; 
+  const res = await api.get(`/api/users/books/${bookId}/progress`, {});
+  return res.data;
+}
+
+export async function getReadingSessions(year: number, month: number) {
+  const res = await api.get(`/api/users/sessions?year=${year}&month=${month}`);
+  return res.data;
 }
