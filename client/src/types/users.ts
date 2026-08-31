@@ -8,3 +8,12 @@ export type User = {
   role?: string;
   joined_date?: string;
 };
+
+export type ReadingSession = {
+  logged_at: string;
+  current_page: number;
+  total_pages: number;
+  title: string;
+  cover: string;
+  book_id: number;
+};

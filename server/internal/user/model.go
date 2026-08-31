@@ -1,5 +1,7 @@
 package user
 
+import "time"
+
 type User struct {
 	UserID     int    `json:"id"`
 	Email      string `json:"email"`
@@ -41,3 +43,12 @@ type TrackBookProgress struct {
 // 	PagesRead        int    `json:"pages_read"`
 // 	ReadDate         string `json:"read_date"`
 // }
+
+type ReadingSession struct {
+	LoggedAt    time.Time `json:"logged_at"`
+	CurrentPage int       `json:"current_page"`
+	BookID      int       `json:"book_id"`
+	Title       string    `json:"title"`
+	Cover       string    `json:"cover"`
+	TotalPages  int       `json:"total_pages"`
+}
