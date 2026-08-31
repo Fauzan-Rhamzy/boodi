@@ -49,9 +49,9 @@ func (r *Repository) Create(req RegisterRequest, hashedPassword string) (int, er
 	}
 
 	_, err = tx.Exec(`
-		INSERT INTO Collection (name, user_id, cover_photo) VALUES
-		('Currently Reading', $1, 'collections/currently-reading.jpg'),
-		('Favorite', $1, 'collections/favorite.jpg')
+		INSERT INTO Collection (name, user_id, cover_photo, is_system) VALUES
+		('Currently Reading', $1, 'collections/currently-reading.jpg', true),
+		('Favorite', $1, 'collections/favorite.jpg', true)
 	`, id)
 	if err != nil {
 		return 0, err

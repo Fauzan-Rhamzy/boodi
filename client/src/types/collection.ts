@@ -19,5 +19,6 @@ export type FavouriteBooks = Book;
 export type Collection = {
   collection_id: number;
   name: string;
+  is_system: boolean;
   cover_photo: string;
 };

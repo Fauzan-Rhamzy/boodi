@@ -54,7 +54,7 @@ export default function LibraryPage() {
     .filter((c) => c.name.toLowerCase().includes(searchQuery.toLowerCase()));
 
   // Toggle dropdown logic
-  const handleMenuToggle = (e: React.MouseEvent, id: string) => {
+  const handleMenuToggle = (e: React.MouseEvent, id: number) => {
     e.stopPropagation(); // Stops the grid cell click event from firing
     setActiveMenuId((prev) => (prev === id ? null : id));
   };
@@ -132,8 +132,10 @@ export default function LibraryPage() {
         </div>
       ) : (
         <div className="mx-2 grid grid-cols-2 gap-x-3 gap-y-6 pt-4">
-          {filteredCollections.map((collection) => {
-            const specialRoute = COLLECTION_ROUTES[collection.name];
+          {filteredCollections.map((collection: Collection) => {
+            const specialRoute = collection.is_system
+              ? COLLECTION_ROUTES[collection.name]
+              : undefined;
 
             return (
               <div
@@ -165,7 +167,9 @@ export default function LibraryPage() {
                 <div className="relative mt-1 flex items-center justify-between gap-1 pl-1">
                   <button
                     onClick={() =>
-                      navigate(`/library/${collection.collection_id}`)
+                      navigate(
+                        specialRoute ?? `/library/${collection.collection_id}`,
+                      )
                     }
                     className="flex-1 text-left cursor-pointer focus:outline-none"
                   >
@@ -175,15 +179,17 @@ export default function LibraryPage() {
                   </button>
 
                   {/* Three Dots Trigger Button */}
-                  <button
-                    type="button"
-                    onClick={(e) =>
-                      handleMenuToggle(e, collection.collection_id)
-                    }
-                    className="p-0.5 -mr-1 text-gray-400 hover:text-gray-700 rounded-full hover:bg-gray-100 transition-colors cursor-pointer shrink-0"
-                  >
-                    <MoreVertical className="h-4 w-4" />
-                  </button>
+                  {!collection.is_system && (
+                    <button
+                      type="button"
+                      onClick={(e) =>
+                        handleMenuToggle(e, collection.collection_id)
+                      }
+                      className="p-0.5 -mr-1 text-gray-400 hover:text-gray-700 rounded-full hover:bg-gray-100 transition-colors cursor-pointer shrink-0"
+                    >
+                      <MoreVertical className="h-4 w-4" />
+                    </button>
+                  )}
 
                   {/* Action Dropdown Menu */}
                   {activeMenuId === collection.collection_id && (

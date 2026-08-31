@@ -42,6 +42,7 @@ type Collection struct {
 	CollectionID int    `json:"collection_id"`
 	Name         string `json:"name"`
 	UserID       int    `json:"user_id"`
+	IsSystem     bool   `json:"is_system"`
 	CoverPhoto   string `json:"cover_photo"`
 }
 

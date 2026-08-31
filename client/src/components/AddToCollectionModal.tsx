@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { X, Check } from "lucide-react";
+import { X, Check, BookMarkedIcon } from "lucide-react";
 import { getCollections, addBookToCollection } from "../api/collection";
 import type { Collection } from "../types/collection";
 import toast from "react-hot-toast";
@@ -19,14 +19,11 @@ export default function AddToCollectionModal({
   const [loading, setLoading] = useState(false);
   const [addingID, setAddingID] = useState<number | null>(null);
 
-  const RESERVED_COLLECTIONS = ["Favorite", "Currently Reading"];
   useEffect(() => {
     if (!isOpen) return;
     getCollections()
       .then((data) => {
-        const filtered = data.filter(
-          (c: Collection) => !RESERVED_COLLECTIONS.includes(c.name),
-        );
+        const filtered = data.filter((c: Collection) => !c.is_system);
         setCollections(filtered);
       })
       .catch(() => toast.error("Failed to load collections"));
@@ -83,7 +80,7 @@ export default function AddToCollectionModal({
                   key={collection.collection_id}
                   onClick={() => handleAdd(collection.collection_id)}
                   disabled={addingID === collection.collection_id}
-                  className="w-full flex items-center gap-3 px-6 py-3 hover:bg-gray-50 transition-colors cursor-pointer disabled:opacity-50"
+                  className="w-full flex items-center gap-3 px-6 py-3 hover:bg-gray-50 transition-colors hover:cursor-pointer disabled:opacity-50"
                 >
                   {/* cover photo */}
                   {collection.cover_photo ? (
@@ -92,7 +89,9 @@ export default function AddToCollectionModal({
                       className="w-10 h-10 rounded-lg object-cover shrink-0"
                     />
                   ) : (
-                    <div className="w-10 h-10 rounded-lg bg-gray-200 shrink-0" />
+                    <div className="w-10 h-10 rounded-lg bg-light-green shrink-0 flex items-center justify-center">
+                      <BookMarkedIcon />
+                    </div>
                   )}
 
                   <span className="text-sm font-medium text-left flex-1">

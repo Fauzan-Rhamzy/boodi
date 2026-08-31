@@ -75,22 +75,22 @@ INSERT INTO UserBook (user_id, book_id, current_page) VALUES
 (6,2,11);
 
 -- COLLECTION
-INSERT INTO Collection (name, user_id, cover_photo) VALUES
-('Currently Reading', 1, 'collections/currently-reading.jpg'),
-('Currently Reading', 2, 'collections/currently-reading.jpg'),
-('Currently Reading', 3, 'collections/currently-reading.jpg'),
-('Currently Reading', 4, 'collections/currently-reading.jpg'),
-('Currently Reading', 5, 'collections/currently-reading.jpg'),
-('Currently Reading', 6, 'collections/currently-reading.jpg'),
-('Favorite', 1, 'collections/favorite.jpg'),
-('Favorite', 2, 'collections/favorite.jpg'),
-('Favorite', 3, 'collections/favorite.jpg'),
-('Favorite', 4, 'collections/favorite.jpg'),
-('Favorite', 5, 'collections/favorite.jpg'),
-('Favorite', 6, 'collections/favorite.jpg'),
-('Summer Reading 2024', 1, 'https://example.com/col1.jpg'),
-('All-Time Favorites', 2, NULL),
-('To Read Pile', 3, 'https://example.com/col3.jpg');
+INSERT INTO Collection (name, user_id, cover_photo, is_system) VALUES
+('Currently Reading', 1, 'collections/currently-reading.jpg', true),
+('Currently Reading', 2, 'collections/currently-reading.jpg', true),
+('Currently Reading', 3, 'collections/currently-reading.jpg', true),
+('Currently Reading', 4, 'collections/currently-reading.jpg', true),
+('Currently Reading', 5, 'collections/currently-reading.jpg', true),
+('Currently Reading', 6, 'collections/currently-reading.jpg', true),
+('Favorite', 1, 'collections/favorite.jpg', true),
+('Favorite', 2, 'collections/favorite.jpg', true),
+('Favorite', 3, 'collections/favorite.jpg', true),
+('Favorite', 4, 'collections/favorite.jpg', true),
+('Favorite', 5, 'collections/favorite.jpg', true),
+('Favorite', 6, 'collections/favorite.jpg', true),
+('Summer Reading 2024', 1, 'https://example.com/col1.jpg', false),
+('All-Time Favorites', 2, NULL, false),
+('To Read Pile', 3, 'https://example.com/col3.jpg', false);
 
 -- BOOK_COLLECTION (Linking Books to Collections)
 INSERT INTO BookCollection (book_id, collection_id) VALUES

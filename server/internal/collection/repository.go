@@ -176,6 +176,7 @@ func (r *Repository) GetUserCollections(userID int) ([]Collection, error) {
 			collection_id,
 			name,
 			cover_photo,
+			is_system,
 			user_id
 		FROM 
 			collection 
@@ -191,7 +192,7 @@ func (r *Repository) GetUserCollections(userID int) ([]Collection, error) {
 	var collections []Collection
 	for rows.Next() {
 		var c Collection
-		rows.Scan(&c.CollectionID, &c.Name, &c.CoverPhoto, &c.UserID)
+		rows.Scan(&c.CollectionID, &c.Name, &c.CoverPhoto, &c.IsSystem, &c.UserID)
 		collections = append(collections, c)
 	}
 	return collections, nil
