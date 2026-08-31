@@ -19,10 +19,16 @@ export default function AddToCollectionModal({
   const [loading, setLoading] = useState(false);
   const [addingID, setAddingID] = useState<number | null>(null);
 
+  const RESERVED_COLLECTIONS = ["Favorite", "Currently Reading"];
   useEffect(() => {
     if (!isOpen) return;
     getCollections()
-      .then(setCollections)
+      .then((data) => {
+        const filtered = data.filter(
+          (c: Collection) => !RESERVED_COLLECTIONS.includes(c.name),
+        );
+        setCollections(filtered);
+      })
       .catch(() => toast.error("Failed to load collections"));
   }, [isOpen]);
 

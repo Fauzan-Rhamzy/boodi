@@ -6,18 +6,13 @@ import { Link, useParams } from "react-router-dom";
 import type { Book } from "../types/book";
 import { getById } from "../api/books";
 import {
-<<<<<<< HEAD
   addBookToCollection,
-=======
->>>>>>> b05bbc269dea9b2ff132d0a26906c943744ec143
   AddToFavourite,
   checkIsFavourited,
   DeleteFromFavourite,
 } from "../api/collection";
-<<<<<<< HEAD
 import AddToCollectionModal from "../components/AddToCollectionModal";
 
-=======
 import TrackProgressPopUp from "../components/TrackProgressPopUP";
 import RatingBox from "../components/RatingBox";
 import ReviewCard from "../components/ReviewCard";
@@ -26,14 +21,11 @@ import type { BookReviews } from "../types/review";
 import { type AuthUser, getMe } from "../features/auth/api";
 import { getUserBookProgress, trackBookProgress } from "../api/users";
 import toast from "react-hot-toast";
->>>>>>> b05bbc269dea9b2ff132d0a26906c943744ec143
 export default function BookDetailPage() {
   const { id } = useParams();
   const [book, setBook] = useState<Book | null>(null);
   const [isFavourited, setIsFavourited] = useState(false);
-<<<<<<< HEAD
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
-=======
   const [reviews, setReviews] = useState<BookReviews[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [user, setUser] = useState<AuthUser | null>(null);
@@ -57,7 +49,6 @@ export default function BookDetailPage() {
     if (b.user_id === user?.user_id) return 1;
     return 0;
   });
->>>>>>> b05bbc269dea9b2ff132d0a26906c943744ec143
 
   useEffect(() => {
     async function fetchDetailBookAndFavorite() {
@@ -119,24 +110,31 @@ export default function BookDetailPage() {
       title: book.title,
       cover: book.cover,
       page: book.page,
-      current_page: currentPage, 
+      current_page: currentPage,
     };
   }, [book?.id, book?.title, book?.cover, currentPage]);
 
-  const handleSave = useCallback(async (data: { book_id: number; pages_read: number; read_date: string }) => {
-    const loading = toast.loading("Saving progress...");
+  const handleSave = useCallback(
+    async (data: {
+      book_id: number;
+      pages_read: number;
+      read_date: string;
+    }) => {
+      const loading = toast.loading("Saving progress...");
 
-    try {
-      await trackBookProgress(data.book_id, data.pages_read, data.read_date);
-      setCurrentPage(data.pages_read);
-      toast.dismiss(loading);
-      toast.success("Track updated!");
-    } catch (error) {
-      toast.dismiss(loading);
-      toast.error("Failed to track book update");
-      throw error;
-    }
-  }, []);
+      try {
+        await trackBookProgress(data.book_id, data.pages_read, data.read_date);
+        setCurrentPage(data.pages_read);
+        toast.dismiss(loading);
+        toast.success("Track updated!");
+      } catch (error) {
+        toast.dismiss(loading);
+        toast.error("Failed to track book update");
+        throw error;
+      }
+    },
+    [],
+  );
 
   if (!book) {
     return <p>Loading...</p>;
@@ -144,11 +142,7 @@ export default function BookDetailPage() {
 
   return (
     <div className="w-full min-h-screen relative pb-10 bg-bw">
-<<<<<<< HEAD
       <div className="w-full flex justify-start px-10">
-=======
-      <div className="w-full flex justify-start px-6">
->>>>>>> b05bbc269dea9b2ff132d0a26906c943744ec143
         <BackArrow useHistory={true} backPath="/" />
       </div>
 
@@ -186,38 +180,27 @@ export default function BookDetailPage() {
         </div>
 
         <div className="flex items-center gap-2 mt-1.5">
-          <button 
-          onClick={() => setIsModalOpen(true)}
-          className="text-sm flex items-center gap-1 bg-text text-white font-medium px-3 py-1 rounded-lg transition">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="text-sm flex items-center gap-1 bg-text text-white font-medium px-3 py-1 rounded-lg transition"
+          >
             <Plus className="w-6 h-6" />
             <span className="text-md">Track Progress</span>
           </button>
 
-<<<<<<< HEAD
           <button
             className="w-6 h-6 p-0 shrink-0 flex items-center justify-center rounded-full border border-black text-text hover:cursor-pointer"
             onClick={() => setIsCollectionModalOpen(true)}
           >
             <Plus className="w-4 h-4" />
-=======
-          <button className="w-8 h-8 p-0 shrink-0 flex items-center justify-center rounded-full border border-black text-text">
-            <Plus className="w-6 h-6" />
->>>>>>> b05bbc269dea9b2ff132d0a26906c943744ec143
           </button>
 
           <button
             onClick={handleToggleFavourite}
-<<<<<<< HEAD
             className="w-6 h-6 p-0 shrink-0 flex items-center justify-center rounded-full border border-black text-text hover:cursor-pointer"
           >
             <Heart
               className={`w-4 h-4 ${isFavourited ? "fill-red-500 text-red-500" : ""}`}
-=======
-            className="w-8 h-8 p-0 shrink-0 flex items-center justify-center rounded-full border border-black text-text"
-          >
-            <Heart
-              className={`w-6 h-6 ${isFavourited ? "fill-red-500 text-red-500" : ""}`}
->>>>>>> b05bbc269dea9b2ff132d0a26906c943744ec143
             />
           </button>
         </div>
@@ -237,11 +220,7 @@ export default function BookDetailPage() {
             <p className="text-base font-bold text-text mt-0.5">{book.page}</p>
           </div>
 
-<<<<<<< HEAD
           <div className="h-8 w-[1px] bg-text"></div>
-=======
-          <div className="h-8 w-px shrink-0 bg-text"></div>
->>>>>>> b05bbc269dea9b2ff132d0a26906c943744ec143
 
           <div className="px-6">
             <p className="text-sm text-text font-medium">Language</p>
@@ -323,7 +302,6 @@ export default function BookDetailPage() {
         </div>
       </div>
 
-<<<<<<< HEAD
       {book && (
         <AddToCollectionModal
           isOpen={isCollectionModalOpen}
@@ -331,14 +309,12 @@ export default function BookDetailPage() {
           bookID={book.id}
         />
       )}
-=======
       <TrackProgressPopUp
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
         initialBook={memoizedInitialBook}
         onSave={handleSave}
       />
->>>>>>> b05bbc269dea9b2ff132d0a26906c943744ec143
     </div>
   );
 }
