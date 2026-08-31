@@ -198,3 +198,33 @@ func (h *Handler) AddBook(w http.ResponseWriter, r *http.Request) {
 		"message": "book added to collection",
 	})
 }
+
+func (h *Handler) RemoveBook(w http.ResponseWriter, r *http.Request) {
+	currentUser := middleware.GetUser(r)
+
+	collectionID, err := strconv.Atoi(chi.URLParam(r, "id"))
+	if err != nil {
+		http.Error(w, "invalid collection id", http.StatusBadRequest)
+		return
+	}
+
+	bookID, err := strconv.Atoi(chi.URLParam(r, "bookID"))
+	if err != nil {
+		http.Error(w, "invalid book id", http.StatusBadRequest)
+		return
+	}
+
+	if err := h.service.RemoveBook(currentUser.UserID, collectionID, bookID); err != nil {
+		if err.Error() == "unauthorized" {
+			http.Error(w, err.Error(), http.StatusForbidden)
+			return
+		}
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{
+		"message": "book removed from collection",
+	})
+}

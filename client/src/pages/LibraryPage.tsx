@@ -67,6 +67,11 @@ export default function LibraryPage() {
     // console.log("delete collection:", id);
   };
 
+  const COLLECTION_ROUTES: Record<string, string> = {
+    Favorite: "/favourite-books",
+    "Currently Reading": "/currently-reading",
+  };
+
   return (
     <div className="w-full h-screen overflow-y-auto p-10 pb-36 bg-bw">
       <div className=" pb-4">
@@ -127,83 +132,93 @@ export default function LibraryPage() {
         </div>
       ) : (
         <div className="mx-2 grid grid-cols-2 gap-x-3 gap-y-6 pt-4">
-          {filteredCollections.map((collection) => (
-            <div
-              key={collection.collection_id}
-              className="relative flex flex-col group"
-            >
-              <button
-                onClick={() => navigate(`/library/${collection.collection_id}`)}
-                className="w-full cursor-pointer text-left focus:outline-none"
-              >
-                {/* cover photo collection */}
-                {collection.cover_photo ? (
-                  <img
-                    src={`http://localhost:8080/images/${collection.cover_photo}`}
-                    className="aspect-square w-full rounded-xl object-cover"
-                  />
-                ) : (
-                  <div className="aspect-square w-full rounded-xl bg-light-green flex items-center justify-center">
-                    <BookMarkedIcon className="w-25 h-25" />
-                  </div>
-                )}
-              </button>
+          {filteredCollections.map((collection) => {
+            const specialRoute = COLLECTION_ROUTES[collection.name];
 
-              {/* Title & Actions Row */}
-              <div className="relative mt-1 flex items-center justify-between gap-1 pl-1">
+            return (
+              <div
+                key={collection.collection_id}
+                className="relative flex flex-col group"
+              >
                 <button
                   onClick={() =>
-                    navigate(`/library/${collection.collection_id}`)
+                    navigate(
+                      specialRoute ?? `/library/${collection.collection_id}`,
+                    )
                   }
-                  className="flex-1 text-left cursor-pointer focus:outline-none"
+                  className="w-full cursor-pointer text-left focus:outline-none"
                 >
-                  <p className="line-clamp-2 text-[11px] font-medium text-gray-800 leading-snug">
-                    {collection.name}
-                  </p>
+                  {/* cover photo collection */}
+                  {collection.cover_photo ? (
+                    <img
+                      src={`http://localhost:8080/images/${collection.cover_photo}`}
+                      className="aspect-square w-full rounded-xl object-cover"
+                    />
+                  ) : (
+                    <div className="aspect-square w-full rounded-xl bg-light-green flex items-center justify-center">
+                      <BookMarkedIcon className="w-25 h-25" />
+                    </div>
+                  )}
                 </button>
 
-                {/* Three Dots Trigger Button */}
-                <button
-                  type="button"
-                  onClick={(e) => handleMenuToggle(e, collection.collection_id)}
-                  className="p-0.5 -mr-1 text-gray-400 hover:text-gray-700 rounded-full hover:bg-gray-100 transition-colors cursor-pointer shrink-0"
-                >
-                  <MoreVertical className="h-4 w-4" />
-                </button>
-
-                {/* Action Dropdown Menu */}
-                {activeMenuId === collection.collection_id && (
-                  <div
-                    className="absolute right-0 top-8 w-28 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-20"
-                    onClick={(e) => e.stopPropagation()} // Prevents closing menu when clicking menu background
+                {/* Title & Actions Row */}
+                <div className="relative mt-1 flex items-center justify-between gap-1 pl-1">
+                  <button
+                    onClick={() =>
+                      navigate(`/library/${collection.collection_id}`)
+                    }
+                    className="flex-1 text-left cursor-pointer focus:outline-none"
                   >
-                    <button
-                      type="button"
-                      onClick={() => {
-                        handleEdit(collection.collection_id);
-                        setActiveMenuId(null);
-                      }}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-xs hover:bg-gray-100 text-left cursor-pointer"
+                    <p className="line-clamp-2 text-[11px] font-medium text-gray-800 leading-snug">
+                      {collection.name}
+                    </p>
+                  </button>
+
+                  {/* Three Dots Trigger Button */}
+                  <button
+                    type="button"
+                    onClick={(e) =>
+                      handleMenuToggle(e, collection.collection_id)
+                    }
+                    className="p-0.5 -mr-1 text-gray-400 hover:text-gray-700 rounded-full hover:bg-gray-100 transition-colors cursor-pointer shrink-0"
+                  >
+                    <MoreVertical className="h-4 w-4" />
+                  </button>
+
+                  {/* Action Dropdown Menu */}
+                  {activeMenuId === collection.collection_id && (
+                    <div
+                      className="absolute right-0 top-8 w-28 bg-white border border-gray-200 rounded-lg shadow-lg py-1 z-20"
+                      onClick={(e) => e.stopPropagation()} // Prevents closing menu when clicking menu background
                     >
-                      <Pencil className="h-3.5 w-3.5" />
-                      Edit
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        handleDelete(collection.collection_id);
-                        setActiveMenuId(null);
-                      }}
-                      className="w-full flex items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 text-left cursor-pointer"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                      Delete
-                    </button>
-                  </div>
-                )}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleEdit(collection.collection_id);
+                          setActiveMenuId(null);
+                        }}
+                        className="w-full flex items-center gap-2 px-3 py-2 text-xs hover:bg-gray-100 text-left cursor-pointer"
+                      >
+                        <Pencil className="h-3.5 w-3.5" />
+                        Edit
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          handleDelete(collection.collection_id);
+                          setActiveMenuId(null);
+                        }}
+                        className="w-full flex items-center gap-2 px-3 py-2 text-xs text-red-600 hover:bg-red-50 text-left cursor-pointer"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
       <CreateCollectionModal

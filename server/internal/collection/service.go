@@ -92,3 +92,15 @@ func (s *Service) AddBook(userID, collectionID, bookID int) error {
 
 	return s.repo.AddBook(collectionID, bookID)
 }
+
+func (s *Service) RemoveBook(userID, collectionID, bookID int) error {
+	collection, err := s.repo.FindByID(collectionID)
+	if err != nil {
+		return errors.New("collection not found")
+	}
+	if collection.UserID != userID {
+		return errors.New("unauthorized")
+	}
+
+	return s.repo.RemoveBook(collectionID, bookID)
+}

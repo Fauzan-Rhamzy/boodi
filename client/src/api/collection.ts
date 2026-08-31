@@ -62,3 +62,13 @@ export async function addBookToCollection(
   });
   return res.data;
 }
+
+export async function removeBookFromCollection(
+  collectionID: number,
+  bookID: number,
+) {
+  const res = await api.delete(
+    `/api/collections/${collectionID}/books/${bookID}`,
+  );
+  return res.data;
+}

@@ -258,12 +258,6 @@ func (r *Repository) IsBookFavourited(userID int, bookID int) (bool, error) {
 	return isFav, err
 }
 
-// func (r *Repository) GetCollections(userID int) {
-// 	rows, err := r.db.Query(`
-// 			SELECT * FROM collection WHERE user_id = $1
-// 		`, userID)
-// }
-
 func (r *Repository) IsBookInCollection(collectionID int, bookID int) (bool, error) {
 	var exists bool
 	err := r.db.QueryRow(`
@@ -290,4 +284,12 @@ func (r *Repository) FindByID(id int) (*Collection, error) {
         FROM collection WHERE collection_id = $1
     `, id).Scan(&c.CollectionID, &c.Name, &c.CoverPhoto, &c.UserID)
 	return &c, err
+}
+
+func (r *Repository) RemoveBook(collectionID, bookID int) error {
+	_, err := r.db.Exec(`
+        DELETE FROM BookCollection
+        WHERE collection_id = $1 AND book_id = $2
+    `, collectionID, bookID)
+	return err
 }
