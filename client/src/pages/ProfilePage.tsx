@@ -14,19 +14,32 @@ export default function ProfilePage() {
   const [preview, setPreview] = useState(
     user?.profile_picture ? defaultPfp : pfp,
   );
+
   const [file, setFile] = useState<File | null>(null);
 
+  const [originalFirstName, setOriginalFirstname] = useState<string>("");
   const [firstName, setFirstname] = useState<string>("");
+
+  const [originalLastName, setOriginalLastname] = useState<string>("");
   const [lastName, setLastname] = useState<string>("");
+
+  const [originalPhoneNumber, setOriginalPhoneNumber] = useState<
+    string | undefined
+  >("");
   const [phoneNumber, setPhoneNumber] = useState<string | undefined>("");
 
   useEffect(() => {
     if (!user) return;
     const fetchUserProfile = async () => {
       const data = await getUserProfile(user?.user_id);
+
+      setOriginalFirstname(data.first_name || "");
       setFirstname(data.first_name || "");
+
+      setOriginalLastname(data.last_name || "");
       setLastname(data.last_name || "");
-      // console.log(data);
+
+      setOriginalPhoneNumber(data.phone || "");
       setPhoneNumber(data.phone || "");
     };
 
@@ -43,9 +56,9 @@ export default function ProfilePage() {
 
   const handleCancel = () => {
     if (user) {
-      setFirstname(user?.first_name || "");
-      // setLastname(user.?last_name || "");
-      // setPhoneNumber(user.?phoneNumber || "");
+      setFirstname(originalFirstName || "");
+      setLastname(originalLastName || "");
+      setPhoneNumber(originalPhoneNumber || "");
     }
     setFile(null);
     setPreview(defaultPfp);
@@ -87,6 +100,13 @@ export default function ProfilePage() {
       toast.error("Failed to update profile");
     }
   };
+
+  const changesMade =
+    originalFirstName !== firstName ||
+    originalLastName !== lastName ||
+    originalPhoneNumber !== phoneNumber ||
+    file;
+
   return (
     <div className="w-full min-h-screen p-10 bg-bw">
       <BackArrow backPath="/home" />
@@ -167,13 +187,15 @@ export default function ProfilePage() {
       <div className="flex gap-4 pt-4">
         <button
           type="button"
+          disabled={!changesMade}
           onClick={handleCancel}
-          className="w-1/2 border-2 border-dark-green py-2 rounded-md hover:bg-gray-300 transition-colors font-bold text-dark-green hover:cursor-pointer"
+          className={`w-1/2 border-2 border-dark-green py-2 rounded-md hover:bg-gray-300 transition-colors font-bold text-dark-green ${!changesMade && "opacity-50"} hover:cursor-pointer`}
         >
           Cancel
         </button>
         <button
-          className="w-full bg-dark-green text-white py-2 rounded-md font-medium hover:cursor-pointer"
+          disabled={!changesMade}
+          className={`w-full bg-dark-green text-white py-2 rounded-md font-medium hover:cursor-pointer ${!changesMade && "opacity-50"}`}
           onClick={(e) => handleSaveChanges(e)}
         >
           Save Changes
