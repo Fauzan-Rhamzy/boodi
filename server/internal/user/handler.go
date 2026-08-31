@@ -126,3 +126,32 @@ func (h *Handler) GetUserBookProgress(w http.ResponseWriter, r *http.Request) {
 		"current_page": currentPage,
 	})
 }
+
+// GET /api/users/sessions?year=2026&month=8
+func (h *Handler) GetReadingSessions(w http.ResponseWriter, r *http.Request) {
+	currentUser := middleware.GetUser(r)
+
+	yearStr := r.URL.Query().Get("year")
+	monthStr := r.URL.Query().Get("month")
+
+	year, err := strconv.Atoi(yearStr)
+	if err != nil {
+		http.Error(w, "invalid year", http.StatusBadRequest)
+		return
+	}
+
+	month, err := strconv.Atoi(monthStr)
+	if err != nil || month < 1 || month > 12 {
+		http.Error(w, "invalid month", http.StatusBadRequest)
+		return
+	}
+
+	sessions, err := h.service.GetReadingSessions(currentUser.UserID, year, month)
+	if err != nil {
+		http.Error(w, "failed to get sessions", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(sessions)
+}
