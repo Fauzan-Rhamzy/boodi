@@ -158,7 +158,7 @@ func (r *Repository) GetLibrary(
 		if err != nil {
 			return nil, err
 		}
-		if book.BookID != 0 {
+		if book.BookID != nil {
 			library.Books = append(library.Books, book)
 		}
 	}
@@ -176,6 +176,7 @@ func (r *Repository) GetUserCollections(userID int) ([]Collection, error) {
 			collection_id,
 			name,
 			cover_photo,
+			is_system,
 			user_id
 		FROM 
 			collection 
@@ -191,7 +192,7 @@ func (r *Repository) GetUserCollections(userID int) ([]Collection, error) {
 	var collections []Collection
 	for rows.Next() {
 		var c Collection
-		rows.Scan(&c.CollectionID, &c.Name, &c.CoverPhoto, &c.UserID)
+		rows.Scan(&c.CollectionID, &c.Name, &c.CoverPhoto, &c.IsSystem, &c.UserID)
 		collections = append(collections, c)
 	}
 	return collections, nil
@@ -258,8 +259,38 @@ func (r *Repository) IsBookFavourited(userID int, bookID int) (bool, error) {
 	return isFav, err
 }
 
-// func (r *Repository) GetCollections(userID int) {
-// 	rows, err := r.db.Query(`
-// 			SELECT * FROM collection WHERE user_id = $1
-// 		`, userID)
-// }
+func (r *Repository) IsBookInCollection(collectionID int, bookID int) (bool, error) {
+	var exists bool
+	err := r.db.QueryRow(`
+        SELECT EXISTS (
+            SELECT 1 FROM bookcollection 
+            WHERE collection_id = $1 AND book_id = $2
+        )
+    `, collectionID, bookID).Scan(&exists)
+	return exists, err
+}
+
+func (r *Repository) AddBook(collectionID, bookID int) error {
+	_, err := r.db.Exec(`
+        INSERT INTO BookCollection (collection_id, book_id)
+        VALUES ($1, $2)
+    `, collectionID, bookID)
+	return err
+}
+
+func (r *Repository) FindByID(id int) (*Collection, error) {
+	var c Collection
+	err := r.db.QueryRow(`
+        SELECT collection_id, name, cover_photo, user_id
+        FROM collection WHERE collection_id = $1
+    `, id).Scan(&c.CollectionID, &c.Name, &c.CoverPhoto, &c.UserID)
+	return &c, err
+}
+
+func (r *Repository) RemoveBook(collectionID, bookID int) error {
+	_, err := r.db.Exec(`
+        DELETE FROM BookCollection
+        WHERE collection_id = $1 AND book_id = $2
+    `, collectionID, bookID)
+	return err
+}

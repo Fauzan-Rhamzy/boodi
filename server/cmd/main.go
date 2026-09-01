@@ -117,6 +117,8 @@ func main() {
 
 		r.Get("/api/collection", collectionHandler.GetUserCollections)
 		r.Post("/api/collection", collectionHandler.CreateUserCollections)
+		r.Post("/api/collections/{id}/books", collectionHandler.AddBook)
+		r.Delete("/api/collections/{id}/books/{bookID}", collectionHandler.RemoveBook)
 
 		r.Get("/api/books", bookHandler.GetAll)
 		r.Get("/api/bookDetail/{id}", bookHandler.GetByID)
