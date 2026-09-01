@@ -1,6 +1,11 @@
 package review
 
-import "database/sql"
+import (
+	"database/sql"
+	"errors"
+
+	"github.com/lib/pq"
+)
 
 type Repository struct {
 	db *sql.DB
@@ -126,7 +131,7 @@ func (r *Repository) GetBookReviews(userID int, bookID int) ([]BookReview, error
 			u.last_name,
 			u.profile_pic ,
 			r.comment
-		ORDER BY r.review_id DESC
+		ORDER BY like_count DESC, reply_count DESC
 	`, userID, bookID)
 
 	if err != nil {
@@ -350,4 +355,49 @@ func (r *Repository) ToggleLike(userID int, reviewID int) (bool, error) {
     `, userID, reviewID)
 
     return true, err
+}
+var ErrReviewExists = errors.New("review already exists")
+
+func (r *Repository) CreateReview(
+	userID int,
+	bookID int,
+	rating int,
+	comment string,
+) (*Review, error) {
+
+	var review Review
+
+	err := r.db.QueryRow(`
+        INSERT INTO Review (
+            user_id,
+            book_id,
+            rating,
+            comment
+        )
+        VALUES ($1, $2, $3, $4)
+        RETURNING review_id, user_id, book_id, rating, comment
+    `,
+		userID,
+		bookID,
+		rating,
+		comment,
+	).Scan(
+		&review.ReviewID,
+		&review.UserID,
+		&review.BookID,
+		&review.Rating,
+		&review.Comment,
+	)
+
+	if err != nil {
+		var pqErr *pq.Error
+
+		if errors.As(err, &pqErr) && pqErr.Code == "23505" {
+			return nil, ErrReviewExists
+		}
+
+		return nil, err
+	}
+
+	return &review, nil
 }

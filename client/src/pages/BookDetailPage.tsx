@@ -1,8 +1,8 @@
 import BackArrow from "../components/BackArrow";
 
-import { Plus, Heart } from "lucide-react";
+import { Plus, Heart, ArrowRight } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import type { Book } from "../types/book";
 import { getById } from "../api/books";
 import {
@@ -21,6 +21,8 @@ import type { BookReviews } from "../types/review";
 import { type AuthUser, getMe } from "../features/auth/api";
 import { getUserBookProgress, trackBookProgress } from "../api/users";
 import toast from "react-hot-toast";
+import WriteReviewModal from "../components/WriteReviewModal";
+import ConfirmModal from "../components/ConfirmModal";
 export default function BookDetailPage() {
   const { id } = useParams();
   const [book, setBook] = useState<Book | null>(null);
@@ -30,6 +32,8 @@ export default function BookDetailPage() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [user, setUser] = useState<AuthUser | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(0);
+  const navigate = useNavigate();
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
   useEffect(() => {
     async function fetchUser() {
@@ -49,6 +53,7 @@ export default function BookDetailPage() {
     if (b.user_id === user?.user_id) return 1;
     return 0;
   });
+  const myReview = reviews.find((review) => review.user_id === user?.user_id);
 
   useEffect(() => {
     async function fetchDetailBookAndFavorite() {
@@ -141,12 +146,12 @@ export default function BookDetailPage() {
   }
 
   return (
-    <div className="w-full min-h-screen relative pb-10 bg-bw">
-      <div className="w-full flex justify-start px-10">
+    <div className="w-full min-h-screen relative pb-10 px-6 bg-bw">
+      <div className="w-full flex justify-start ">
         <BackArrow useHistory={true} backPath="/" />
       </div>
 
-      <div className="flex flex-col items-center pt-5 pb-10 px-4">
+      <div className="flex flex-col items-center pt-5 pb-10 ">
         <img
           src={`http://localhost:8080/images/${book.cover}`}
           alt={book.title}
@@ -280,17 +285,30 @@ export default function BookDetailPage() {
         </div>
 
         <div className="w-full max-w-md mx-auto space-y-6 text-left px-4 mt-2">
-          <h2
-            className="font-bold text-xl mb-3 text-text"
-            style={{ marginBottom: "3px", marginTop: "7px" }}
-          >
-            Reviews
-          </h2>
-
-          <div className="flex flex-col items-center  justify-center mt-2 gap-2 pb-6">
-            <button className="w-19/20 flex justify-center items-center rounded-full bg-dark-green text-white py-2.5 text-md font-medium active:scale-98 transition-all">
-              Write a Review
+          <div className="flex my-3 justify-between">
+            <h2
+              className="font-bold text-xl mb-3 text-text"
+              style={{ marginBottom: "3px", marginTop: "7px" }}
+            >
+              Reviews
+            </h2>
+            <button
+              className="flex items-center gap-1 text-md mr-5 font-medium text-dark-green"
+              onClick={() => navigate(`/book/${id}/all-reviews`)}
+            >
+              See all
+              <ArrowRight className="h-5 w-5" />
             </button>
+          </div>
+          <div className="flex flex-col items-center  justify-center mt-2 gap-2 pb-6">
+            {!myReview && (
+              <button
+                onClick={() => setIsReviewModalOpen(true)}
+                className="w-19/20 flex justify-center items-center rounded-full bg-dark-green text-white py-2.5 text-md font-medium active:scale-98 transition-all"
+              >
+                Write a Review
+              </button>
+            )}
             {sortedReviews.map((review) => (
               <ReviewCard
                 key={review.review_id}
@@ -314,6 +332,24 @@ export default function BookDetailPage() {
         onClose={() => setIsModalOpen(false)}
         initialBook={memoizedInitialBook}
         onSave={handleSave}
+      />
+      <WriteReviewModal
+        isOpen={isReviewModalOpen}
+        bookId={book.id}
+        onClose={() => setIsReviewModalOpen(false)}
+        onSuccess={async () => {
+          const reviewData = await getBookReviews(book.id);
+          setReviews(reviewData ?? []);
+        }}
+      />
+      <WriteReviewModal
+        isOpen={isReviewModalOpen}
+        bookId={book.id}
+        onClose={() => setIsReviewModalOpen(false)}
+        onSuccess={async () => {
+          const reviewData = await getBookReviews(book.id);
+          setReviews(reviewData ?? []);
+        }}
       />
     </div>
   );

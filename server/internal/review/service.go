@@ -25,3 +25,24 @@ func (s *Service) GetUserReviews(userID int) ([]TrendingReview, error) {
 func (s *Service) ToggleLike(userID int, reviewID int) (bool, error) {
 	return s.repo.ToggleLike(userID, reviewID)
 }
+
+type CreateReviewRequest struct {
+	BookID  int    `json:"book_id"`
+	Rating  int    `json:"rating"`
+	Comment string `json:"comment"`
+}
+
+func (s *Service) CreateReview(
+	userID int,
+	bookID int,
+	rating int,
+	comment string,
+) (*Review, error) {
+
+	return s.repo.CreateReview(
+		userID,
+		bookID,
+		rating,
+		comment,
+	)
+}

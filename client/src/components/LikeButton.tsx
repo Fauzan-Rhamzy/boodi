@@ -45,7 +45,7 @@ export default function LikeButton({
       className="flex items-center gap-1 text-dark-green"
     >
       <Heart
-        className={`h-5 w-5 animate-pop ${isLiked ? "fill-current" : ""}`}
+        className={`h-5 w-5  ${isLiked ? "fill-current animate-pop" : ""}`}
       />
 
       {showLikedText ? (

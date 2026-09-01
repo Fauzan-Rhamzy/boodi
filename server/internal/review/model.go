@@ -39,3 +39,11 @@ type RatingSummaryResponse struct {
 	Total   int             `json:"total"`
 	Ratings []RatingSummary `json:"ratings"`
 }
+
+type Review struct {
+	ReviewID int    `json:"review_id"`
+	Comment  string `json:"comment"`
+	Rating   int    `json:"rating"`
+	BookID   int    `json:"book_id"`
+	UserID   int    `json:"user_id"`
+}
