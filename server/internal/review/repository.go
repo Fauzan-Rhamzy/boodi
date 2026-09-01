@@ -317,3 +317,37 @@ func (r *Repository) GetUserReviews(userID int) ([]TrendingReview, error) {
 
 	return reviews, nil
 }
+
+func (r *Repository) ToggleLike(userID int, reviewID int) (bool, error) {
+    var exists bool
+
+    err := r.db.QueryRow(`
+        SELECT EXISTS (
+            SELECT 1
+            FROM Likes
+            WHERE user_id = $1
+            AND review_id = $2
+        )
+    `, userID, reviewID).Scan(&exists)
+
+    if err != nil {
+        return false, err
+    }
+
+    if exists {
+        _, err = r.db.Exec(`
+            DELETE FROM Likes
+            WHERE user_id = $1
+            AND review_id = $2
+        `, userID, reviewID)
+
+        return false, err
+    }
+
+    _, err = r.db.Exec(`
+        INSERT INTO Likes (user_id, review_id)
+        VALUES ($1, $2)
+    `, userID, reviewID)
+
+    return true, err
+}

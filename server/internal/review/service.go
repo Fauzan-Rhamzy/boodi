@@ -21,3 +21,7 @@ func (s *Service) GetBookRating(bookID int) (*RatingSummaryResponse, error) {
 func (s *Service) GetUserReviews(userID int) ([]TrendingReview, error) {
 	return s.repo.GetUserReviews(userID)
 }
+
+func (s *Service) ToggleLike(userID int, reviewID int) (bool, error) {
+	return s.repo.ToggleLike(userID, reviewID)
+}
