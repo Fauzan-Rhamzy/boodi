@@ -53,6 +53,7 @@ export default function BookDetailPage() {
     if (b.user_id === user?.user_id) return 1;
     return 0;
   });
+  const myReview = reviews.find((review) => review.user_id === user?.user_id);
 
   useEffect(() => {
     async function fetchDetailBookAndFavorite() {
@@ -300,12 +301,14 @@ export default function BookDetailPage() {
             </button>
           </div>
           <div className="flex flex-col items-center  justify-center mt-2 gap-2 pb-6">
-            <button
-              onClick={() => setIsReviewModalOpen(true)}
-              className="w-19/20 flex justify-center items-center rounded-full bg-dark-green text-white py-2.5 text-md font-medium active:scale-98 transition-all"
-            >
-              Write a Review
-            </button>
+            {!myReview && (
+              <button
+                onClick={() => setIsReviewModalOpen(true)}
+                className="w-19/20 flex justify-center items-center rounded-full bg-dark-green text-white py-2.5 text-md font-medium active:scale-98 transition-all"
+              >
+                Write a Review
+              </button>
+            )}
             {sortedReviews.map((review) => (
               <ReviewCard
                 key={review.review_id}

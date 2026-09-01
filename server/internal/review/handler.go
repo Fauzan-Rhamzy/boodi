@@ -2,6 +2,7 @@ package review
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"server/internal/shared/middleware"
 	"server/internal/shared/response"
@@ -116,16 +117,29 @@ func (h *Handler) CreateReview(w http.ResponseWriter, r *http.Request) {
     
 
     review, err := h.service.CreateReview(
-        user.UserID,
-        req.BookID,
-        req.Rating,
-        strings.TrimSpace(req.Comment),
-    )
+    user.UserID,
+    req.BookID,
+    req.Rating,
+    strings.TrimSpace(req.Comment),
+)
 
-    if err != nil {
-        http.Error(w, err.Error(), http.StatusInternalServerError)
+if err != nil {
+    if errors.Is(err, ErrReviewExists) {
+        http.Error(
+            w,
+            "You have already reviewed this book",
+            http.StatusConflict,
+        )
         return
     }
+
+    http.Error(
+        w,
+        "Failed to create review",
+        http.StatusInternalServerError,
+    )
+    return
+}
 
     w.Header().Set("Content-Type", "application/json")
     json.NewEncoder(w).Encode(review)

@@ -95,9 +95,10 @@ CREATE TABLE BookCollection(
 CREATE TABLE Review(
     review_id SERIAL PRIMARY KEY,
     comment VARCHAR(500),
-    rating INT NOT NULL,
+    rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
     book_id INT REFERENCES book(book_id) NOT NULL,
-    user_id INT REFERENCES users(user_id)NOT NULL
+    user_id INT REFERENCES users(user_id) NOT NULL,
+    UNIQUE(user_id, book_id)
 );
 
 CREATE TABLE Likes(
