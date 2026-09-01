@@ -28,3 +28,9 @@ export async function getUserReviews(): Promise<TrendingReview[]> {
   const response = await api.get<TrendingReview[]>("/api/profile/reviews");
   return response.data.data;
 }
+
+export async function toggleReviewLike(reviewID: number) {
+  const response = await api.post(`/api/reviews/${reviewID}/like`);
+
+  return response.data;
+}

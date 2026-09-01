@@ -1,5 +1,6 @@
 import { Heart, MessageSquare, MessageSquareReply, Star } from "lucide-react";
 import type { BookReviews } from "../types/review.ts";
+import LikeButton from "./LikeButton.tsx";
 
 type ReviewCardProps = {
   review: BookReviews;
@@ -62,14 +63,11 @@ export default function ReviewCard({ review, userID }: ReviewCardProps) {
 
         <div className="flex justify-left gap-5 pt-0.5 pb-1 mx-10">
           {/* Likes */}
-          <div className="flex justify-end items-center gap-1 text-dark-green mr-2">
-            <Heart
-              className={`h-5 w-5 font-bold ${review.is_liked ? "fill-current" : ""}`}
-            />
-            <p className="text-sm pl-0.5 font-medium">
-              {review.like_count} likes
-            </p>
-          </div>
+          <LikeButton
+            reviewID={review.review_id}
+            initialIsLiked={review.is_liked}
+            initialLikeCount={review.like_count}
+          />
           <div className="flex justify-end items-center gap-1 text-dark-green mr-2">
             <MessageSquare className="h-5 w-5 " />
             <p className="text-sm pl-0.5 font-medium">

@@ -1,6 +1,7 @@
 import { Heart, Star } from "lucide-react";
 import type { TrendingReview } from "../types/review.ts";
 import BookCover from "./BookCover.tsx";
+import LikeButton from "./LikeButton.tsx";
 
 type ReviewCardProps = {
   review: TrendingReview;
@@ -52,12 +53,11 @@ export default function TrendingReviewCard({ review }: ReviewCardProps) {
         </div>
 
         {/* Likes */}
-        <div className="flex justify-end items-center gap-1 text-dark-green mr-2">
-          <Heart
-            className={`h-4 w-4 ${review.is_liked ? "fill-current" : ""}`}
-          />
-          <p className="text-xs font-medium">{review.like_count} likes</p>
-        </div>
+        <LikeButton
+          reviewID={review.review_id}
+          initialIsLiked={review.is_liked}
+          initialLikeCount={review.like_count}
+        />
       </div>
     </div>
   );

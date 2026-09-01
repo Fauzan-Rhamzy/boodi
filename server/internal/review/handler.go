@@ -1,6 +1,7 @@
 package review
 
 import (
+	"encoding/json"
 	"net/http"
 	"server/internal/shared/middleware"
 	"server/internal/shared/response"
@@ -63,4 +64,25 @@ func (h *Handler) GetUserReviews(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response.JSON(w, http.StatusOK, reviews)
+}
+
+func (h *Handler) ToggleLike(w http.ResponseWriter, r *http.Request) {
+    reviewID, err := strconv.Atoi(chi.URLParam(r, "reviewID"))
+    if err != nil {
+        http.Error(w, "Invalid review ID", http.StatusBadRequest)
+        return
+    }
+
+    user := middleware.GetUser(r)
+	userID:=user.UserID
+
+    liked, err := h.service.ToggleLike(userID, reviewID)
+    if err != nil {
+        http.Error(w, "Failed to toggle like", http.StatusInternalServerError)
+        return
+    }
+
+    json.NewEncoder(w).Encode(map[string]interface{}{
+        "liked": liked,
+    })
 }

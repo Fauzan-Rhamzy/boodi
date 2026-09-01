@@ -131,6 +131,7 @@ func main() {
 		r.Get("/api/book/{book_id}/ratings", reviewHandler.GetBookRatings)
 		r.Put("/api/users/{user_id}", usersHandler.UpdateProfile)
 		r.Get("/api/profile/reviews", reviewHandler.GetUserReviews)
+		r.Post("/api/reviews/{reviewID}/like", reviewHandler.ToggleLike)
 	})
 
 	// protected routes for admin
