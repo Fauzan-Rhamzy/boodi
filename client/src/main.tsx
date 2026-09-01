@@ -23,6 +23,7 @@ import AppLayout from "./AppLayout.tsx";
 import { Toaster } from "react-hot-toast";
 import OnboardingPage from "./pages/OnboardingPage.tsx";
 import GenrePage from "./pages/GenrePage.tsx";
+import BookReviews from "./pages/BookReviews.tsx";
 
 const router = createBrowserRouter([
   {
@@ -116,6 +117,14 @@ const router = createBrowserRouter([
             element: (
               <ProtectedRoute>
                 <BookDetailPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "book/:id/all-reviews",
+            element: (
+              <ProtectedRoute>
+                <BookReviews />
               </ProtectedRoute>
             ),
           },

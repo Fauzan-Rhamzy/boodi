@@ -10,14 +10,14 @@ type ReviewCardProps = {
 export default function ReviewCard({ review, userID }: ReviewCardProps) {
   const isCurrentUser = review.user_id === userID;
   return (
-    <div className="flex h-fit w-full shrink-0  gap-4 rounded-2xl bg-white p-3 shadow-lg ring-1 ring-black/5 my-3">
+    <div className="flex h-fit w-full shrink-0  gap-4 rounded-2xl bg-white/90 p-3 shadow-lg ring-1 ring-black/5 my-3">
       {/* Book Cover */}
 
       {/* Review Content */}
       <div className="flex min-w-0 flex-1 flex-col justify-between py-1 ">
         <div className="">
           {isCurrentUser ? (
-            <p className=" font-sans font-extrabold  text-lg pb-1.5 pt-1 ml-1 mb-3 bg-light-green w-fit px-2 rounded-full">
+            <p className=" font-sans font-extrabold  text-md pb-1.5 pt-1 ml-1 mb-3 bg-light-green w-fit px-2 rounded-full">
               Your Review
             </p>
           ) : (
