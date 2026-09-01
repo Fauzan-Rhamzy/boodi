@@ -81,6 +81,7 @@ CREATE TABLE AuthorBook (
 CREATE TABLE Collection(
     collection_id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
+    is_system BOOLEAN DEFAULT false,
     user_id INT REFERENCES users(user_id)NOT NULL,
 	cover_photo TEXT
 );
