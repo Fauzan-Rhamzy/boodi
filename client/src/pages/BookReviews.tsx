@@ -7,13 +7,15 @@ import { useParams } from "react-router";
 import type { Book } from "../types/book";
 import { getById } from "../api/books";
 import { getBookReviews } from "../api/review";
-import BookCover from "../components/BookCover";
 
 export default function BookReviews() {
   const { id } = useParams();
   const [book, setBook] = useState<Book | null>(null);
   const [reviews, setReviews] = useState<BookReviews[]>([]);
   const [user, setUser] = useState<AuthUser | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const reviewsPerPage = 10;
 
   useEffect(() => {
     async function fetchData() {
@@ -55,6 +57,14 @@ export default function BookReviews() {
     if (b.user_id === user?.user_id) return 1;
     return 0;
   });
+  const totalPages = Math.ceil(sortedReviews.length / reviewsPerPage);
+
+  const startIndex = (currentPage - 1) * reviewsPerPage;
+
+  const paginatedReviews = sortedReviews.slice(
+    startIndex,
+    startIndex + reviewsPerPage,
+  );
 
   return (
     <div className="w-full min-h-screen relative pb-10 pt-5 px-6 bg-bw">
@@ -81,13 +91,39 @@ export default function BookReviews() {
       </div>
       <div>
         {" "}
-        {sortedReviews.map((review) => (
+        {paginatedReviews.map((review) => (
           <ReviewCard
             key={review.review_id}
             review={review}
             userID={user.user_id}
           />
         ))}
+        {paginatedReviews.length === 0 && (
+          <p className="text-center mt-8 text-text">No reviews found.</p>
+        )}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-4 mt-6">
+            <button
+              disabled={currentPage === 1}
+              onClick={() => setCurrentPage((page) => page - 1)}
+              className="px-4 py-2 rounded-lg bg-dark-green text-white disabled:opacity-40"
+            >
+              Previous
+            </button>
+
+            <span className="font-medium text-text">
+              {currentPage} / {totalPages}
+            </span>
+
+            <button
+              disabled={currentPage === totalPages}
+              onClick={() => setCurrentPage((page) => page + 1)}
+              className="px-4 py-2 rounded-lg bg-dark-green text-white disabled:opacity-40"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
