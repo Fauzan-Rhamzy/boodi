@@ -102,8 +102,9 @@ CREATE TABLE Review(
 
 CREATE TABLE Likes(
     like_id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(user_id)NOT NULL,
-    review_id INT REFERENCES review(review_id) NOT NULL
+    user_id INT REFERENCES users(user_id) NOT NULL,
+    review_id INT REFERENCES review(review_id) NOT NULL,
+    UNIQUE(user_id, review_id)
 );
 
 CREATE TABLE Reply(
