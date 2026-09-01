@@ -34,3 +34,17 @@ export async function toggleReviewLike(reviewID: number) {
 
   return response.data;
 }
+
+export async function createReview(
+  bookId: number,
+  rating: number,
+  comment: string,
+) {
+  const response = await api.post("/api/reviews", {
+    book_id: bookId,
+    rating,
+    comment,
+  });
+
+  return response.data;
+}

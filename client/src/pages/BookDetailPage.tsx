@@ -21,6 +21,8 @@ import type { BookReviews } from "../types/review";
 import { type AuthUser, getMe } from "../features/auth/api";
 import { getUserBookProgress, trackBookProgress } from "../api/users";
 import toast from "react-hot-toast";
+import WriteReviewModal from "../components/WriteReviewModal";
+import ConfirmModal from "../components/ConfirmModal";
 export default function BookDetailPage() {
   const { id } = useParams();
   const [book, setBook] = useState<Book | null>(null);
@@ -31,6 +33,7 @@ export default function BookDetailPage() {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const navigate = useNavigate();
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
   useEffect(() => {
     async function fetchUser() {
@@ -297,7 +300,10 @@ export default function BookDetailPage() {
             </button>
           </div>
           <div className="flex flex-col items-center  justify-center mt-2 gap-2 pb-6">
-            <button className="w-19/20 flex justify-center items-center rounded-full bg-dark-green text-white py-2.5 text-md font-medium active:scale-98 transition-all">
+            <button
+              onClick={() => setIsReviewModalOpen(true)}
+              className="w-19/20 flex justify-center items-center rounded-full bg-dark-green text-white py-2.5 text-md font-medium active:scale-98 transition-all"
+            >
               Write a Review
             </button>
             {sortedReviews.map((review) => (
@@ -323,6 +329,24 @@ export default function BookDetailPage() {
         onClose={() => setIsModalOpen(false)}
         initialBook={memoizedInitialBook}
         onSave={handleSave}
+      />
+      <WriteReviewModal
+        isOpen={isReviewModalOpen}
+        bookId={book.id}
+        onClose={() => setIsReviewModalOpen(false)}
+        onSuccess={async () => {
+          const reviewData = await getBookReviews(book.id);
+          setReviews(reviewData ?? []);
+        }}
+      />
+      <WriteReviewModal
+        isOpen={isReviewModalOpen}
+        bookId={book.id}
+        onClose={() => setIsReviewModalOpen(false)}
+        onSuccess={async () => {
+          const reviewData = await getBookReviews(book.id);
+          setReviews(reviewData ?? []);
+        }}
       />
     </div>
   );
