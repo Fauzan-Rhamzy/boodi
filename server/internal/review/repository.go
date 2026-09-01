@@ -126,7 +126,7 @@ func (r *Repository) GetBookReviews(userID int, bookID int) ([]BookReview, error
 			u.last_name,
 			u.profile_pic ,
 			r.comment
-		ORDER BY r.review_id DESC
+		ORDER BY like_count DESC, reply_count DESC
 	`, userID, bookID)
 
 	if err != nil {

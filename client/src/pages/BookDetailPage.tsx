@@ -289,7 +289,7 @@ export default function BookDetailPage() {
               Reviews
             </h2>
             <button
-              className="flex items-center gap-1 text-lg mr-5 font-medium text-dark-green"
+              className="flex items-center gap-1 text-md mr-5 font-medium text-dark-green"
               onClick={() => navigate(`/book/${id}/all-reviews`)}
             >
               See all
