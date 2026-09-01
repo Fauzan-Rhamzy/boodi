@@ -68,6 +68,12 @@ export default function ReviewCard({ review, userID }: ReviewCardProps) {
             initialIsLiked={review.is_liked}
             initialLikeCount={review.like_count}
           />
+          <div className="flex justify-end items-center gap-1 text-dark-green mr-2">
+            <MessageSquare className="h-5 w-5 " />
+            <p className="text-sm pl-0.5 font-medium">
+              {review.reply_count} replies
+            </p>
+          </div>
         </div>
       </div>
     </div>

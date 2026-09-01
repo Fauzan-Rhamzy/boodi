@@ -15,6 +15,7 @@ export default function LikeButton({
 }: LikeButtonProps) {
   const [isLiked, setIsLiked] = useState(initialIsLiked);
   const [likeCount, setLikeCount] = useState(initialLikeCount);
+  const [showLikedText, setShowLikedText] = useState(false);
 
   const handleLike = async () => {
     try {
@@ -23,6 +24,16 @@ export default function LikeButton({
       setIsLiked(data.liked);
 
       setLikeCount((prev) => (data.liked ? prev + 1 : prev - 1));
+
+      if (data.liked) {
+        setShowLikedText(true);
+
+        setTimeout(() => {
+          setShowLikedText(false);
+        }, 1000);
+      } else {
+        setShowLikedText(false);
+      }
     } catch (error) {
       console.error("Failed to toggle like:", error);
     }
@@ -33,9 +44,15 @@ export default function LikeButton({
       onClick={handleLike}
       className="flex items-center gap-1 text-dark-green"
     >
-      <Heart className={`h-5 w-5 ${isLiked ? "fill-current" : ""}`} />
+      <Heart
+        className={`h-5 w-5 animate-pop ${isLiked ? "fill-current" : ""}`}
+      />
 
-      <p className="text-sm pl-0.5 font-medium">{likeCount} likes</p>
+      {showLikedText ? (
+        <p className="text-sm font-medium animate-pop">Liked!</p>
+      ) : (
+        <p className="text-sm font-medium">{likeCount} likes</p>
+      )}
     </button>
   );
 }
