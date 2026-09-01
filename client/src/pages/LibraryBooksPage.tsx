@@ -97,13 +97,12 @@ export default function LibraryBooksPage() {
     book.title.toLowerCase().includes(searchQuery.toLowerCase()),
   );
   return (
-    <div
-      className="min-h-screen w-full bg-bw">
+    <div className="min-h-screen w-full bg-bw">
       {/* Header */}
       <div className="px-6 pt-3 pb-2">
         <BackArrow useHistory={true} />
 
-        <MoreButton/>
+        <MoreButton />
 
         <h1 className="mb-3 ml-2 pt-20 pb-1 text-3xl text-text font-bold">
           {isCurrentlyReading

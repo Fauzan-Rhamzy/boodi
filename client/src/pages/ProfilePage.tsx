@@ -109,7 +109,7 @@ export default function ProfilePage() {
 
   return (
     <div className="w-full min-h-screen p-10 bg-bw">
-      <BackArrow backPath="/home" />
+      <BackArrow backPath="/profile" />
 
       <div className="flex items-center justify-center h-64 mt-2">
         <BigProfile pfp={preview} />
