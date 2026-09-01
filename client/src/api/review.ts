@@ -40,7 +40,7 @@ export async function createReview(
   rating: number,
   comment: string,
 ) {
-  const response = await api.post("/api/reviews", {
+  const response = await api.post("/api/create-review", {
     book_id: bookId,
     rating,
     comment,

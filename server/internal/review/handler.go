@@ -6,6 +6,7 @@ import (
 	"server/internal/shared/middleware"
 	"server/internal/shared/response"
 	"strconv"
+	"strings"
 
 	"github.com/go-chi/chi/v5"
 )
@@ -85,4 +86,47 @@ func (h *Handler) ToggleLike(w http.ResponseWriter, r *http.Request) {
     json.NewEncoder(w).Encode(map[string]interface{}{
         "liked": liked,
     })
+}
+
+type CreateReviewRequet struct {
+    BookID  int    `json:"book_id"`
+    Rating  int    `json:"rating"`
+    Comment string `json:"comment"`
+}
+
+func (h *Handler) CreateReview(w http.ResponseWriter, r *http.Request) {
+    var req CreateReviewRequest
+
+    if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+        http.Error(w, "Invalid request", http.StatusBadRequest)
+        return
+    }
+
+    if req.Rating < 1 || req.Rating > 5 {
+        http.Error(w, "Rating must be between 1 and 5", http.StatusBadRequest)
+        return
+    }
+
+    if strings.TrimSpace(req.Comment) == "" {
+        http.Error(w, "Comment is required", http.StatusBadRequest)
+        return
+    }
+
+	user := middleware.GetUser(r)
+    
+
+    review, err := h.service.CreateReview(
+        user.UserID,
+        req.BookID,
+        req.Rating,
+        strings.TrimSpace(req.Comment),
+    )
+
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusInternalServerError)
+        return
+    }
+
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(review)
 }

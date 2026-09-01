@@ -351,3 +351,41 @@ func (r *Repository) ToggleLike(userID int, reviewID int) (bool, error) {
 
     return true, err
 }
+
+func (r *Repository) CreateReview(
+    userID int,
+    bookID int,
+    rating int,
+    comment string,
+) (*Review, error) {
+
+    var review Review
+
+    err := r.db.QueryRow(`
+        INSERT INTO Review (
+            user_id,
+            book_id,
+            rating,
+            comment
+        )
+        VALUES ($1, $2, $3, $4)
+        RETURNING review_id, user_id, book_id, rating, comment
+    `,
+        userID,
+        bookID,
+        rating,
+        comment,
+    ).Scan(
+        &review.ReviewID,
+        &review.UserID,
+        &review.BookID,
+        &review.Rating,
+        &review.Comment,
+    )
+
+    if err != nil {
+        return nil, err
+    }
+
+    return &review, nil
+}
