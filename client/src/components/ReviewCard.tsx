@@ -35,9 +35,9 @@ export default function ReviewCard({ review, userID }: ReviewCardProps) {
             />
             <p className="text-lg font-bold text-dark-green pt-1">
               {isCurrentUser ? (
-                <p className="font-caveat font-extrabold  text-3xl">
+                <span className="font-caveat font-extrabold  text-3xl">
                   You <span className="text-xl">said..</span>
-                </p>
+                </span>
               ) : (
                 <>
                   {review.first_name} {review.last_name}{" "}
