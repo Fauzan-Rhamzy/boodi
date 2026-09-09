@@ -1,4 +1,11 @@
-import { Heart, MessageSquare, MessageSquareReply, Star } from "lucide-react";
+import {
+  Heart,
+  MessageSquare,
+  MessageSquareReply,
+  SquarePen,
+  Star,
+  Trash,
+} from "lucide-react";
 import type { BookReviews } from "../types/review.ts";
 import LikeButton from "./LikeButton.tsx";
 
@@ -17,9 +24,15 @@ export default function ReviewCard({ review, userID }: ReviewCardProps) {
       <div className="flex min-w-0 flex-1 flex-col justify-between py-1 ">
         <div className="">
           {isCurrentUser ? (
-            <p className=" font-sans font-extrabold  text-md pb-1.5 pt-1 ml-1 mb-3 bg-light-green w-fit px-2 rounded-full">
-              Your Review
-            </p>
+            <div className="flex justify-between mx-1">
+              <p className=" font-sans font-extrabold  text-md pb-1.5 pt-1  mb-3 bg-light-green w-fit px-2 rounded-full">
+                Your Review
+              </p>
+              <div className="flex gap-3 mr-2">
+                <SquarePen className="bg-light-green p-1 w-8 h-8 rounded-full" />
+                <Trash className="bg-light-green p-1 w-8 h-8 rounded-full" />
+              </div>
+            </div>
           ) : (
             <></>
           )}
