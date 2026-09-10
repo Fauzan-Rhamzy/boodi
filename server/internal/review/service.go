@@ -46,3 +46,24 @@ func (s *Service) CreateReview(
 		comment,
 	)
 }
+
+func (s *Service) UpdateReview(
+	userID int,
+	reviewID int,
+	rating int,
+	comment string,
+) (*Review, error) {
+	return s.repo.UpdateReview(
+		userID,
+		reviewID,
+		rating,
+		comment,
+	)
+}
+
+func (s *Service) DeleteReview(
+	userID int,
+	reviewID int,
+) error {
+	return s.repo.DeleteReview(userID, reviewID)
+}

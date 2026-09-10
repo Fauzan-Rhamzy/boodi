@@ -16,7 +16,7 @@ import AddToCollectionModal from "../components/AddToCollectionModal";
 import TrackProgressPopUp from "../components/TrackProgressPopUP";
 import RatingBox from "../components/RatingBox";
 import ReviewCard from "../components/ReviewCard";
-import { getBookReviews } from "../api/review";
+import { deleteReview, getBookReviews } from "../api/review";
 import type { BookReviews } from "../types/review";
 import { type AuthUser, getMe } from "../features/auth/api";
 import { getUserBookProgress, trackBookProgress } from "../api/users";
@@ -34,6 +34,32 @@ export default function BookDetailPage() {
   const [currentPage, setCurrentPage] = useState<number>(0);
   const navigate = useNavigate();
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [editingReview, setEditingReview] = useState<BookReviews | null>(null);
+  const [deletingReview, setDeletingReview] = useState<BookReviews | null>(
+    null,
+  );
+
+  const handleDeleteReview = (review: BookReviews) => {
+    setDeletingReview(review);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deletingReview) return;
+
+    try {
+      await deleteReview(deletingReview.review_id);
+
+      toast.success("Review deleted!");
+
+      const reviewData = await getBookReviews(deletingReview.book_id);
+      setReviews(reviewData ?? []);
+
+      setDeletingReview(null);
+    } catch (error) {
+      console.error("Failed to delete review:", error);
+      toast.error("Failed to delete review");
+    }
+  };
 
   useEffect(() => {
     async function fetchUser() {
@@ -91,6 +117,15 @@ export default function BookDetailPage() {
 
     fetchDetailBookAndFavorite();
   }, [id]);
+  const handleWriteReview = () => {
+    setEditingReview(null);
+    setIsReviewModalOpen(true);
+  };
+
+  const handleEditReview = (review: BookReviews) => {
+    setEditingReview(review);
+    setIsReviewModalOpen(true);
+  };
 
   const handleToggleFavourite = async () => {
     if (!book) return;
@@ -303,7 +338,7 @@ export default function BookDetailPage() {
           <div className="flex flex-col items-center  justify-center mt-2 gap-2 pb-6">
             {!myReview && (
               <button
-                onClick={() => setIsReviewModalOpen(true)}
+                onClick={handleWriteReview}
                 className="w-19/20 flex justify-center items-center rounded-full bg-dark-green text-white py-2.5 text-md font-medium active:scale-98 transition-all"
               >
                 Write a Review
@@ -314,6 +349,8 @@ export default function BookDetailPage() {
                 key={review.review_id}
                 review={review}
                 userID={user.user_id}
+                onEdit={handleEditReview}
+                onDelete={handleDeleteReview}
               />
             ))}
           </div>
@@ -336,20 +373,25 @@ export default function BookDetailPage() {
       <WriteReviewModal
         isOpen={isReviewModalOpen}
         bookId={book.id}
-        onClose={() => setIsReviewModalOpen(false)}
+        editReview={editingReview}
+        onClose={() => {
+          setIsReviewModalOpen(false);
+          setEditingReview(null);
+        }}
         onSuccess={async () => {
           const reviewData = await getBookReviews(book.id);
           setReviews(reviewData ?? []);
         }}
       />
-      <WriteReviewModal
-        isOpen={isReviewModalOpen}
-        bookId={book.id}
-        onClose={() => setIsReviewModalOpen(false)}
-        onSuccess={async () => {
-          const reviewData = await getBookReviews(book.id);
-          setReviews(reviewData ?? []);
-        }}
+      <ConfirmModal
+        isOpen={!!deletingReview}
+        title="Delete review?"
+        message="Are you sure you want to delete this review? This action cannot be undone."
+        onCancel={() => setDeletingReview(null)}
+        onConfirm={handleConfirmDelete}
+        cancelText="Cancel"
+        confirmText="Delete Review"
+        destructive
       />
     </div>
   );

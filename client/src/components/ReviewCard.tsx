@@ -1,20 +1,20 @@
-import {
-  Heart,
-  MessageSquare,
-  MessageSquareReply,
-  SquarePen,
-  Star,
-  Trash,
-} from "lucide-react";
+import { MessageSquare, SquarePen, Star, Trash } from "lucide-react";
 import type { BookReviews } from "../types/review.ts";
 import LikeButton from "./LikeButton.tsx";
 
 type ReviewCardProps = {
   review: BookReviews;
   userID: number;
+  onEdit?: (review: BookReviews) => void;
+  onDelete?: (review: BookReviews) => void;
 };
 
-export default function ReviewCard({ review, userID }: ReviewCardProps) {
+export default function ReviewCard({
+  review,
+  userID,
+  onEdit,
+  onDelete,
+}: ReviewCardProps) {
   const isCurrentUser = review.user_id === userID;
   return (
     <div className="flex h-fit w-full shrink-0  gap-4 rounded-2xl bg-white/90 p-3 shadow-lg ring-1 ring-black/5 my-3">
@@ -29,8 +29,21 @@ export default function ReviewCard({ review, userID }: ReviewCardProps) {
                 Your Review
               </p>
               <div className="flex gap-3 mr-2">
-                <SquarePen className="bg-light-green p-1 w-8 h-8 rounded-full" />
-                <Trash className="bg-light-green p-1 w-8 h-8 rounded-full" />
+                <button
+                  onClick={() => onEdit(review)}
+                  className="flex items-center gap-1 text-dark-green cursor-pointer"
+                >
+                  <SquarePen className="bg-light-green p-1 w-8 h-8 rounded-full " />
+                </button>
+                {onDelete && (
+                  <button
+                    type="button"
+                    onClick={() => onDelete(review)}
+                    className="flex items-center gap-1 text-dark-green cursor-pointer"
+                  >
+                    <Trash className="h-8 w-8 rounded-full bg-light-green p-1" />
+                  </button>
+                )}
               </div>
             </div>
           ) : (

@@ -48,3 +48,20 @@ export async function createReview(
 
   return response.data;
 }
+export async function updateReview(
+  reviewID: number,
+  rating: number,
+  comment: string,
+) {
+  const response = await api.put(`/api/reviews/${reviewID}`, {
+    rating,
+    comment,
+  });
+
+  return response.data.data;
+}
+
+export async function deleteReview(reviewID: number) {
+  const response = await api.delete(`/api/reviews/${reviewID}`);
+  return response.data;
+}
