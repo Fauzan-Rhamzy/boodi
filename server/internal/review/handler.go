@@ -144,3 +144,75 @@ if err != nil {
     w.Header().Set("Content-Type", "application/json")
     json.NewEncoder(w).Encode(review)
 }
+type UpdateReviewRequest struct {
+	Rating  int    `json:"rating"`
+	Comment string `json:"comment"`
+}
+
+func (h *Handler) UpdateReview(w http.ResponseWriter, r *http.Request) {
+	reviewID, err := strconv.Atoi(chi.URLParam(r, "reviewID"))
+	if err != nil {
+		http.Error(w, "Invalid review ID", http.StatusBadRequest)
+		return
+	}
+
+	var req UpdateReviewRequest
+
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Invalid request", http.StatusBadRequest)
+		return
+	}
+
+	if req.Rating < 1 || req.Rating > 5 {
+		http.Error(w, "Rating must be between 1 and 5", http.StatusBadRequest)
+		return
+	}
+
+	if strings.TrimSpace(req.Comment) == "" {
+		http.Error(w, "Comment is required", http.StatusBadRequest)
+		return
+	}
+
+	user := middleware.GetUser(r)
+
+	review, err := h.service.UpdateReview(
+		user.UserID,
+		reviewID,
+		req.Rating,
+		strings.TrimSpace(req.Comment),
+	)
+
+	if err != nil {
+		if errors.Is(err, ErrReviewNotFound) {
+			http.Error(w, "Review not found", http.StatusNotFound)
+			return
+		}
+
+		http.Error(w, "Failed to update review", http.StatusInternalServerError)
+		return
+	}
+
+	response.JSON(w, http.StatusOK, review)
+}
+func (h *Handler) DeleteReview(w http.ResponseWriter, r *http.Request) {
+	reviewID, err := strconv.Atoi(chi.URLParam(r, "reviewID"))
+	if err != nil {
+		http.Error(w, "Invalid review ID", http.StatusBadRequest)
+		return
+	}
+
+	user := middleware.GetUser(r)
+
+	err = h.service.DeleteReview(user.UserID, reviewID)
+	if err != nil {
+		if errors.Is(err, ErrReviewNotFound) {
+			http.Error(w, "Review not found", http.StatusNotFound)
+			return
+		}
+
+		http.Error(w, "Failed to delete review", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusNoContent)
+}

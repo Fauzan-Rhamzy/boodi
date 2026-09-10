@@ -1,13 +1,20 @@
-import { Heart, MessageSquare, MessageSquareReply, Star } from "lucide-react";
+import { MessageSquare, SquarePen, Star, Trash } from "lucide-react";
 import type { BookReviews } from "../types/review.ts";
 import LikeButton from "./LikeButton.tsx";
 
 type ReviewCardProps = {
   review: BookReviews;
   userID: number;
+  onEdit?: (review: BookReviews) => void;
+  onDelete?: (review: BookReviews) => void;
 };
 
-export default function ReviewCard({ review, userID }: ReviewCardProps) {
+export default function ReviewCard({
+  review,
+  userID,
+  onEdit,
+  onDelete,
+}: ReviewCardProps) {
   const isCurrentUser = review.user_id === userID;
   return (
     <div className="flex h-fit w-full shrink-0  gap-4 rounded-2xl bg-white/90 p-3 shadow-lg ring-1 ring-black/5 my-3">
@@ -17,9 +24,28 @@ export default function ReviewCard({ review, userID }: ReviewCardProps) {
       <div className="flex min-w-0 flex-1 flex-col justify-between py-1 ">
         <div className="">
           {isCurrentUser ? (
-            <p className=" font-sans font-extrabold  text-md pb-1.5 pt-1 ml-1 mb-3 bg-light-green w-fit px-2 rounded-full">
-              Your Review
-            </p>
+            <div className="flex justify-between mx-1">
+              <p className=" font-sans font-extrabold  text-md pb-1.5 pt-1  mb-3 bg-light-green w-fit px-2 rounded-full">
+                Your Review
+              </p>
+              <div className="flex gap-3 mr-2">
+                <button
+                  onClick={() => onEdit(review)}
+                  className="flex items-center gap-1 text-dark-green cursor-pointer"
+                >
+                  <SquarePen className="bg-light-green p-1 w-8 h-8 rounded-full " />
+                </button>
+                {onDelete && (
+                  <button
+                    type="button"
+                    onClick={() => onDelete(review)}
+                    className="flex items-center gap-1 text-dark-green cursor-pointer"
+                  >
+                    <Trash className="h-8 w-8 rounded-full bg-light-green p-1" />
+                  </button>
+                )}
+              </div>
+            </div>
           ) : (
             <></>
           )}

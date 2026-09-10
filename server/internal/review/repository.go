@@ -401,3 +401,74 @@ func (r *Repository) CreateReview(
 
 	return &review, nil
 }
+
+var ErrReviewNotFound = errors.New("review not found")
+
+func (r *Repository) UpdateReview(
+	userID int,
+	reviewID int,
+	rating int,
+	comment string,
+) (*Review, error) {
+	var review Review
+
+	err := r.db.QueryRow(`
+		UPDATE Review
+		SET
+			rating = $1,
+			comment = $2
+		WHERE review_id = $3
+		AND user_id = $4
+		RETURNING review_id, user_id, book_id, rating, comment
+	`,
+		rating,
+		comment,
+		reviewID,
+		userID,
+	).Scan(
+		&review.ReviewID,
+		&review.UserID,
+		&review.BookID,
+		&review.Rating,
+		&review.Comment,
+	)
+
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, ErrReviewNotFound
+		}
+
+		return nil, err
+	}
+
+	return &review, nil
+}
+
+func (r *Repository) DeleteReview(
+	userID int,
+	reviewID int,
+) error {
+	result, err := r.db.Exec(`
+		DELETE FROM Review
+		WHERE review_id = $1
+		AND user_id = $2
+	`,
+		reviewID,
+		userID,
+	)
+
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return ErrReviewNotFound
+	}
+
+	return nil
+}
