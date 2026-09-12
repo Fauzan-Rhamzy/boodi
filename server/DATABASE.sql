@@ -46,14 +46,6 @@ CREATE TABLE UserBook(
     logged_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE TABLE ReadingHistory (
-    reading_history_id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(user_id) NOT NULL,
-    book_id INT REFERENCES book(book_id) NOT NULL,
-    pages_read INT NOT NULL,  
-    read_date DATE NOT NULL   
-);
-
 CREATE TABLE Genre (
     genre_id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL 
