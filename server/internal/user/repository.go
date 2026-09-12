@@ -60,53 +60,13 @@ func (r *Repository) TrackBookProgress(userId int, bookId int, req TrackBookProg
 		return fmt.Errorf("page number (%d) exceeds total book pages (%d)", req.PagesRead, maxPage)
 	}
 
-	// Cek apakah udah ada di UserBook
-	var currPage int
-	err = tx.QueryRow(`
-		SELECT 
-			current_page
-		FROM UserBook 
-		WHERE user_id = $1 AND book_id = $2`, req.UserID, req.BookID).Scan(&currPage)
+	// insert baru tiap track progress
+	_, err = tx.Exec(`
+		INSERT INTO UserBook (user_id, book_id, current_page, logged_at)
+		VALUES ($1, $2, $3, NOW())`, req.UserID, req.BookID, req.PagesRead)
 
-	if err != nil && !errors.Is(err, sql.ErrNoRows) {
+	if err != nil {
 		return err
-	}
-
-	isNewRecord := errors.Is(err, sql.ErrNoRows)
-
-	// kalo belom ada di UserBook, insert baru
-	if isNewRecord {
-		_, err := tx.Exec(`
-			INSERT INTO UserBook (user_id, book_id, current_page, logged_at)
-			VALUES ($1, $2, $3, NOW())`, req.UserID, req.BookID, req.PagesRead)
-
-		if err != nil {
-			return err
-		}
-	} else {
-		// kalo udah ada, update buku yang udah ada di UserBook
-		_, err := tx.Exec(`
-			UPDATE UserBook 
-			SET current_page = $1, logged_at = NOW() WHERE user_id = $2 AND book_id = $3`, req.PagesRead, req.UserID, req.BookID)
-
-		if err != nil {
-			return err
-		}
-	}
-
-	pagesAdded := req.PagesRead - currPage
-	if pagesAdded == 0 {
-		return tx.Commit()
-	}
-
-	//update ke reading history
-	if pagesAdded > 0 {
-		_, err = tx.Exec(`
-			INSERT INTO ReadingHistory (user_id, book_id, pages_read, read_date)
-			VALUES ($1, $2, $3, $4::timestamptz)`, req.UserID, req.BookID, pagesAdded, req.ReadDate)
-		if err != nil {
-			return err
-		}
 	}
 
 	return tx.Commit()
@@ -114,7 +74,7 @@ func (r *Repository) TrackBookProgress(userId int, bookId int, req TrackBookProg
 
 func (r *Repository) GetUserBookProgress(userID int, bookID int) (int, error) {
 	var currentPage int
-	query := `SELECT current_page FROM UserBook WHERE user_id = $1 AND book_id = $2`
+	query := `SELECT current_page FROM UserBook WHERE user_id = $1 AND book_id = $2 ORDER BY logged_at DESC LIMIT 1`
 
 	err := r.db.QueryRow(query, userID, bookID).Scan(&currentPage)
 	if err != nil {
