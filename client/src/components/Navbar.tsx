@@ -3,7 +3,10 @@ import { Home, LayoutGrid, Search, User } from "lucide-react";
 
 export default function Navbar() {
   const location = useLocation();
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (paths: string | string[]) => {
+    const pathArray = Array.isArray(paths) ? paths : [paths];
+    return pathArray.includes(location.pathname);
+  };
 
   return (
     <div className="fixed bottom-0 left-1/2 z-50 w-full max-w-md -translate-x-1/2">
@@ -48,7 +51,7 @@ export default function Navbar() {
           <Link
             to={"/profile"}
             className={`flex flex-col items-center gap-1 p-2 transition-colors duration-200 ${
-              isActive("/profile")
+              isActive(["/profile", "/profile/reviews", "/profile/diary"])
                 ? "text-cream font-semibold"
                 : "hover:text-cream text-white"
             }`}
