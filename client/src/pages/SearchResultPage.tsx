@@ -13,6 +13,11 @@ export default function SearchResultPage() {
   const [books, setBooks] = useState<Book[]>([]);
   const hasLongWord = searchQuery.split(/\s+/).some((word) => word.length > 20);
   useEffect(() => {
+    if (!searchQuery) {
+      setBooks([]);
+      return;
+    }
+
     const fetchBooks = async () => {
       try {
         const data = searchQuery
@@ -46,19 +51,24 @@ export default function SearchResultPage() {
       {/* Results */}
       {books.length === 0 ? (
         <div className="flex flex-col items-center justify-center px-10 py-10 text-center">
-          <p className="text-lg font-bold text-gray-700">No books found</p>
-
-          <p className="mt-1 text-sm text-gray-500">
-            No book with that title was found.
-          </p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-3 gap-x-3 gap-y-6 px-6 mx-2 pt-4">
-          {books.map((book) => (
-            <BookCover book={book} key={book.id} />
-          ))}
-        </div>
-      )}
+        {searchQuery ? (
+          <>
+            <p className="text-lg font-bold text-brown">No books found</p>
+            <p className="mt-1 text-sm text-light-brown">
+              No book with that title was found.
+            </p>
+          </>
+        ) : (
+          <p className="text-lg font-bold text-brown">No searches yet</p>
+        )}
+      </div>
+    ) : (
+      <div className="grid grid-cols-3 gap-x-3 gap-y-6 px-6 mx-2 pt-4">
+        {books.map((book) => (
+          <BookCover book={book} key={book.id} />
+        ))}
+      </div>
+    )}
     </div>
   );
 }
