@@ -13,3 +13,7 @@ type BookResponse struct {
 	Title string `json:"title"`
 	Cover string `json:"cover"`
 }
+
+type CreateAuthorRequest struct {
+	Name string `json:"name"`
+}
