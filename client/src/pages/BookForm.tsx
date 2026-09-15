@@ -10,25 +10,24 @@ import type { SelectOption } from "../components/MultiSelectSearch";
 import MultiSelectSearch from "../components/MultiSelectSearch";
 import { addAuthorFromBook, getAllAuthors } from "../api/author";
 import { addGenreFromBook, getAllGenres } from "../api/genre";
-import { addBook } from "../api/books";
+import { addBook, getById } from "../api/books";
 
 export default function BookForm() {
   const { bookId } = useParams();
-  const [book, setBook] = useState<Book>();
+  //   const [book, setBook] = useState<Book>();
 
-  const [preview, setPreview] = useState(book?.cover ?? "");
+  const [originalCover, setOriginalCover] = useState<string>("");
+  const [preview, setPreview] = useState<string | null>();
 
   const [file, setFile] = useState<File | null>(null);
 
   const [originalTitle, setOriginalTitle] = useState<string>("");
   const [title, setTitle] = useState<string>("");
 
-  const [originalAuthor, setOriginalAuthor] = useState<string>("");
-  const [author, setAuthor] = useState<string>("");
-
+  const [originalAuthors, setOriginalAuthors] = useState<SelectOption[]>([]);
   const [selectedAuthors, setSelectedAuthors] = useState<SelectOption[]>([]);
 
-  const [originalYear, setOriginalYear] = useState<number>();
+  const [originalYear, setOriginalYear] = useState<number>(2000);
   const [year, setYear] = useState<number>(2000);
 
   const [originalPrice, setOriginalPrice] = useState<number>();
@@ -43,9 +42,7 @@ export default function BookForm() {
   const [originalDesc, setOriginalDesc] = useState<string>("");
   const [desc, setDesc] = useState<string>("");
 
-  const [originalGenre, setOriginalGenre] = useState<string>("");
-  const [genre, setGenre] = useState<string>("");
-
+  const [originalGenres, setOriginalGenres] = useState<SelectOption[]>([]);
   const [selectedGenres, setSelectedGenres] = useState<SelectOption[]>([]);
 
   const [authorOptions, setAuthorOptions] = useState<SelectOption[]>([]);
@@ -62,9 +59,42 @@ export default function BookForm() {
     console.log(genreOptions);
   };
 
+  const fetchBook = async () => {
+    const book = await getById(Number(bookId));
+    setOriginalCover(book.cover);
+
+    setTitle(book.title);
+    setOriginalTitle(book.title);
+
+    setOriginalAuthors(book.authors);
+    setSelectedAuthors(book.authors);
+
+    setYear(book.year);
+    setOriginalYear(book.year);
+
+    setPrice(book.price);
+    setOriginalPrice(book.price);
+
+    setPage(book.page);
+    setOriginalPage(book.page);
+
+    setLanguage(book.language);
+    setOriginalLang(book.language);
+
+    setDesc(book.description);
+    setOriginalDesc(book.description);
+
+    setOriginalGenres(book.genres);
+    setSelectedGenres(book.genres);
+  };
+
   useEffect(() => {
     fetchAuthors();
     fetchGenres();
+
+    if (bookId) {
+      fetchBook();
+    }
   }, []);
 
   const handleAddNewAuthor = async (name: string) => {
@@ -101,15 +131,17 @@ export default function BookForm() {
 
   const handleCancel = () => {
     if (bookId) {
-      setAuthor(originalAuthor || "");
-      setDesc(originalDesc || "");
-      setGenre(originalGenre || "");
-      setPrice(originalPrice || 0);
-      setTitle(originalTitle || "");
-      setYear(originalYear || 2000);
+      setTitle(originalTitle);
+      setSelectedAuthors(originalAuthors);
+      setYear(originalYear);
+      setPrice(originalPrice);
+      setPage(originalPage);
+      setLanguage(originalLang || "");
+      setDesc(originalDesc);
+      setSelectedGenres(originalGenres);
+      setFile(null);
+      setPreview("");
     }
-    setFile(null);
-    setPreview("");
     toast.success("Changes cancelled");
   };
 
@@ -175,35 +207,66 @@ export default function BookForm() {
     formData.append("page", page.toString());
     formData.append("desc", desc);
 
-    try {
-      console.log(formData);
-      const res = await addBook(formData);
-      if (res) {
-        toast.success("Book has been added");
+    if (!bookId) {
+      try {
+        console.log(formData);
+        const res = await addBook(formData);
+        if (res) {
+          toast.success("Book has been added");
+        }
+      } catch (error) {
+        toast.error("Failed to add book");
+      } finally {
+        toast.dismiss(loading);
       }
-    } catch (error) {
-      toast.error("Failed to add book");
-    } finally {
-      toast.dismiss(loading);
+    } else {
+      try {
+      } catch (error) {
+        toast.error("Failed to save book changes");
+      } finally {
+        toast.dismiss(loading);
+      }
     }
   };
 
   const changesMade =
-    originalAuthor !== author ||
+    // originalAuthor !== author ||
     originalDesc !== desc ||
-    originalGenre !== genre ||
+    // originalGenre !== genre ||
     originalPrice !== price ||
     originalYear !== year ||
     file;
 
-  const canAdd =
-    price &&
-    year &&
-    title.trim() !== "" &&
-    desc.trim() !== "" &&
-    selectedAuthors.length !== 0 &&
-    selectedGenres.length !== 0;
+  const isArrayChanged = (
+    current: SelectOption[],
+    original: SelectOption[],
+  ) => {
+    if (current.length !== original.length) return true;
 
+    const currentIds = current.map((item) => item.id).sort();
+    const originalIds = original.map((item) => item.id).sort();
+
+    return currentIds.some((id, index) => id !== originalIds[index]);
+  };
+
+  const canAdd = !bookId
+    ? title.trim() !== "" &&
+      selectedAuthors.length !== 0 &&
+      year &&
+      price &&
+      page &&
+      language.trim() !== "" &&
+      desc.trim() !== "" &&
+      selectedGenres.length !== 0
+    : file ||
+      title !== originalTitle ||
+      isArrayChanged(selectedAuthors, originalAuthors) ||
+      year !== originalYear ||
+      price !== originalPrice ||
+      page !== originalPage ||
+      language !== originalLang ||
+      desc !== originalDesc ||
+      isArrayChanged(selectedGenres, originalGenres);
   return (
     <div className="w-full min-h-screen p-10 bg-bw">
       <BackArrow backPath="/admin" />
@@ -219,7 +282,7 @@ export default function BookForm() {
         )}
       </div>
       <div className="flex items-center justify-center h-64 mt-2">
-        <BookPhoto cover={preview} />
+        <BookPhoto preview={preview} originalCover={originalCover} />
       </div>
 
       <div className="flex items-center justify-center ">
@@ -327,16 +390,6 @@ export default function BookForm() {
               Language <span className="text-red-500 ml-0.5">*</span>
             </label>
             <div className="mt-1">
-              {/* <input
-                id="page"
-                name="page"
-                type="checkbox"
-                required
-                className="block w-full rounded-xl bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2  sm:text-sm/6"
-                placeholder="Example: 67"
-                value={page}
-                onChange={(e) => setPage(Number(e.target.value))}
-              /> */}
               <select
                 id="lang"
                 name="lang"
@@ -371,24 +424,6 @@ export default function BookForm() {
             </div>
           </div>
 
-          {/* <div>
-            <label htmlFor="genre" className="block text-sm/6 font-bold">
-              Genre(s) <span className="text-red-500 ml-0.5">*</span>
-            </label>
-            <div className="mt-1">
-              <input
-                id="genre"
-                name="genre"
-                type="select"
-                required
-                className="block w-full rounded-xl bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2  sm:text-sm/6"
-                placeholder="Search a genre..."
-                value={genre}
-                onChange={(e) => setGenre(e.target.value)}
-              />
-            </div>
-          </div> */}
-
           <MultiSelectSearch
             label="Genre(s)"
             placeholder="Search genre..."
@@ -407,9 +442,8 @@ export default function BookForm() {
         {bookId && (
           <button
             type="button"
-            //   disabled={!changesMade}
-            //   onClick={handleCancel}
-            className={`w-1/2 border-2 border-dark-green py-2 rounded-md hover:bg-gray-300 transition-colors font-bold text-dark-green ${!false && "opacity-50"} hover:cursor-pointer`}
+            disabled={!canAdd}
+            className={`w-1/2 border-2 border-dark-green py-2 rounded-md transition-colors font-bold text-dark-green ${canAdd ? "hover:cursor-pointer hover:bg-gray-300" : "opacity-50"}`}
             onClick={() => handleCancel()}
           >
             Cancel

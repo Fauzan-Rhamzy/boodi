@@ -14,7 +14,7 @@ func NewRepository(db *sql.DB) *Repository {
 
 func (r *Repository) FindAll() ([]Author, error) {
 	rows, err := r.db.Query(`
-        SELECT author_id, name, description, COALESCE(profile_pic, '')
+        SELECT author_id, name, description, profile_pic
         FROM Author
         ORDER BY name ASC
     `)
