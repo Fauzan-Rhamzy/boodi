@@ -217,3 +217,50 @@ func (r *Repository) GetTrendingBooks() ([]Book, error) {
 
 	return books, nil
 }
+
+func (r *Repository) Create(req CreateBookRequest, cover string) (int, error) {
+	// mulai transaction
+	tx, err := r.db.Begin()
+	if err != nil {
+		return 0, err
+	}
+	defer tx.Rollback() // rollback kalau gagal
+
+	// insert buku
+	var bookID int
+	err = tx.QueryRow(`
+        INSERT INTO Book (title, price, year, page, language, description, cover)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        RETURNING book_id
+    `, req.Title, req.Price, req.Year, req.Page, req.Language, req.Description, cover).Scan(&bookID)
+	if err != nil {
+		return 0, err
+	}
+
+	// insert author relations
+	for _, authorID := range req.AuthorIDs {
+		_, err = tx.Exec(`
+            INSERT INTO AuthorBook (author_id, book_id) VALUES ($1, $2)
+        `, authorID, bookID)
+		if err != nil {
+			return 0, err
+		}
+	}
+
+	// insert genre relations
+	for _, genreID := range req.GenreIDs {
+		_, err = tx.Exec(`
+            INSERT INTO BookGenre (book_id, genre_id) VALUES ($1, $2)
+        `, bookID, genreID)
+		if err != nil {
+			return 0, err
+		}
+	}
+
+	// commit
+	if err := tx.Commit(); err != nil {
+		return 0, err
+	}
+
+	return bookID, nil
+}

@@ -21,3 +21,7 @@ func (s *Service) SearchBooks(query string) ([]Book, error) {
 func (s *Service) GetTrendingBooks() ([]Book, error) {
 	return s.repo.GetTrendingBooks()
 }
+
+func (s *Service) Create(req CreateBookRequest, filePath string) (int, error) {
+	return s.repo.Create(req, filePath)
+}

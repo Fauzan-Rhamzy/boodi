@@ -12,6 +12,38 @@ func NewRepository(db *sql.DB) *Repository {
 	return &Repository{db: db}
 }
 
+func (r *Repository) FindAll() ([]Author, error) {
+	rows, err := r.db.Query(`
+        SELECT author_id, name, description, profile_pic
+        FROM Author
+        ORDER BY name ASC
+    `)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	authors := make([]Author, 0)
+	for rows.Next() {
+		var a Author
+		if err := rows.Scan(&a.AuthorID, &a.Name, &a.Description, &a.ProfilePic); err != nil {
+			return nil, err
+		}
+		authors = append(authors, a)
+	}
+	return authors, nil
+}
+
+func (r *Repository) Create(req CreateAuthorRequest) (int, error) {
+	var id int
+	err := r.db.QueryRow(`
+        INSERT INTO Author (name)
+        VALUES ($1)
+        RETURNING author_id
+    `, req.Name).Scan(&id)
+	return id, err
+}
+
 func (r *Repository) FindByID(id int) (*Author, error) {
 	var a Author
 	query := `SELECT author_id, name, description, COALESCE(profile_pic, '') FROM Author WHERE author_id = $1`

@@ -3,8 +3,8 @@ package author
 type Author struct {
 	AuthorID    int            `json:"id"`
 	Name        string         `json:"name"`
-	Description string         `json:"description"`
-	ProfilePic  string         `json:"profile_pic"`
+	Description *string        `json:"description"`
+	ProfilePic  *string        `json:"profile_pic"`
 	Books       []BookResponse `json:"books"`
 }
 
@@ -12,4 +12,8 @@ type BookResponse struct {
 	ID    int    `json:"id"`
 	Title string `json:"title"`
 	Cover string `json:"cover"`
+}
+
+type CreateAuthorRequest struct {
+	Name string `json:"name"`
 }

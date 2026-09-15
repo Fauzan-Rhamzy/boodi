@@ -21,3 +21,14 @@ type GenreResponse struct {
 	ID   int    `json:"id"`
 	Name string `json:"name"`
 }
+
+type CreateBookRequest struct {
+	Title       string  `json:"title"`
+	Price       float64 `json:"price"`
+	Year        int     `json:"year"`
+	Page        int     `json:"page"`
+	Language    string  `json:"language"`
+	Description string  `json:"description"`
+	AuthorIDs   []int   `json:"author_ids"`
+	GenreIDs    []int   `json:"genre_ids"`
+}

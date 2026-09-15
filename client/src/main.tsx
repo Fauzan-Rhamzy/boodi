@@ -24,6 +24,8 @@ import { Toaster } from "react-hot-toast";
 import OnboardingPage from "./pages/OnboardingPage.tsx";
 import GenrePage from "./pages/GenrePage.tsx";
 import BookReviews from "./pages/BookReviews.tsx";
+import BookForm from "./pages/BookForm.tsx";
+import ProtectedAdmin from "./components/ProtectedAdmin.tsx";
 
 const router = createBrowserRouter([
   {
@@ -169,6 +171,24 @@ const router = createBrowserRouter([
             ),
           },
         ],
+      },
+
+      {
+        path: "admin/book",
+        element: (
+          <ProtectedAdmin>
+            <BookForm />
+          </ProtectedAdmin>
+        ),
+      },
+
+      {
+        path: "admin/book/:bookId",
+        element: (
+          <ProtectedAdmin>
+            <BookForm />
+          </ProtectedAdmin>
+        ),
       },
 
       {
