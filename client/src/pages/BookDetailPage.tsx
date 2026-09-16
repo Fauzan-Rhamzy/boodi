@@ -16,13 +16,15 @@ import AddToCollectionModal from "../components/AddToCollectionModal";
 import TrackProgressPopUp from "../components/TrackProgressPopUP";
 import RatingBox from "../components/RatingBox";
 import ReviewCard from "../components/ReviewCard";
-import { deleteReview, getBookReviews } from "../api/review";
+
+import { getBookReviews } from "../api/review";
+
 import type { BookReviews } from "../types/review";
 import { type AuthUser, getMe } from "../features/auth/api";
 import { getUserBookProgress, trackBookProgress } from "../api/users";
 import toast from "react-hot-toast";
 import WriteReviewModal from "../components/WriteReviewModal";
-import ConfirmModal from "../components/ConfirmModal";
+
 export default function BookDetailPage() {
   const { id } = useParams();
   const [book, setBook] = useState<Book | null>(null);
@@ -33,33 +35,35 @@ export default function BookDetailPage() {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(0);
   const navigate = useNavigate();
+
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
-  const [editingReview, setEditingReview] = useState<BookReviews | null>(null);
-  const [deletingReview, setDeletingReview] = useState<BookReviews | null>(
-    null,
-  );
 
-  const handleDeleteReview = (review: BookReviews) => {
-    setDeletingReview(review);
-  };
+  // const [editingReview, setEditingReview] = useState<BookReviews | null>(null);
+  // const [deletingReview, setDeletingReview] = useState<BookReviews | null>(
+  //   null,
+  // );
 
-  const handleConfirmDelete = async () => {
-    if (!deletingReview) return;
+  // const handleDeleteReview = (review: BookReviews) => {
+  //   setDeletingReview(review);
+  // };
 
-    try {
-      await deleteReview(deletingReview.review_id);
+  // const handleConfirmDelete = async () => {
+  //   if (!deletingReview) return;
 
-      toast.success("Review deleted!");
+  //   try {
+  //     await deleteReview(deletingReview.review_id);
 
-      const reviewData = await getBookReviews(deletingReview.book_id);
-      setReviews(reviewData ?? []);
+  //     toast.success("Review deleted!");
 
-      setDeletingReview(null);
-    } catch (error) {
-      console.error("Failed to delete review:", error);
-      toast.error("Failed to delete review");
-    }
-  };
+  //     const reviewData = await getBookReviews(deletingReview.book_id);
+  //     setReviews(reviewData ?? []);
+
+  //     setDeletingReview(null);
+  //   } catch (error) {
+  //     console.error("Failed to delete review:", error);
+  //     toast.error("Failed to delete review");
+  //   }
+  // };
 
   useEffect(() => {
     async function fetchUser() {
@@ -79,11 +83,24 @@ export default function BookDetailPage() {
     if (b.user_id === user?.user_id) return 1;
     return 0;
   });
+
   const myReview = reviews.find((review) => review.user_id === user?.user_id);
+
+  const loadReviews = async () => {
+    if (!id) return;
+
+    try {
+      const reviewData = await getBookReviews(Number(id));
+      setReviews(reviewData ?? []);
+    } catch (error) {
+      console.error("Failed to get book reviews:", error);
+    }
+  };
 
   useEffect(() => {
     async function fetchDetailBookAndFavorite() {
       if (!id) return;
+
       const bookIdNum = Number(id);
 
       // 1. Ambil detail buku terlebih dahulu (Wajib)
@@ -101,12 +118,10 @@ export default function BookDetailPage() {
       } catch (error) {
         console.error("Failed to get favourite status:", error);
       }
-      try {
-        const reviewData = await getBookReviews(bookIdNum);
-        setReviews(reviewData ?? []);
-      } catch (error) {
-        console.error("Failed to get book reviews:", error);
-      }
+
+      // Get reviews
+      await loadReviews();
+
       try {
         const progress = await getUserBookProgress(bookIdNum);
         setCurrentPage(progress.current_page || 0);
@@ -117,15 +132,15 @@ export default function BookDetailPage() {
 
     fetchDetailBookAndFavorite();
   }, [id]);
+
   const handleWriteReview = () => {
-    setEditingReview(null);
     setIsReviewModalOpen(true);
   };
 
-  const handleEditReview = (review: BookReviews) => {
-    setEditingReview(review);
-    setIsReviewModalOpen(true);
-  };
+  // const handleEditReview = (review: BookReviews) => {
+  //   setEditingReview(review);
+  //   setIsReviewModalOpen(true);
+  // };
 
   const handleToggleFavourite = async () => {
     if (!book) return;
@@ -145,6 +160,7 @@ export default function BookDetailPage() {
 
   const memoizedInitialBook = useMemo(() => {
     if (!book) return null;
+
     return {
       id: book.id,
       title: book.title,
@@ -164,7 +180,9 @@ export default function BookDetailPage() {
 
       try {
         await trackBookProgress(data.book_id, data.pages_read, data.read_date);
+
         setCurrentPage(data.pages_read);
+
         toast.dismiss(loading);
         toast.success("Track updated!");
       } catch (error) {
@@ -207,6 +225,7 @@ export default function BookDetailPage() {
           {book.authors && book.authors.length > 0 ? (
             <>
               <span>Written by</span>
+
               <Link
                 to={`/author/${book.authors[0].id}`}
                 className="font-bold underline cursor-pointer text-text underline-offset-3 active: light brown active: scale-95 duration 100"
@@ -240,7 +259,9 @@ export default function BookDetailPage() {
             className="w-6 h-6 p-0 shrink-0 flex items-center justify-center rounded-full border border-black text-text hover:cursor-pointer"
           >
             <Heart
-              className={`w-4 h-4 ${isFavourited ? "fill-red-500 text-red-500" : ""}`}
+              className={`w-4 h-4 ${
+                isFavourited ? "fill-red-500 text-red-500" : ""
+              }`}
             />
           </button>
         </div>
@@ -248,6 +269,7 @@ export default function BookDetailPage() {
         <div className="flex items-center text-center mt-4">
           <div className="px-6">
             <p className="text-sm text-text font-medium">Price</p>
+
             <p className="text-base font-bold text-text mt-0.5">
               ${book.price.toLocaleString("id-ID")}
             </p>
@@ -257,6 +279,7 @@ export default function BookDetailPage() {
 
           <div className="px-6">
             <p className="text-sm text-text font-medium">Pages</p>
+
             <p className="text-base font-bold text-text mt-0.5">{book.page}</p>
           </div>
 
@@ -264,6 +287,7 @@ export default function BookDetailPage() {
 
           <div className="px-6">
             <p className="text-sm text-text font-medium">Language</p>
+
             <p className="text-base font-bold text-text mt-0.5">
               {book.language}
             </p>
@@ -316,6 +340,7 @@ export default function BookDetailPage() {
           >
             Ratings
           </h2>
+
           <RatingBox bookId={book.id} className="pt-1" />
         </div>
 
@@ -327,6 +352,7 @@ export default function BookDetailPage() {
             >
               Reviews
             </h2>
+
             <button
               className="flex items-center gap-1 text-md mr-5 font-medium text-dark-green"
               onClick={() => navigate(`/book/${id}/all-reviews`)}
@@ -335,7 +361,8 @@ export default function BookDetailPage() {
               <ArrowRight className="h-5 w-5" />
             </button>
           </div>
-          <div className="flex flex-col items-center  justify-center mt-2 gap-2 pb-6">
+
+          <div className="flex flex-col items-center justify-center mt-2 gap-2 pb-6">
             {!myReview && (
               <button
                 onClick={handleWriteReview}
@@ -344,13 +371,13 @@ export default function BookDetailPage() {
                 Write a Review
               </button>
             )}
+
             {sortedReviews.map((review) => (
               <ReviewCard
                 key={review.review_id}
                 review={review}
-                userID={user.user_id}
-                onEdit={handleEditReview}
-                onDelete={handleDeleteReview}
+                userID={user!.user_id}
+                onRefresh={loadReviews}
               />
             ))}
           </div>
@@ -364,25 +391,32 @@ export default function BookDetailPage() {
           bookID={book.id}
         />
       )}
+
       <TrackProgressPopUp
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         initialBook={memoizedInitialBook}
         onSave={handleSave}
       />
+
       <WriteReviewModal
         isOpen={isReviewModalOpen}
         bookId={book.id}
-        editReview={editingReview}
         onClose={() => {
           setIsReviewModalOpen(false);
-          setEditingReview(null);
+
+          {
+            /* setEditingReview(null); */
+          }
         }}
         onSuccess={async () => {
-          const reviewData = await getBookReviews(book.id);
-          setReviews(reviewData ?? []);
+          await loadReviews();
+
+          setIsReviewModalOpen(false);
         }}
       />
+
+      {/*
       <ConfirmModal
         isOpen={!!deletingReview}
         title="Delete review?"
@@ -393,6 +427,7 @@ export default function BookDetailPage() {
         confirmText="Delete Review"
         destructive
       />
+      */}
     </div>
   );
 }

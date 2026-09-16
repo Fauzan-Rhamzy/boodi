@@ -17,6 +17,17 @@ export default function BookReviews() {
 
   const reviewsPerPage = 10;
 
+  const loadReviews = async () => {
+    if (!id) return;
+
+    try {
+      const reviewData = await getBookReviews(Number(id));
+      setReviews(reviewData ?? []);
+    } catch (error) {
+      console.error("Failed to get book reviews:", error);
+    }
+  };
+
   useEffect(() => {
     async function fetchData() {
       if (!id) return;
@@ -37,12 +48,8 @@ export default function BookReviews() {
         console.error("Failed to get detail book:", error);
       }
 
-      try {
-        const reviewData = await getBookReviews(bookIdNum);
-        setReviews(reviewData ?? []);
-      } catch (error) {
-        console.error("Failed to get book reviews:", error);
-      }
+      // Get reviews
+      await loadReviews();
     }
 
     fetchData();
@@ -96,6 +103,7 @@ export default function BookReviews() {
             key={review.review_id}
             review={review}
             userID={user.user_id}
+            onRefresh={loadReviews}
           />
         ))}
         {paginatedReviews.length === 0 && (
