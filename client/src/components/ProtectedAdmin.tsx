@@ -7,7 +7,6 @@ export default function ProtectedAdmin({
   children: React.ReactNode | null;
 }) {
   const { user, loading } = useAuth();
-
   if (loading) return <div>Loading...</div>;
 
   if (!user) return <Navigate to="/login" replace />;
