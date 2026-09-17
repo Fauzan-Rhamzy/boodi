@@ -53,21 +53,21 @@ CREATE TABLE Genre (
 
 CREATE TABLE BookGenre (
     book_genre_id SERIAL PRIMARY KEY, 
-    book_id INT REFERENCES book(book_id), 
+    book_id INT REFERENCES book(book_id) ON DELETE CASCADE, 
     genre_id INT REFERENCES genre(genre_id) NOT NULL
 );
 
 CREATE TABLE Author (
     author_id SERIAL PRIMARY KEY, 
     name VARCHAR(255) NOT NULL, 
-    description TEXT NOT NULL, 
+    description TEXT, 
     profile_pic TEXT
 );
 
 CREATE TABLE AuthorBook (
     author_book_id SERIAL PRIMARY KEY,
     author_id INT REFERENCES author(author_id), 
-    book_id INT REFERENCES book(book_id)
+    book_id INT REFERENCES book(book_id) ON DELETE CASCADE
 );
 
 CREATE TABLE Collection(

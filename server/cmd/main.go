@@ -16,6 +16,7 @@ import (
 	"server/internal/author"
 	"server/internal/book"
 	"server/internal/collection"
+	"server/internal/genre"
 	"server/internal/review"
 	"server/internal/shared/db"
 	"server/internal/shared/middleware"
@@ -87,6 +88,11 @@ func main() {
 	usersService := user.NewService(usersRepo)
 	usersHandler := user.NewHandler(usersService)
 
+	// genre
+	genreRepo := genre.NewRepository(dbCon)
+	genreService := genre.NewService(genreRepo)
+	genreHandler := genre.NewHandler(genreService)
+
 	router := chi.NewRouter()
 
 	// middleware
@@ -135,6 +141,11 @@ func main() {
 		r.Post("/api/create-review", reviewHandler.CreateReview)
 		r.Put("/api/reviews/{reviewID}", reviewHandler.UpdateReview)
 		r.Delete("/api/reviews/{reviewID}", reviewHandler.DeleteReview)
+
+		// get all genres
+		r.Get("/api/genres", genreHandler.FindAll)
+		// get all authors
+		r.Get("/api/authors", authorHandler.GetAll)
 	})
 
 	// protected routes for admin
@@ -143,6 +154,12 @@ func main() {
 		r.Use(middleware.RequireAdmin)
 		//  r.Post("/api/books", bookHandler.Create)
 		// r.Delete("/api/books/{id}", bookHandler.Delete)
+
+		r.Post("/api/book", bookHandler.Create)
+		r.Delete("/api/book/{id}", bookHandler.Delete)
+		r.Put("/api/book/{id}", bookHandler.Update)
+		r.Post("/api/author", authorHandler.Create)
+		r.Post("/api/genre", genreHandler.Create)
 	})
 	router.Handle(
 		"/images/*",

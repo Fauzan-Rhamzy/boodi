@@ -4,19 +4,38 @@ import { useNavigate } from "react-router";
 interface BackArrowProps {
   useHistory?: boolean;
   backPath?: string;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }
 
-export default function BackArrow({ useHistory = false, backPath = "/" }: BackArrowProps) {
+export default function BackArrow({
+  useHistory = false,
+  backPath = "/",
+  onClick,
+}: BackArrowProps) {
   const navigate = useNavigate();
 
-  const handleBack = () => {
+  // const handleBack = () => {
+  //   if (useHistory && window.history.length > 2) {
+  //     navigate(-1);
+  //   } else {
+  //     navigate(backPath);
+  //   }
+  // };
+
+  const handleBack = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (onClick) {
+      onClick(e);
+      if (e.defaultPrevented) {
+        return;
+      }
+    }
+
     if (useHistory && window.history.length > 2) {
       navigate(-1);
     } else {
       navigate(backPath);
     }
   };
-
   return (
     <div className="absolute top-10">
       <button
