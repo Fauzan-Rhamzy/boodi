@@ -25,3 +25,15 @@ export async function addBook(book: FormData) {
   });
   return res.data;
 }
+
+export async function deleteBook(id: number): Promise<number> {
+  const res = await api.delete(`/api/book/${id}`);
+  return res.data;
+}
+
+export async function updateBook(id: number, book: FormData) {
+  const res = await api.put(`/api/book/${id}`, book, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+  return res.data;
+}

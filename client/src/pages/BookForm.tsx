@@ -1,4 +1,4 @@
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import BackArrow from "../components/BackArrow";
 import BookCover from "../components/BookCover";
 import BookPhoto from "../components/BookPhoto";
@@ -10,9 +10,10 @@ import type { SelectOption } from "../components/MultiSelectSearch";
 import MultiSelectSearch from "../components/MultiSelectSearch";
 import { addAuthorFromBook, getAllAuthors } from "../api/author";
 import { addGenreFromBook, getAllGenres } from "../api/genre";
-import { addBook, getById } from "../api/books";
+import { addBook, deleteBook, getById, updateBook } from "../api/books";
 
 export default function BookForm() {
+  const navigate = useNavigate();
   const { bookId } = useParams();
   //   const [book, setBook] = useState<Book>();
 
@@ -55,37 +56,41 @@ export default function BookForm() {
   const fetchGenres = async () => {
     const genres = await getAllGenres();
     setGenreOptions(genres);
-    console.log(genres);
-    console.log(genreOptions);
   };
 
   const fetchBook = async () => {
-    const book = await getById(Number(bookId));
-    setOriginalCover(book.cover);
+    try {
+      const book = await getById(Number(bookId));
 
-    setTitle(book.title);
-    setOriginalTitle(book.title);
+      setOriginalCover(book.cover);
 
-    setOriginalAuthors(book.authors);
-    setSelectedAuthors(book.authors);
+      setTitle(book.title);
+      setOriginalTitle(book.title);
 
-    setYear(book.year);
-    setOriginalYear(book.year);
+      setOriginalAuthors(book.authors);
+      setSelectedAuthors(book.authors);
 
-    setPrice(book.price);
-    setOriginalPrice(book.price);
+      setYear(book.year);
+      setOriginalYear(book.year);
 
-    setPage(book.page);
-    setOriginalPage(book.page);
+      setPrice(book.price);
+      setOriginalPrice(book.price);
 
-    setLanguage(book.language);
-    setOriginalLang(book.language);
+      setPage(book.page);
+      setOriginalPage(book.page);
 
-    setDesc(book.description);
-    setOriginalDesc(book.description);
+      setLanguage(book.language);
+      setOriginalLang(book.language);
 
-    setOriginalGenres(book.genres);
-    setSelectedGenres(book.genres);
+      setDesc(book.description);
+      setOriginalDesc(book.description);
+
+      setOriginalGenres(book.genres);
+      setSelectedGenres(book.genres);
+    } catch (error) {
+      toast.error("Book id is not found");
+      navigate("/admin");
+    }
   };
 
   useEffect(() => {
@@ -95,12 +100,12 @@ export default function BookForm() {
     if (bookId) {
       fetchBook();
     }
-  }, []);
+  }, [bookId]);
 
   const handleAddNewAuthor = async (name: string) => {
     try {
-      const res = addAuthorFromBook(name);
-      const newAuthor = { id: res.id, name };
+      const res = await addAuthorFromBook(name);
+      const newAuthor = { id: res.id, name: name };
       setAuthorOptions((prev) => [...prev, newAuthor]);
       setSelectedAuthors((prev) => [...prev, newAuthor]);
       toast.success("Author has been added");
@@ -209,7 +214,6 @@ export default function BookForm() {
 
     if (!bookId) {
       try {
-        console.log(formData);
         const res = await addBook(formData);
         if (res) {
           toast.success("Book has been added");
@@ -221,11 +225,27 @@ export default function BookForm() {
       }
     } else {
       try {
+        const res = await updateBook(Number(bookId), formData);
+        if (res) {
+          toast.success("Book changes has been saved");
+        }
       } catch (error) {
         toast.error("Failed to save book changes");
       } finally {
         toast.dismiss(loading);
       }
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!bookId) return;
+    try {
+      const res = await deleteBook(Number(bookId));
+      // console.log(res);
+      toast.success("Book deleted");
+      navigate("/admin");
+    } catch (error) {
+      toast.error("Failed to delete book");
     }
   };
 
@@ -267,16 +287,69 @@ export default function BookForm() {
       language !== originalLang ||
       desc !== originalDesc ||
       isArrayChanged(selectedGenres, originalGenres);
+
+  // Cek apakah ada data yang sudah diketik atau diubah
+  const hasChanges = !bookId
+    ? // Saat ADD BOOK: akan bernilai true jika ada satu saja field yang mulai diisi
+      title.trim() !== "" ||
+      selectedAuthors.length !== 0 ||
+      year !== 2000 || // karena default state Anda 2000
+      price !== undefined ||
+      page !== undefined ||
+      language.trim() !== "" ||
+      desc.trim() !== "" ||
+      selectedGenres.length !== 0 ||
+      file !== null
+    : // Saat EDIT BOOK: nilainya sama persis dengan syarat canAdd Anda saat edit
+      file ||
+      title !== originalTitle ||
+      isArrayChanged(selectedAuthors, originalAuthors) ||
+      year !== originalYear ||
+      price !== originalPrice ||
+      page !== originalPage ||
+      language !== originalLang ||
+      desc !== originalDesc ||
+      isArrayChanged(selectedGenres, originalGenres);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasChanges) {
+        e.preventDefault();
+        e.returnValue = "Changes you made may not be saved.";
+        return e.returnValue;
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [hasChanges]);
+
   return (
     <div className="w-full min-h-screen p-10 bg-bw">
-      <BackArrow backPath="/admin" />
+      <BackArrow
+        backPath="/admin"
+        onClick={(e) => {
+          if (hasChanges) {
+            const confirmLeave = window.confirm(
+              "You have unsaved changes. Are you sure you want to leave?",
+            );
+            if (!confirmLeave) {
+              e.preventDefault(); // Mengaktifkan e.defaultPrevented di dalam BackArrow
+            }
+          }
+        }}
+      />
+      {canAdd && "nyala"}
       <div className="flex justify-between items-center w-full">
         <h1 className="mt-15 font-caveat font-bold text-4xl">
           {bookId ? "Edit Book" : "Add a New Book"}
         </h1>
 
         {bookId && (
-          <button className="mt-15 bg-red-500 text-white py-1 px-1 rounded-md font-bold hover:cursor-pointer text-[10px] p-0 flex items-center gap-2">
+          <button
+            onClick={() => handleDelete()}
+            className="mt-15 bg-red-500 text-white py-1 px-1 rounded-md font-bold hover:cursor-pointer text-[10px] p-0 flex items-center gap-2"
+          >
             <Trash size={15} /> Delete Book
           </button>
         )}

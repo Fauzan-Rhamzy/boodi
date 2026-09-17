@@ -156,6 +156,8 @@ func main() {
 		// r.Delete("/api/books/{id}", bookHandler.Delete)
 
 		r.Post("/api/book", bookHandler.Create)
+		r.Delete("/api/book/{id}", bookHandler.Delete)
+		r.Put("/api/book/{id}", bookHandler.Update)
 		r.Post("/api/author", authorHandler.Create)
 		r.Post("/api/genre", genreHandler.Create)
 	})
