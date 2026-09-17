@@ -27,8 +27,10 @@ INSERT INTO Users (email, phone, password, first_name, last_name, profile_pic, r
 ('alice.reads@example.com', '5551234567', 'hashedpwd789', 'Alice', 'Jones', 'profile/user-3.png', 'user'),
 ('bob.bookworm@example.com', '4449876543', 'hashedpwd321', 'Bob', 'Brown', 'profile/user-4.png', 'user'),
 ('charlie.davis@example.com', '3335557777', 'hashedpwd654', 'Charlie', 'Davis', 'profile/user-5.png', 'user'),
-('angeliquegabriella991@gmail.com','+6287828756725','$2a$10$5kzcot7HoSfggcFYdSR8ve78/P5Kha..G5sIdQK4iFVz.UIVncaTS','Angelique','Halim','profile/user-6.png','user');
-
+('angeliquegabriella991@gmail.com','+6287828756725','$2a$10$5kzcot7HoSfggcFYdSR8ve78/P5Kha..G5sIdQK4iFVz.UIVncaTS','Angelique','Halim','profile/user-6.png','user'),
+--passnya: passadmin
+('admin1@gmail.com','+6212345678910','$2a$10$wBwkNxDTx74gTYpeibp77uCvpESBkogDWkeoXp6gZkNjlLXK7eRgS','Admin','Satu','profile/user-1.png','admin'),
+('admin2@gmail.com','+6212345678911','$2a$10$wBwkNxDTx74gTYpeibp77uCvpESBkogDWkeoXp6gZkNjlLXK7eRgS','Admin','Dua','profile/user-2.png','admin');
 -- BOOKS
 -- BOOKS (Nama kolom disesuaikan dengan struktur CREATE TABLE Anda)
 INSERT INTO Book (title, price, year, page, language, description, cover) VALUES
@@ -129,7 +131,10 @@ INSERT INTO Review (comment, rating, book_id, user_id) VALUES
 ('Changed my perspective entirely. Highly recommend.', 5, 3, 4),
 ('Decent thriller, but the ending was a bit predictable.', 3, 4, 1),
 ('Incredibly detailed and well-researched.', 5, 5, 2),
-('ANGIE FAUZAN NAD TIF JUN', 5,1,6);
+('ANGIE FAUZAN NAD TIF JUN', 5,1,6),
+('test1', 4, 5, 6),
+('test1', 3, 2, 6),
+('test1', 2, 3, 6);
 
 -- LIKES (Likes on Reviews)
 INSERT INTO Likes (user_id, review_id) VALUES
