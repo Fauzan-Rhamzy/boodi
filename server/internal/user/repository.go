@@ -28,10 +28,20 @@ func (r *Repository) FindByID(id int) (*User, error) {
 }
 
 func (r *Repository) Update(id int, req UpdateProfileRequest) error {
+	if req.PicPath != "" {
+		_, err := r.db.Exec(`
+			UPDATE users
+			SET first_name = $1, last_name = $2, phone = $3, profile_pic = $4
+			WHERE user_id = $5
+		`, req.FirstName, req.LastName, req.Phone, req.PicPath, id)
+		return err
+	}
+
 	_, err := r.db.Exec(`
 		UPDATE users
-		SET first_name = $1, last_name = $2, phone = $3, profile_pic = $4	WHERE user_id = $5
-	`, req.FirstName, req.LastName, req.Phone, req.PicPath, id)
+		SET first_name = $1, last_name = $2, phone = $3
+		WHERE user_id = $4
+	`, req.FirstName, req.LastName, req.Phone, id)
 	return err
 }
 

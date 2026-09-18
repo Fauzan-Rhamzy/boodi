@@ -59,9 +59,9 @@ export default function ProfilePage() {
       setFirstname(originalFirstName || "");
       setLastname(originalLastName || "");
       setPhoneNumber(originalPhoneNumber || "");
+      setPreview(user?.profile_picture ? defaultPfp : pfp);
     }
     setFile(null);
-    setPreview(defaultPfp);
     toast.success("Changes cancelled");
   };
 
