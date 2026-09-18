@@ -85,7 +85,16 @@ func (h *Handler) Logout(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) Me(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	_, err := r.Cookie("token")
+	if err != nil {
+		json.NewEncoder(w).Encode(nil)
+		return
+	}
+
 	user := middleware.GetUser(r)
+
 	firstName, err := h.service.GetFirstName(user.UserID)
 	if err != nil {
 		http.Error(w, "failed to get user", http.StatusInternalServerError)
@@ -97,7 +106,6 @@ func (h *Handler) Me(w http.ResponseWriter, r *http.Request) {
 		profilePicture = "profile/dummy.png"
 	}
 
-	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]any{
 		"user_id":         user.UserID,
 		"first_name":      firstName,
