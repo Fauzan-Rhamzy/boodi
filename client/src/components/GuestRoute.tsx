@@ -11,7 +11,10 @@ export default function GuestRoute({
 
   if (loading) return <div>Loading...</div>;
 
-  if (user) return <Navigate to={"/home"} replace />;
+  if (user) {
+    if (user.role === "admin") return <Navigate to={"/admin/home"} replace />;
+    else return <Navigate to={"/home"} replace />;
+  }
 
   return <>{children}</>;
 }

@@ -12,7 +12,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState<boolean>(true);
   const [error, setError] = useState("");
 
-  const { refetch } = useAuth();
+  const { user, refetch } = useAuth();
 
   const navigate = useNavigate();
 
@@ -23,11 +23,22 @@ export default function LoginPage() {
 
     try {
       await login({ email, password });
-      await refetch();
+
+      const user = await refetch();
+
+      if (!user) {
+        setError("Failed to get user information");
+        return;
+      }
+
       toast.success("You're logged in");
-      navigate("/home");
+
+      if (user.role === "admin") {
+        navigate("/admin/home");
+      } else {
+        navigate("/home");
+      }
     } catch (err: any) {
-      console.log(err);
       setError(err.response?.data || "Failed to login");
     }
   };

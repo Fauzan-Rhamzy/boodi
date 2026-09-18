@@ -1,38 +1,48 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import AuthorPage from "./pages/AuthorPage.tsx";
+
 import "../index.css";
+
 import App from "./App.tsx";
-import LoginPage from "./pages/LoginPage.tsx";
-import RegisterPage from "./pages/RegisterPage.tsx";
-import HomePage from "./pages/HomePage.tsx";
-import LibraryPage from "./pages/LibraryPage.tsx";
-import ProfilePage from "./pages/ProfilePage.tsx";
-import NotFoundPage from "./pages/NotFoundPage.tsx";
-import BookDetailPage from "./pages/BookDetailPage.tsx";
-import SearchResultPage from "./pages/SearchResultPage.tsx";
+import AppLayout from "./AppLayout.tsx";
+
 import { AuthProvider } from "./features/auth/AuthContext.tsx";
+import { Toaster } from "react-hot-toast";
+
 import GuestRoute from "./components/GuestRoute.tsx";
 import ProtectedRoute from "./components/ProtectedRoute.tsx";
-import LibraryBooksPage from "./pages/LibraryBooksPage.tsx";
+import ProtectedAdmin from "./components/ProtectedAdmin.tsx";
+
+import OnboardingPage from "./pages/OnboardingPage.tsx";
+import LoginPage from "./pages/LoginPage.tsx";
+import RegisterPage from "./pages/RegisterPage.tsx";
+import NotFoundPage from "./pages/NotFoundPage.tsx";
+
+import HomePage from "./pages/HomePage.tsx";
+import AuthorPage from "./pages/AuthorPage.tsx";
+import LibraryPage from "./pages/LibraryPage.tsx";
+import ProfilePage from "./pages/ProfilePage.tsx";
 import ProfileBooksPage from "./pages/Profile-BooksPage.tsx";
 import ProfileReviewPage from "./pages/Profile-ReviewPage.tsx";
 import ProfileDiaryPage from "./pages/Profile-DiaryPage.tsx";
-import AppLayout from "./AppLayout.tsx";
-import { Toaster } from "react-hot-toast";
-import OnboardingPage from "./pages/OnboardingPage.tsx";
-import GenrePage from "./pages/GenrePage.tsx";
+import BookDetailPage from "./pages/BookDetailPage.tsx";
 import BookReviews from "./pages/BookReviews.tsx";
+import SearchResultPage from "./pages/SearchResultPage.tsx";
+import LibraryBooksPage from "./pages/LibraryBooksPage.tsx";
+import GenrePage from "./pages/GenrePage.tsx";
+
+import AdminHomepage from "./pages/AdminHomepage.tsx";
 import BookForm from "./pages/BookForm.tsx";
-import ProtectedAdmin from "./components/ProtectedAdmin.tsx";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
-      // NO NAVBAR
+      // =========================
+      // PUBLIC ROUTES
+      // =========================
       {
         index: true,
         element: <OnboardingPage />,
@@ -54,7 +64,9 @@ const router = createBrowserRouter([
         ),
       },
 
-      // pake NAVBAR
+      // =========================
+      // USER ROUTES
+      // =========================
       {
         element: <AppLayout />,
         children: [
@@ -173,6 +185,17 @@ const router = createBrowserRouter([
         ],
       },
 
+      // =========================
+      // ADMIN ROUTES
+      // =========================
+      {
+        path: "admin/home",
+        element: (
+          <ProtectedAdmin>
+            <AdminHomepage />
+          </ProtectedAdmin>
+        ),
+      },
       {
         path: "admin/book",
         element: (
@@ -181,7 +204,6 @@ const router = createBrowserRouter([
           </ProtectedAdmin>
         ),
       },
-
       {
         path: "admin/book/:bookId",
         element: (
@@ -191,6 +213,9 @@ const router = createBrowserRouter([
         ),
       },
 
+      // =========================
+      // 404
+      // =========================
       {
         path: "*",
         element: <NotFoundPage />,
@@ -198,9 +223,11 @@ const router = createBrowserRouter([
     ],
   },
 ]);
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Toaster />
+
     <AuthProvider>
       <RouterProvider router={router} />
     </AuthProvider>
