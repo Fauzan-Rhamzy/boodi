@@ -73,7 +73,7 @@ func (r *Repository) TrackBookProgress(userId int, bookId int, req TrackBookProg
 	// insert baru tiap track progress
 	_, err = tx.Exec(`
 		INSERT INTO UserBook (user_id, book_id, current_page, logged_at)
-		VALUES ($1, $2, $3, NOW())`, req.UserID, req.BookID, req.PagesRead)
+		VALUES ($1, $2, $3, $4)`, req.UserID, req.BookID, req.PagesRead, req.ReadDate)
 
 	if err != nil {
 		return err

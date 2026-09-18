@@ -99,6 +99,13 @@ export default function ProfileDiaryPage() {
     }
   };
 
+  async function fetchSessions() {
+    try {
+      const data = await getReadingSessions(selectedYear, selectedMonth + 1);
+      setSessions(data);
+    } catch (error) {}
+  }
+
   useEffect(() => {
     async function fetchUser() {
       try {
@@ -111,13 +118,6 @@ export default function ProfileDiaryPage() {
     }
 
     fetchUser();
-
-    async function fetchSessions() {
-      try {
-        const data = await getReadingSessions(selectedYear, selectedMonth + 1);
-        setSessions(data);
-      } catch (error) {}
-    }
 
     fetchSessions();
   }, [selectedYear, selectedMonth]);
@@ -135,6 +135,7 @@ export default function ProfileDiaryPage() {
         setCurrentPage(data.pages_read);
         toast.dismiss(loading);
         toast.success("Track updated!");
+        fetchSessions();
       } catch (error) {
         toast.dismiss(loading);
         toast.error("Failed to track book update");
