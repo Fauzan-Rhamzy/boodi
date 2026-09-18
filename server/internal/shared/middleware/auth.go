@@ -48,6 +48,12 @@ func RequireAuth(next http.Handler) http.Handler {
 	})
 }
 
-func GetUser(r *http.Request) AuthUser {
-	return r.Context().Value(UserKey).(AuthUser)
+func GetUser(r *http.Request) (AuthUser, bool) {
+	val := r.Context().Value(UserKey)
+	if val == nil {
+		return AuthUser{}, false
+	}
+	user, ok := val.(AuthUser)
+
+	return user, ok
 }
