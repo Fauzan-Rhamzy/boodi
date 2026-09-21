@@ -3,6 +3,10 @@ package genre
 import (
 	"encoding/json"
 	"net/http"
+	"server/internal/shared/response"
+	"strconv"
+
+	"github.com/go-chi/chi/v5"
 )
 
 type Handler struct {
@@ -42,4 +46,43 @@ func (h *Handler) FindAll(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(genres)
+}
+
+func (h *Handler) GetGenreBooks(w http.ResponseWriter, r *http.Request) {
+	idStr := chi.URLParam(r, "genreID")
+	genreID, err := strconv.Atoi(idStr)
+	if err != nil {
+		response.Error(w, http.StatusBadRequest, "genre id not valid")
+		return
+	}
+
+	genreBooks, err := h.service.GetGenreBooks(genreID)
+
+	if err != nil {
+		http.Error(w, "invalid genre", http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(genreBooks)
+}
+
+func (h *Handler) FindGenreByID(w http.ResponseWriter, r *http.Request) {
+	idStr := chi.URLParam(r, "genreID")
+	genreID, err := strconv.Atoi(idStr)
+	if err != nil {
+		response.Error(w, http.StatusBadRequest, "genre id not valid")
+		return
+	}
+
+	genre, err := h.service.GetGenreByID(genreID)
+
+	if err != nil {
+		http.Error(w, "invalid genre", http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(genre)
+
 }

@@ -175,7 +175,7 @@ const router = createBrowserRouter([
             ),
           },
           {
-            path: "genre/:id",
+            path: "genre/:genreID",
             element: (
               <ProtectedRoute>
                 <GenrePage />

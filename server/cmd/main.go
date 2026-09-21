@@ -146,6 +146,8 @@ func main() {
 
 		// get all genres
 		r.Get("/api/genres", genreHandler.FindAll)
+		r.Get("/api/genre/{genreID}", genreHandler.FindGenreByID)
+		r.Get("/api/genre/{genreID}/books", genreHandler.GetGenreBooks)
 		// get all authors
 		r.Get("/api/authors", authorHandler.GetAll)
 	})
