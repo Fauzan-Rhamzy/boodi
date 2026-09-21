@@ -104,12 +104,14 @@ func main() {
 	router.Post("/api/auth/login", authHandler.Login)
 	router.Post("/api/auth/register", authHandler.Register)
 	router.Get("/api/auth/logout", authHandler.Logout)
+	router.Get("/api/auth/me", authHandler.Me)
+
 	// router.Get("/api/books", bookHandler.GetAll)
 
 	// protected routes for logged in users
 	router.Group(func(r chi.Router) {
 		r.Use(middleware.RequireAuth)
-		r.Get("/api/auth/me", authHandler.Me)
+		// r.Get("/api/auth/me", authHandler.Me)
 		r.Get("/api/books/trending", bookHandler.GetTrendingBooks)
 		r.Get("/currently-reading", collectionHandler.GetCurrentlyReading)
 		r.Get("/library/{id}", collectionHandler.GetLibrary)
@@ -144,6 +146,8 @@ func main() {
 
 		// get all genres
 		r.Get("/api/genres", genreHandler.FindAll)
+		r.Get("/api/genre/{genreID}", genreHandler.FindGenreByID)
+		r.Get("/api/genre/{genreID}/books", genreHandler.GetGenreBooks)
 		// get all authors
 		r.Get("/api/authors", authorHandler.GetAll)
 	})

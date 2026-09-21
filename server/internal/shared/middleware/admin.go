@@ -4,7 +4,7 @@ import "net/http"
 
 func RequireAdmin(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-		user := GetUser(req)
+		user, _ := GetUser(req)
 
 		if user.Role != "admin" {
 			http.Error(w, "akses ditolak", http.StatusForbidden)

@@ -15,3 +15,15 @@ func (s *Service) Create(req CreateGenreRequest) (int, error) {
 func (s *Service) FindAll() ([]Genre, error) {
 	return s.repo.FindAll()
 }
+
+func (s *Service) GetGenreByID(genreID int) (Genre, error) {
+	return s.repo.GetGenreByID(genreID)
+}
+
+func (s *Service) GetGenreBooks(genreID int) ([]Book, error) {
+	return s.repo.GetGenreBooks(genreID)
+}
+
+// func (s *Service) GetGenreByName(genreName string) (Genre, error) {
+// 	return s.repo.GetByName(genreName)
+// }

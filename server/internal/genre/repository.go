@@ -29,3 +29,42 @@ func (r *Repository) Create(req CreateGenreRequest) (int, error) {
     `, req.Name).Scan(&id)
 	return id, err
 }
+
+func (r *Repository) GetGenreByID(genreID int) (Genre, error) {
+	var genre Genre
+	err := r.db.QueryRow(`
+		SELECT genre_id, name 
+		FROM Genre 
+		WHERE genre_id = $1`, genreID).Scan(&genre.ID, &genre.Name)
+
+	if err != nil {
+		return genre, err
+	}
+
+	return genre, nil
+}
+
+func (r *Repository) GetGenreBooks(genreID int) ([]Book, error) {
+	booksRows, err := r.db.Query(`
+		SELECT b.book_id, b.title, b.cover
+		FROM Genre g
+		LEFT JOIN BookGenre bg 
+		ON bg.book_genre_id = g.genre_id
+		LEFT JOIN book b
+		ON b.book_id = bg.book_genre_id
+		WHERE g.genre_id = $1`, genreID)
+
+	if err != nil {
+		return nil, err
+	}
+	defer booksRows.Close()
+
+	genreBooks := make([]Book, 0)
+	for booksRows.Next() {
+		var g Book
+		booksRows.Scan(&g.BookID, &g.Title, &g.Cover)
+		genreBooks = append(genreBooks, g)
+	}
+
+	return genreBooks, nil
+}

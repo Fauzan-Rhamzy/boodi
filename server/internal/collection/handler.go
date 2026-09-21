@@ -19,7 +19,7 @@ func NewHandler(service *Service) *Handler {
 	return &Handler{service: service}
 }
 func (h *Handler) GetCurrentlyReading(w http.ResponseWriter, r *http.Request) {
-	user := middleware.GetUser(r)
+	user, _ := middleware.GetUser(r)
 
 	books, err := h.service.GetCurrentlyReading(user.UserID)
 	if err != nil {
@@ -31,7 +31,7 @@ func (h *Handler) GetCurrentlyReading(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetFavouriteBooks(w http.ResponseWriter, r *http.Request) {
-	user := middleware.GetUser(r)
+	user, _ := middleware.GetUser(r)
 
 	books, err := h.service.GetFavouriteBooks(user.UserID)
 	if err != nil {
@@ -43,7 +43,7 @@ func (h *Handler) GetFavouriteBooks(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetLibrary(w http.ResponseWriter, r *http.Request) {
-	user := middleware.GetUser(r)
+	user, _ := middleware.GetUser(r)
 
 	collectionID, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
@@ -61,7 +61,7 @@ func (h *Handler) GetLibrary(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetUserCollections(w http.ResponseWriter, r *http.Request) {
-	currentUser := middleware.GetUser(r)
+	currentUser, _ := middleware.GetUser(r)
 
 	collections, err := h.service.GetUserCollections(currentUser.UserID)
 	if err != nil {
@@ -74,7 +74,7 @@ func (h *Handler) GetUserCollections(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) CreateUserCollections(w http.ResponseWriter, r *http.Request) {
-	currentUser := middleware.GetUser(r)
+	currentUser, _ := middleware.GetUser(r)
 	r.ParseMultipartForm(5 << 20)
 
 	name := r.FormValue("name")
@@ -111,7 +111,7 @@ func (h *Handler) CreateUserCollections(w http.ResponseWriter, r *http.Request) 
 }
 
 func (h *Handler) AddToFavourite(w http.ResponseWriter, r *http.Request) {
-	user := middleware.GetUser(r)
+	user, _ := middleware.GetUser(r)
 
 	bookID, err := strconv.Atoi(chi.URLParam(r, "bookId"))
 	if err != nil {
@@ -128,7 +128,7 @@ func (h *Handler) AddToFavourite(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) DeleteFromFavourite(w http.ResponseWriter, r *http.Request) {
-	user := middleware.GetUser(r)
+	user, _ := middleware.GetUser(r)
 
 	bookID, err := strconv.Atoi(chi.URLParam(r, "bookId"))
 	if err != nil {
@@ -145,7 +145,7 @@ func (h *Handler) DeleteFromFavourite(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) IsBookFavourited(w http.ResponseWriter, r *http.Request) {
-	user := middleware.GetUser(r)
+	user, _ := middleware.GetUser(r)
 
 	bookIDStr := chi.URLParam(r, "id")
 	bookID, err := strconv.Atoi(bookIDStr)
@@ -164,7 +164,7 @@ func (h *Handler) IsBookFavourited(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) AddBook(w http.ResponseWriter, r *http.Request) {
-	currentUser := middleware.GetUser(r)
+	currentUser, _ := middleware.GetUser(r)
 	collectionID, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
 		http.Error(w, "invalid collection id", http.StatusBadRequest)
@@ -200,7 +200,7 @@ func (h *Handler) AddBook(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) RemoveBook(w http.ResponseWriter, r *http.Request) {
-	currentUser := middleware.GetUser(r)
+	currentUser, _ := middleware.GetUser(r)
 
 	collectionID, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {

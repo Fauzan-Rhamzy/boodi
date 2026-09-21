@@ -36,7 +36,7 @@ func (h *Handler) GetProfile(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) UpdateProfile(w http.ResponseWriter, r *http.Request) {
-	currentUser := middleware.GetUser(r)
+	currentUser, _ := middleware.GetUser(r)
 
 	id, err := strconv.Atoi(chi.URLParam(r, "user_id"))
 	if err != nil || currentUser.UserID != id {
@@ -75,7 +75,7 @@ func (h *Handler) UpdateProfile(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) TrackBookProgress(w http.ResponseWriter, r *http.Request) {
-	currentUser := middleware.GetUser(r)
+	currentUser, _ := middleware.GetUser(r)
 	if currentUser.UserID == 0 {
 		http.Error(w, "unauthorized", http.StatusUnauthorized)
 		return
@@ -102,7 +102,7 @@ func (h *Handler) TrackBookProgress(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetUserBookProgress(w http.ResponseWriter, r *http.Request) {
-	currentUser := middleware.GetUser(r)
+	currentUser, _ := middleware.GetUser(r)
 	if currentUser.UserID == 0 {
 		http.Error(w, "unauthorized", http.StatusUnauthorized)
 		return
@@ -129,7 +129,7 @@ func (h *Handler) GetUserBookProgress(w http.ResponseWriter, r *http.Request) {
 
 // GET /api/users/sessions?year=2026&month=8
 func (h *Handler) GetReadingSessions(w http.ResponseWriter, r *http.Request) {
-	currentUser := middleware.GetUser(r)
+	currentUser, _ := middleware.GetUser(r)
 
 	yearStr := r.URL.Query().Get("year")
 	monthStr := r.URL.Query().Get("month")

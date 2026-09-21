@@ -6,6 +6,8 @@ import (
 	"os"
 	"server/internal/shared/middleware"
 	"strconv"
+
+	"github.com/golang-jwt/jwt/v5"
 )
 
 type Handler struct {
@@ -85,7 +87,48 @@ func (h *Handler) Logout(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) Me(w http.ResponseWriter, r *http.Request) {
-	user := middleware.GetUser(r)
+	w.Header().Set("Content-Type", "application/json")
+
+	// 1. Cek apakah user sudah ada di context (jika suatu saat dilewati middleware)
+	if user, ok := middleware.GetUser(r); ok {
+		h.respondWithUserProfile(w, user)
+		return
+	}
+
+	// 2. Jika tidak ada di context, cek cookie token
+	cookie, err := r.Cookie("token")
+	if err != nil {
+		json.NewEncoder(w).Encode(nil) // Tidak login, return null dengan aman
+		return
+	}
+
+	// 3. 🛠️ PARSING TOKEN SECARA MANUAL (Karena berada di public route)
+	token, err := jwt.Parse(cookie.Value, func(t *jwt.Token) (interface{}, error) {
+		return []byte(os.Getenv("JWT_SECRET")), nil
+	})
+	if err != nil || !token.Valid {
+		json.NewEncoder(w).Encode(nil) // Token invalid/expired, anggap guest
+		return
+	}
+
+	claims, ok := token.Claims.(jwt.MapClaims)
+	if !ok {
+		json.NewEncoder(w).Encode(nil)
+		return
+	}
+
+	// 4. Buat objek user dari token yang valid
+	user := middleware.AuthUser{
+		UserID: int(claims["user_id"].(float64)),
+		Role:   claims["role"].(string),
+	}
+
+	// 5. Ambil data profil dari service
+	h.respondWithUserProfile(w, user)
+}
+
+// Helper function agar kode Anda tetap bersih dan tidak duplikat
+func (h *Handler) respondWithUserProfile(w http.ResponseWriter, user middleware.AuthUser) {
 	firstName, err := h.service.GetFirstName(user.UserID)
 	if err != nil {
 		http.Error(w, "failed to get user", http.StatusInternalServerError)
@@ -93,11 +136,10 @@ func (h *Handler) Me(w http.ResponseWriter, r *http.Request) {
 	}
 
 	profilePicture, err := h.service.GetProfilePicture(user.UserID)
-	if profilePicture == "" {
+	if err != nil || profilePicture == "" {
 		profilePicture = "profile/dummy.png"
 	}
 
-	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]any{
 		"user_id":         user.UserID,
 		"first_name":      firstName,

@@ -11,6 +11,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 )
+
 type Handler struct {
 	service *Service
 }
@@ -20,7 +21,7 @@ func NewHandler(service *Service) *Handler {
 }
 
 func (h *Handler) GetTrendingReviews(w http.ResponseWriter, r *http.Request) {
-	user := middleware.GetUser(r)
+	user, _ := middleware.GetUser(r)
 
 	reviews, err := h.service.GetTrendingReviews(user.UserID)
 	if err != nil {
@@ -32,7 +33,7 @@ func (h *Handler) GetTrendingReviews(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetBookReviews(w http.ResponseWriter, r *http.Request) {
-	user := middleware.GetUser(r)
+	user, _ := middleware.GetUser(r)
 	idStr := chi.URLParam(r, "book_id")
 	idBook, err := strconv.Atoi(idStr)
 	reviews, err := h.service.GetBookReviews(user.UserID, idBook)
@@ -57,7 +58,7 @@ func (h *Handler) GetBookRatings(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) GetUserReviews(w http.ResponseWriter, r *http.Request) {
-	user := middleware.GetUser(r)
+	user, _ := middleware.GetUser(r)
 
 	reviews, err := h.service.GetUserReviews(user.UserID)
 	if err != nil {
@@ -69,81 +70,81 @@ func (h *Handler) GetUserReviews(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) ToggleLike(w http.ResponseWriter, r *http.Request) {
-    reviewID, err := strconv.Atoi(chi.URLParam(r, "reviewID"))
-    if err != nil {
-        http.Error(w, "Invalid review ID", http.StatusBadRequest)
-        return
-    }
+	reviewID, err := strconv.Atoi(chi.URLParam(r, "reviewID"))
+	if err != nil {
+		http.Error(w, "Invalid review ID", http.StatusBadRequest)
+		return
+	}
 
-    user := middleware.GetUser(r)
-	userID:=user.UserID
+	user, _ := middleware.GetUser(r)
+	userID := user.UserID
 
-    liked, err := h.service.ToggleLike(userID, reviewID)
-    if err != nil {
-        http.Error(w, "Failed to toggle like", http.StatusInternalServerError)
-        return
-    }
+	liked, err := h.service.ToggleLike(userID, reviewID)
+	if err != nil {
+		http.Error(w, "Failed to toggle like", http.StatusInternalServerError)
+		return
+	}
 
-    json.NewEncoder(w).Encode(map[string]interface{}{
-        "liked": liked,
-    })
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"liked": liked,
+	})
 }
 
 type CreateReviewRequet struct {
-    BookID  int    `json:"book_id"`
-    Rating  int    `json:"rating"`
-    Comment string `json:"comment"`
+	BookID  int    `json:"book_id"`
+	Rating  int    `json:"rating"`
+	Comment string `json:"comment"`
 }
 
 func (h *Handler) CreateReview(w http.ResponseWriter, r *http.Request) {
-    var req CreateReviewRequest
+	var req CreateReviewRequest
 
-    if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-        http.Error(w, "Invalid request", http.StatusBadRequest)
-        return
-    }
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Invalid request", http.StatusBadRequest)
+		return
+	}
 
-    if req.Rating < 1 || req.Rating > 5 {
-        http.Error(w, "Rating must be between 1 and 5", http.StatusBadRequest)
-        return
-    }
+	if req.Rating < 1 || req.Rating > 5 {
+		http.Error(w, "Rating must be between 1 and 5", http.StatusBadRequest)
+		return
+	}
 
-    if strings.TrimSpace(req.Comment) == "" {
-        http.Error(w, "Comment is required", http.StatusBadRequest)
-        return
-    }
+	if strings.TrimSpace(req.Comment) == "" {
+		http.Error(w, "Comment is required", http.StatusBadRequest)
+		return
+	}
 
-	user := middleware.GetUser(r)
-    
+	user, _ := middleware.GetUser(r)
 
-    review, err := h.service.CreateReview(
-    user.UserID,
-    req.BookID,
-    req.Rating,
-    strings.TrimSpace(req.Comment),
-)
+	review, err := h.service.CreateReview(
+		user.UserID,
+		req.BookID,
+		req.Rating,
+		strings.TrimSpace(req.Comment),
+	)
 
-if err != nil {
-    if errors.Is(err, ErrReviewExists) {
-        http.Error(
-            w,
-            "You have already reviewed this book",
-            http.StatusConflict,
-        )
-        return
-    }
+	if err != nil {
+		if errors.Is(err, ErrReviewExists) {
+			http.Error(
+				w,
+				"You have already reviewed this book",
+				http.StatusConflict,
+			)
+			return
+		}
 
-    http.Error(
-        w,
-        "Failed to create review",
-        http.StatusInternalServerError,
-    )
-    return
+		http.Error(
+			w,
+			"Failed to create review",
+			http.StatusInternalServerError,
+		)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(review)
 }
 
-    w.Header().Set("Content-Type", "application/json")
-    json.NewEncoder(w).Encode(review)
-}
 type UpdateReviewRequest struct {
 	Rating  int    `json:"rating"`
 	Comment string `json:"comment"`
@@ -173,7 +174,7 @@ func (h *Handler) UpdateReview(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := middleware.GetUser(r)
+	user, _ := middleware.GetUser(r)
 
 	review, err := h.service.UpdateReview(
 		user.UserID,
@@ -201,7 +202,7 @@ func (h *Handler) DeleteReview(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := middleware.GetUser(r)
+	user, _ := middleware.GetUser(r)
 
 	err = h.service.DeleteReview(user.UserID, reviewID)
 	if err != nil {
